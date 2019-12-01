@@ -1,0 +1,117 @@
+<template>
+  <div class="RegisterBindPhoneNum">
+    <h1>绑定手机号</h1>
+    <li class="phone-num">
+      <input type="number" v-model="phone_num" placeholder="请输入手机号" />
+    </li>
+    <li class="reg-num">
+      <input type="number" v-model="reg_num" placeholder="请输入验证码" />
+      <div class="get-reg-num" @click="getRegNum">{{timeout}}</div>
+    </li>
+
+    <van-button color="#16A332" round type="info" @click="next">下一步</van-button>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      phone_num: "",
+      reg_num: "",
+      timeout: "获取验证码",
+      isGetRegNum: true
+    };
+  },
+  methods: {
+    next() {
+      let regPhoneNum = /^[1](([3][0-9])|([4][5-9])|([5][0-3,5-9])|([6][5,6])|([7][0-8])|([8][0-9])|([9][1,8,9]))[0-9]{8}$/;
+      if (!this.phone_num) {
+        this.$toast("请输入您的手机号");
+        return false;
+      }
+      if (!regPhoneNum.test(this.phone_num)) {
+        this.$toast("请检查您的的手机号是否正确");
+        return false;
+      }
+      if (!this.reg_num) {
+        this.$toast("请输入验证码");
+        return false;
+      }
+
+      this.$router.push({
+        path: "/RegisterChooseIllStep"
+      });
+    },
+    // 获取验证码
+    getRegNum() {
+      let second = 60;
+      if (this.isGetRegNum) {
+        this.timeout = `${second}后重新获取`;
+        let timer = setInterval(() => {
+          if (second > 0) {
+            second--;
+            this.timeout = `${second}后重新获取`;
+            this.isGetRegNum = false;
+          } else {
+            this.timeout = "重新获取";
+            clearInterval(timer);
+            this.isGetRegNum = true;
+          }
+        }, 1000);
+      }
+    }
+  }
+};
+</script>
+
+<style lang="scss" scoped>
+.RegisterBindPhoneNum {
+  width: 100%;
+  position: absolute;
+  padding: 0 0.6rem;
+  box-sizing: border-box;
+  h1 {
+    width: 100%;
+    height: 5.4rem;
+    line-height: 5.4rem;
+    font-size: 0.96rem;
+    color: #333;
+    font-weight: 600;
+  }
+  li {
+    width: 100%;
+    height: 3rem;
+    border-bottom: 0.02rem solid #d0d0d0;
+    padding-top: 0.4rem;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    input {
+      border: none;
+      width: 9.8rem;
+      height: 0.6rem;
+      font-size: 0.56rem;
+    }
+    .get-reg-num {
+      width: 3.96rem;
+      height: 1rem;
+      text-align: center;
+      line-height: 1rem;
+      color: #16a332;
+      font-weight: 400;
+      font-size: 0.56rem;
+      border-left: 1px solid #d0d0d0;
+    }
+  }
+  .reg-num {
+    margin-bottom: 2.8rem;
+  }
+  .van-button {
+    width: 11.8rem;
+    height: 1.76rem;
+    margin-left: 1rem;
+  }
+}
+</style>
