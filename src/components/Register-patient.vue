@@ -202,10 +202,6 @@ export default {
     color: #bbb;
     border-top: 1px solid #000;
   }
-  .van-picker__cancel,
-  .van-picker__confirm {
-    color: #16a332 !important;
-  }
   .van-button {
     width: 100%;
     height: 1.76rem;

@@ -64,6 +64,15 @@ module.exports = {
           limit: 10000,
           name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
         }
+      },
+      {
+        // js 文件才使用 babel
+        test: /\.js$/,
+        loader: 'babel-loader?cacheDirectory=true',
+        // 只在 src 文件夹下查找
+        include: [resolve('src')],
+        // 不会去查找的路径
+        exclude: /node_modules/
       }
     ]
   },

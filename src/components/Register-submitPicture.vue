@@ -23,7 +23,9 @@ export default {
     };
   },
   methods: {
-    next() {},
+    next() {
+      
+    },
     // 上传图片
     afterRead(file) {
       console.log(file);

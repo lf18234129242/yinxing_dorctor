@@ -12,6 +12,26 @@ export default new Router({
   routes: [
     {
       path: '/',
+      name: 'doctorsDetails',
+      component: loadView('Doctors-details'),
+      meta:{
+        index:1,
+        auth:true,
+        title:'疾病详情'
+      }
+    },
+    {
+      path: '/DoctorsOrder',
+      name: 'DoctorsOrder',
+      component: loadView('Doctors-order'),
+      meta:{
+        index:1,
+        auth:true,
+        title:'我的医嘱'
+      }
+    },
+    {
+      path: '/RegisterChooseIll',
       name: 'RegisterChooseIll',
       component: loadView('Register-chooseIll'),
       meta:{

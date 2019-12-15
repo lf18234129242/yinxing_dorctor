@@ -35,7 +35,9 @@ html,body,#app {
   margin: 0;
   padding: 0;
 }
-
+.van-picker__cancel, .van-picker__confirm {
+  color: #16a332;
+}
 .fold-left-enter-active {
     animation-name: fold-left-in;
     animation-duration: .3s;

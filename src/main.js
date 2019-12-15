@@ -5,9 +5,9 @@ import App from './App'
 import router from './router'
 import './assets/css/base.css'
 import './assets/js/fontsize.js'
-import { RadioGroup, Radio, CellGroup, Cell, Button, Popup, Picker, Toast, Uploader } from 'vant';
+import { RadioGroup, Radio, CellGroup, Cell, Button, Popup, Picker, Toast, Uploader, Tabs, Tab } from 'vant';
 
-Vue.use(RadioGroup).use(Radio).use(CellGroup).use(Cell).use(Button).use(Popup).use(Picker).use(Toast).use(Uploader);
+Vue.use(RadioGroup).use(Radio).use(CellGroup).use(Cell).use(Button).use(Popup).use(Picker).use(Toast).use(Uploader).use(Tabs).use(Tab);
 
 Vue.config.productionTip = false
 router.beforeEach((to, from, next) => {
