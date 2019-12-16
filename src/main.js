@@ -3,12 +3,15 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import axios from 'axios'
 import './assets/css/base.css'
 import './assets/js/fontsize.js'
 import { RadioGroup, Radio, CellGroup, Cell, Button, Popup, Picker, Toast, Uploader, Tabs, Tab } from 'vant';
 
 Vue.use(RadioGroup).use(Radio).use(CellGroup).use(Cell).use(Button).use(Popup).use(Picker).use(Toast).use(Uploader).use(Tabs).use(Tab);
 
+//把 `******` 加到 `Vue` 的原型中
+Vue.prototype.axios = axios
 Vue.config.productionTip = false
 router.beforeEach((to, from, next) => {
   // 为页面添加标题

@@ -11,8 +11,8 @@ function loadView(view) {
 export default new Router({
   routes: [
     {
-      path: '/',
-      name: 'doctorsDetails',
+      path: '/DoctorsDetails',
+      name: 'DoctorsDetails',
       component: loadView('Doctors-details'),
       meta:{
         index:1,
@@ -31,7 +31,7 @@ export default new Router({
       }
     },
     {
-      path: '/RegisterChooseIll',
+      path: '/',
       name: 'RegisterChooseIll',
       component: loadView('Register-chooseIll'),
       meta:{

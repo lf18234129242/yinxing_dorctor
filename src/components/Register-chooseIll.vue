@@ -25,6 +25,7 @@
 </template>
 
 <script>
+import url from './../apiconfig'
 export default {
   name: "Register-chooseIll",
   data() {
@@ -48,8 +49,20 @@ export default {
           title: "44骨质疏松",
           id: 4
         }
-      ]
+      ],
+      token: "",
+      push_id: "",
     };
+  },
+  mounted() {
+    // let href = window.location.href
+    let href =
+      "https://www.okginko.com/index.html?token=ouYrs1Y3ri3ke2Wyk-7Q7njCAE4o&push_id=2";
+    let splitIndex = href.indexOf("?");
+    let str = href.substring(splitIndex + 1);
+    this.token = this.getStrParam(str, "token");
+    this.push_id = this.getStrParam(str, "push_id");
+    this.getIllList()
   },
   computed: {
     newRadioList() {
@@ -62,6 +75,41 @@ export default {
       });
       return newRadioList;
     }
+  },
+  methods: {
+    getStrParam(str, name) {
+      var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+      var r = str.match(reg);
+      if (r != null) return r[2];
+      return "";
+    },
+    getIllList() {
+      this.axios.post(url.ill_list,{
+        token:this.token
+      }).then(res => {
+        console.log(res)
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+    // getClientInfo() {
+    //   let openid = localStorage.getItem("openid");
+    //   this.axios
+    //     .post(url.getClientInfo, {
+    //       access_token: this.access_token,
+    //       openid: openid
+    //     })
+    //     .then(res => {
+    //       console.log(res);
+    //       this.car_owner = res.data.data.username;
+    //       localStorage.setItem("id", res.data.data.id);
+    //       localStorage.setItem("wx_headimgurl", res.data.data.wx_headimgurl);
+    //       localStorage.setItem("username", res.data.data.username);
+    //     })
+    //     .catch(err => {
+    //       console.log(err);
+    //     });
+    // }
   }
 };
 </script>

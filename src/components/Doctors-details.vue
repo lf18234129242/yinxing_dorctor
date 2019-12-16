@@ -117,7 +117,8 @@ section{
   }
   .van-tab{
     z-index: 2;
-    min-width: none;
+    // min-width: none;
+    padding: 0;
   }
   .van-tabs__content{
     width: 100%;
