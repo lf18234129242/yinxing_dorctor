@@ -1,0 +1,31 @@
+import axios from 'axios'
+import url from './apiconfig'
+function count(id, token) {
+    axios.post(url.userpush_save, {
+        token: token,
+        pushId: id
+    }).then(res => {
+        console.log(res)
+    }).catch(err => {
+        console.log(err)
+    })
+}
+function getStrParam(href, name) {
+    let splitIndex = href.indexOf("?");
+    let str = href.substring(splitIndex + 1);
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+    var r = str.match(reg);
+    if (r != null) return r[2];
+    return "";
+}
+function queryUserInfo(token,type){ // 首次进入页面，查询是否有记录
+    axios.post(url.query, {
+        token: token,
+        type: type
+    }).then(res => {
+        console.log(res)
+    }).catch(err => {
+        console.log(err)
+    })
+}
+export { count, getStrParam }

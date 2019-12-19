@@ -7,9 +7,9 @@
     <van-radio-group v-model="radio">
       <van-cell-group>
         <van-cell
-          v-for="(item,index) in newRadioList"
+          v-for="(item,index) in radioList"
           :key="index"
-          :title="item.title"
+          :title="item.name"
           clickable
           @click="radio = item.id"
         >
@@ -17,52 +17,33 @@
         </van-cell>
       </van-cell-group>
     </van-radio-group>
-
-    <router-link :to="{path:'/RegisterPatient',query:{}}">
-      <van-button type="primary" color="#16A332">下一步</van-button>
-    </router-link>
+    <van-button @click="submit" type="primary" color="#16A332">下一步</van-button>
   </div>
 </template>
 
 <script>
-import url from './../apiconfig'
+import url from "./../apiconfig";
+import { count, getStrParam } from "./../count";
 export default {
   name: "Register-chooseIll",
   data() {
     return {
       search_data: "", //搜索内容
       radio: 1,
-      radioList: [
-        {
-          title: "11关节炎",
-          id: 1
-        },
-        {
-          title: "22痛风",
-          id: 2
-        },
-        {
-          title: "33风湿性关节炎",
-          id: 3
-        },
-        {
-          title: "44骨质疏松",
-          id: 4
-        }
-      ],
+      radioList: [],
       token: "",
-      push_id: "",
+      push_id: ""
     };
   },
   mounted() {
     // let href = window.location.href
     let href =
       "https://www.okginko.com/index.html?token=ouYrs1Y3ri3ke2Wyk-7Q7njCAE4o&push_id=2";
-    let splitIndex = href.indexOf("?");
-    let str = href.substring(splitIndex + 1);
-    this.token = this.getStrParam(str, "token");
-    this.push_id = this.getStrParam(str, "push_id");
-    this.getIllList()
+    this.token = getStrParam(href, "token");
+    this.push_id = getStrParam(href, "push_id");
+    this.getIllList();
+    count(this.push_id, this.token);
+    sessionStorage.setItem("token", this.token);
   },
   computed: {
     newRadioList() {
@@ -77,39 +58,30 @@ export default {
     }
   },
   methods: {
-    getStrParam(str, name) {
-      var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
-      var r = str.match(reg);
-      if (r != null) return r[2];
-      return "";
-    },
     getIllList() {
-      this.axios.post(url.ill_list,{
-        token:this.token
-      }).then(res => {
-        console.log(res)
-      }).catch(err => {
-        console.log(err)
-      })
+      this.axios
+        .post(url.ill_list, {
+          token: this.token
+        })
+        .then(res => {
+          if (res.data.code === 0) {
+            this.radioList = res.data.data;
+          }
+        })
+        .catch(err => {});
     },
-    // getClientInfo() {
-    //   let openid = localStorage.getItem("openid");
-    //   this.axios
-    //     .post(url.getClientInfo, {
-    //       access_token: this.access_token,
-    //       openid: openid
-    //     })
-    //     .then(res => {
-    //       console.log(res);
-    //       this.car_owner = res.data.data.username;
-    //       localStorage.setItem("id", res.data.data.id);
-    //       localStorage.setItem("wx_headimgurl", res.data.data.wx_headimgurl);
-    //       localStorage.setItem("username", res.data.data.username);
-    //     })
-    //     .catch(err => {
-    //       console.log(err);
-    //     });
-    // }
+    submit() {
+      this.axios
+        .post(url.illness_save, {
+          illnessId: this.radio,
+          token: this.token
+        })
+        .then(res => {
+          if (res.data.code === 0) {
+            this.$router.push("/RegisterPatient");
+          }
+        });
+    }
   }
 };
 </script>

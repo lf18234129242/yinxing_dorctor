@@ -14,17 +14,62 @@
 </template>
 
 <script>
+import url from "./../apiconfig";
+import { count, getStrParam } from "./../count";
 export default {
   data() {
     return {
       phone_num: "",
       reg_num: "",
+      phoneCode: "",
       timeout: "获取验证码",
-      isGetRegNum: true
+      isGetRegNum: true,
+      token: "",
+      push_id: ""
     };
+  },
+  mounted() {
+    let token = sessionStorage.getItem("token");
+    this.token = token;
+    if (!token || token == undefined) {
+      // let href = window.location.href
+      let href =
+        "https://www.okginko.com/index.html?token=ouYrs1Y3ri3ke2Wyk-7Q7njCAE4o&push_id=2";
+      this.token = getStrParam(href, "token");
+      this.push_id = getStrParam(href, "push_id");
+      count(this.push_id, this.token);
+      sessionStorage.setItem("token", this.token);
+    }
   },
   methods: {
     next() {
+      if (!this.reg_num) {
+        this.$toast("请输入验证码");
+        return false;
+      }
+      if (this.reg_num == this.phoneCode) {
+        this.savePhoneNum();
+      } else {
+        this.$toast("验证码输入错误");
+      }
+    },
+    savePhoneNum() {
+      this.axios
+        .post(url.phone_save, {
+          phoneNumber: this.phone_num,
+          token: this.token
+        })
+        .then(res => {
+          if (res.data.code === 0) {
+            this.$router.push({
+              path: "/RegisterChooseIllStep"
+            });
+          }
+        });
+    },
+    // 获取验证码
+    getRegNum() {
+      let second = 60;
       let regPhoneNum = /^[1](([3][0-9])|([4][5-9])|([5][0-3,5-9])|([6][5,6])|([7][0-8])|([8][0-9])|([9][1,8,9]))[0-9]{8}$/;
       if (!this.phone_num) {
         this.$toast("请输入您的手机号");
@@ -34,18 +79,6 @@ export default {
         this.$toast("请检查您的的手机号是否正确");
         return false;
       }
-      if (!this.reg_num) {
-        this.$toast("请输入验证码");
-        return false;
-      }
-
-      this.$router.push({
-        path: "/RegisterChooseIllStep"
-      });
-    },
-    // 获取验证码
-    getRegNum() {
-      let second = 60;
       if (this.isGetRegNum) {
         this.timeout = `${second}后重新获取`;
         let timer = setInterval(() => {
@@ -60,6 +93,18 @@ export default {
           }
         }, 1000);
       }
+      this.getPhoneCode();
+    },
+    getPhoneCode() {
+      this.axios
+        .post(url.phone_code, {
+          phoneNumber: this.phone_num,
+          token: this.token
+        })
+        .then(res => {
+          this.$toast("验证码发送成功");
+          this.phoneCode = res.data.code;
+        });
     }
   }
 };

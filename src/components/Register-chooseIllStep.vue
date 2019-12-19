@@ -6,7 +6,7 @@
         <van-cell
           v-for="(item,index) in radioList"
           :key="index"
-          :title="item.title"
+          :title="item.NAME"
           clickable
           @click="radio = item.id"
         >
@@ -14,37 +14,62 @@
         </van-cell>
       </van-cell-group>
     </van-radio-group>
-    
-    <router-link :to="{path:'/RegisterSubmitPicture',query:{}}">
-      <van-button type="primary" color="#16A332">下一步</van-button>
-    </router-link>
+
+    <van-button @click="next" type="primary" color="#16A332">下一步</van-button>
   </div>
 </template>
 
 <script>
+import url from "./../apiconfig";
+import { count, getStrParam } from "./../count";
 export default {
   data() {
     return {
       radio: 1,
-      radioList: [
-        {
-          title: "11关节炎",
-          id: 1
-        },
-        {
-          title: "22痛风",
-          id: 2
-        },
-        {
-          title: "33风湿性关节炎",
-          id: 3
-        },
-        {
-          title: "44骨质疏松",
-          id: 4
-        }
-      ]
+      radioList: [],
+      token: ""
     };
+  },
+  mounted() {
+    let token = sessionStorage.getItem("token");
+    this.token = token;
+    if (!token || token == undefined) {
+      // let href = window.location.href
+      let href =
+        "https://www.okginko.com/index.html?token=ouYrs1Y3ri3ke2Wyk-7Q7njCAE4o&push_id=2";
+      this.token = getStrParam(href, "token");
+      this.push_id = getStrParam(href, "push_id");
+      count(this.push_id, this.token);
+      sessionStorage.setItem("token", this.token);
+    }
+    this.getIllStep();
+  },
+  methods: {
+    getIllStep() {
+      this.axios
+        .post(url.process_list, {
+          token: this.token
+        })
+        .then(res => {
+          console.log(res);
+          if (res.data.code === 0) {
+            this.radioList = res.data.data;
+          }
+        });
+    },
+    next() {
+      this.axios
+        .post(url.process_save, {
+          token: this.token,
+          processId: this.radio
+        })
+        .then(res => {
+          console.log(res);
+          if (res.data.code === 0) {
+            this.$router.push('/RegisterSubmitPicture')
+          }
+        })
+    }
   }
 };
 </script>

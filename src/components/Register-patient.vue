@@ -33,43 +33,70 @@
         @confirm="onConfirm_age"
       />
     </van-popup>
-
     <van-button type="primary" color="#16A332" @click="next">下一步</van-button>
   </div>
 </template>
 
 <script>
+import url from "./../apiconfig";
+import { count, getStrParam } from "./../count";
 export default {
   data() {
     return {
       username: "",
       usersex: "",
+      gender: null,
       userage: "",
       show_sex: false,
       show_age: false,
       sex_columns: ["男", "女"],
-      age_columns: []
+      age_columns: [],
+      token: "",
+      push_id: ""
     };
+  },
+  mounted() {
+    let token = sessionStorage.getItem("token");
+    this.token = token;
+    if (!token || token == undefined) {
+      // let href = window.location.href
+      let href =
+        "https://www.okginko.com/index.html?token=ouYrs1Y3ri3ke2Wyk-7Q7njCAE4o&push_id=2";
+      this.token = getStrParam(href, "token");
+      this.push_id = getStrParam(href, "push_id");
+      count(this.push_id, this.token);
+      sessionStorage.setItem("token", this.token);
+    }
   },
   methods: {
     // 下一步
-    next(){
-      if(this.username == ''){
-        this.$toast('请输入您的姓名')
+    next() {
+      if (this.username == "") {
+        this.$toast("请输入您的姓名");
         return false;
       }
-      if(this.usersex == ''){
-        this.$toast('请选择您的性别')
+      if (this.usersex == "") {
+        this.$toast("请选择您的性别");
         return false;
       }
-      if(this.userage == ''){
-        this.$toast('请选择您的年龄')
+      if (this.userage == "") {
+        this.$toast("请选择您的年龄");
         return false;
       }
-      this.$router.push({
-        path:'/RegisterBindPhoneNum',
-        query:{}
-      })
+      this.axios
+        .post(url.message_save, {
+          age: this.userage,
+          gender: this.gender,
+          name: this.username,
+          token: this.token
+        })
+        .then(res => {
+          if (res.data.code === 0) {
+            this.$router.push({
+              path: "/RegisterBindPhoneNum"
+            });
+          }
+        });
     },
     selectSex() {
       this.show_sex = true;
@@ -78,10 +105,12 @@ export default {
       switch (event.target.innerHTML) {
         case "男":
           this.usersex = "男";
+          this.gender = 1;
           this.show_sex = false;
           break;
         case "女":
           this.usersex = "女";
+          this.gender = 2;
           this.show_sex = false;
           break;
         case "取消":
