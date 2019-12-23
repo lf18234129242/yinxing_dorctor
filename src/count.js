@@ -1,5 +1,7 @@
 import axios from 'axios'
 import url from './apiconfig'
+import Vue from 'vue'
+import router from './router'
 function count(id, token) {
     axios.post(url.userpush_save, {
         token: token,
@@ -18,14 +20,17 @@ function getStrParam(href, name) {
     if (r != null) return r[2];
     return "";
 }
-function queryUserInfo(token,type){ // 首次进入页面，查询是否有记录
-    axios.post(url.query, {
+function queryUserInfo(token,type,router){ // 首次进入页面，查询是否有记录
+    axios.post(url.query_user_info, {
         token: token,
         type: type
     }).then(res => {
         console.log(res)
+        if(res.data.userStatus === 2){
+            router.push(router)
+        }
     }).catch(err => {
         console.log(err)
     })
 }
-export { count, getStrParam }
+export { count, getStrParam, queryUserInfo }

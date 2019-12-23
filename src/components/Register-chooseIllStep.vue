@@ -21,7 +21,7 @@
 
 <script>
 import url from "./../apiconfig";
-import { count, getStrParam } from "./../count";
+import { count, getStrParam, queryUserInfo } from "./../count";
 export default {
   data() {
     return {
@@ -41,6 +41,7 @@ export default {
       this.push_id = getStrParam(href, "push_id");
       count(this.push_id, this.token);
       sessionStorage.setItem("token", this.token);
+      queryUserInfo(this.token, 3, "/RegisterChooseIllStep");
     }
     this.getIllStep();
   },
@@ -66,9 +67,9 @@ export default {
         .then(res => {
           console.log(res);
           if (res.data.code === 0) {
-            this.$router.push('/RegisterSubmitPicture')
+            this.$router.push("/RegisterSubmitPicture");
           }
-        })
+        });
     }
   }
 };
