@@ -66,7 +66,7 @@ export default {
       this.push_id = getStrParam(href, "push_id");
       count(this.push_id, this.token);
       sessionStorage.setItem("token", this.token);
-      queryUserInfo(this.token, 4, "/RegisterBindPhoneNum");
+      // queryUserInfo(this.token, 4, "/RegisterBindPhoneNum");
     }
   },
   methods: {

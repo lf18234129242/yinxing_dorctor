@@ -80,5 +80,15 @@ export default new Router({
         title:'提交资料'
       }
     },
+    {
+      path: '/WechatCode',
+      name: 'WechatCode',
+      component: loadView('WechatCode'),
+      meta:{
+        index:1,
+        auth:true,
+        title:'二维码'
+      }
+    },
   ]
 })

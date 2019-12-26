@@ -66,7 +66,6 @@ export default {
     },
     // 上传图片
     afterRead(file) {
-      // this.$toast.loading("正在上传中...");
       Toast.loading({
         message:'正在上传中...',
         duration:0,

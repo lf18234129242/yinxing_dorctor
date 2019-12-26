@@ -44,7 +44,7 @@ export default {
     this.getIllList();
     count(this.push_id, this.token);
     sessionStorage.setItem("token", this.token);
-    queryUserInfo(this.token, 2, "/RegisterPatient");
+    // queryUserInfo(this.token, 2, "/RegisterPatient");
   },
   computed: {
     newRadioList() {

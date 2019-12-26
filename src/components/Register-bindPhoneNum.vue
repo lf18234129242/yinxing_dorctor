@@ -39,7 +39,7 @@ export default {
       this.push_id = getStrParam(href, "push_id");
       count(this.push_id, this.token);
       sessionStorage.setItem("token", this.token);
-      queryUserInfo(this.token, 5, "/RegisterChooseIllStep");
+      // queryUserInfo(this.token, 5, "/RegisterChooseIllStep");
     }
   },
   methods: {
