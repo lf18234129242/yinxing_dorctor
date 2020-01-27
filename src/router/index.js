@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-// import RegisterChooseIll from '@/components/Register-chooseIll'
 
 Vue.use(Router)
 

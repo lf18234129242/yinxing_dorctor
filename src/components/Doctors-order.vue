@@ -27,6 +27,8 @@
   </div>
 </template>
 <script>
+import url from "./../apiconfig";
+import { count, getStrParam, queryUserInfo } from "./../count";
 import echarts from "echarts";
 export default {
   data() {
@@ -39,6 +41,14 @@ export default {
     this.$nextTick(function() {
       this.drawPie("main");
     });
+    // let href = window.location.href
+    let href = "https://www.okginko.com/index.html?token=ouYrs1YZ2D4DVAbxbmBCgjMUv72Y&push_id=2";
+    this.token = getStrParam(href, "token");
+    this.push_id = getStrParam(href, "push_id");
+    this.getDoctorOrder();
+    // count(this.push_id, this.token);
+    sessionStorage.setItem("token", this.token);
+    // queryUserInfo(this.token, 2, "/RegisterPatient");
   },
   methods: {
     drawPie() {
@@ -94,6 +104,20 @@ export default {
         ]
       };
       charts.setOption(option);
+    },
+    getDoctorOrder () {
+      this.axios
+        .post(url.doctorsOrder, {
+          token: this.token,
+          type: 1,
+          pushId: 46
+        })
+        .then(res => {
+          console.log('getDoctorOrder', res)
+          if (res.data.code === 0) {
+          }
+        })
+        .catch(err => {});
     }
   }
 };

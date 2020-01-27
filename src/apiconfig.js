@@ -10,6 +10,9 @@ const URL = {
     process_save: BASEURL + '/api/userinfo/process/save', // 病程保存接口
     query_user_info: BASEURL + '/api/userinfo/query', // 用户信息查询接口
     userpush_save: BASEURL + '/api/userpush/save', // 推送点击率保存接口
+    doctor_code: BASEURL + '/api/doctor/code', // 医生二维码
+    doctorsOrder: BASEURL + '/api/userpush/doctorsOrder', // 科室疾病病程内容
+    theoryInfo: BASEURL + '/api/userpush/theoryInfo', // 疾病原理内容
 }
 
 module.exports = URL

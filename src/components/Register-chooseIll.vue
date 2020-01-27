@@ -37,8 +37,7 @@ export default {
   },
   mounted() {
     // let href = window.location.href
-    let href =
-      "https://www.okginko.com/index.html?token=ouYrs1Y3ri3ke2Wyk-7Q7njCAE4o&push_id=2";
+    let href = "https://www.okginko.com/index.html?token=ouYrs1Y3ri3ke2Wyk-7Q7njCAE4o&push_id=2";
     this.token = getStrParam(href, "token");
     this.push_id = getStrParam(href, "push_id");
     this.getIllList();
