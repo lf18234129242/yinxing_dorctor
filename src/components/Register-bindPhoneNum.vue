@@ -30,8 +30,10 @@ export default {
   },
   mounted() {
     let token = sessionStorage.getItem("token");
+    let push_id = sessionStorage.getItem("push_id");
     this.token = token;
-    if (!token || token == undefined) {
+    this.push_id = push_id;
+    if (!token) {
       // let href = window.location.href
       let href =
         "https://www.okginko.com/index.html?token=ouYrs1Y3ri3ke2Wyk-7Q7njCAE4o&push_id=2";
@@ -39,7 +41,7 @@ export default {
       this.push_id = getStrParam(href, "push_id");
       count(this.push_id, this.token);
       sessionStorage.setItem("token", this.token);
-      // queryUserInfo(this.token, 5, "/RegisterChooseIllStep");
+      sessionStorage.setItem("push_id", this.push_id);
     }
   },
   methods: {

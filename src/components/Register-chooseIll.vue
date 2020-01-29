@@ -23,7 +23,7 @@
 
 <script>
 import url from "./../apiconfig";
-import { count, getStrParam, queryUserInfo } from "./../count";
+import { count, getStrParam } from "./../count";
 export default {
   name: "Register-chooseIll",
   data() {
@@ -43,7 +43,7 @@ export default {
     this.getIllList();
     count(this.push_id, this.token);
     sessionStorage.setItem("token", this.token);
-    // queryUserInfo(this.token, 2, "/RegisterPatient");
+    sessionStorage.setItem("push_id", this.push_id);
   },
   computed: {
     newRadioList() {

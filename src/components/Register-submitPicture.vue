@@ -9,8 +9,7 @@
       :before-read="beforeRead"
       :after-read="afterRead"
     />
-
-    <van-button color="#16A332" round type="info" @click="next">下一步</van-button>
+    <van-button color="#16A332" round type="info" @click="next">提交</van-button>
   </div>
 </template>
 
@@ -26,14 +25,17 @@ export default {
       uploadBase64_url:
         "https://admin.okginko.com/ginkgo-admin/sys/oss/uploadBase64",
       fileArr: [],
-      token: ""
+      token: "",
+      push_id: ""
     };
   },
   mounted() {
     this.fileArr = [];
     let token = sessionStorage.getItem("token");
+    let push_id = sessionStorage.getItem("push_id");
     this.token = token;
-    if (!token || token == undefined) {
+    this.push_id = push_id;
+    if (!token) {
       // let href = window.location.href
       let href =
         "https://www.okginko.com/index.html?token=ouYrs1Y3ri3ke2Wyk-7Q7njCAE4o&push_id=2";
@@ -41,6 +43,7 @@ export default {
       this.push_id = getStrParam(href, "push_id");
       count(this.push_id, this.token);
       sessionStorage.setItem("token", this.token);
+      sessionStorage.setItem("push_id", this.push_id);
     }
   },
   methods: {
@@ -58,6 +61,7 @@ export default {
             if (res.data.code === 0) {
               this.fileArr = [];
               this.textarea = "";
+              this.$router.push("/WechatCode")
             }
           });
       } else {

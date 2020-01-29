@@ -33,4 +33,15 @@ function queryUserInfo(token,type,router){ // 首次进入页面，查询是否�
         console.log(err)
     })
 }
-export { count, getStrParam, queryUserInfo }
+// 解析富文本使用
+function showHtml(str) {
+    return str
+    .replace(str ? /&(?!#?\w+;)/g : /&/g, '&amp;')
+    .replace(/nbsp;/g,"")
+    .replace(/&lt;/g,"<")
+    .replace(/&gt;/g,">")
+    .replace(/&quot;/g,"\"")
+    .replace(/&#39;/g, "\'")
+    .replace(/&amp;/g,"&")
+}
+export { count, getStrParam, queryUserInfo, showHtml }

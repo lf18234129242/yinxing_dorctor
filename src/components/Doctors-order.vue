@@ -1,120 +1,112 @@
 <template>
   <div class="Doctors-order">
     <div class="title_box">
-      <p class="warn">{{doctor_warn}}</p>
-      <img class="doctor" src="./../assets/img/doctor.png" alt />
+      <p class="warn">{{doctorOrderList[0].text1}}</p>
+      <img class="doctor" :src="doctorOrderList[0].avatar_url" alt />
     </div>
     <section>
-      <div id="leidatu"></div>
-      <div class="warn_title">
-        <p>12月01日 您的健康指数偏低</p>
-        <h3>点击提升 > </h3>
+      <div class="score_box">
+        <img class="step" src="@/assets/img/step.png" alt="">
+        <p>健康进度 {{ill_score}}%</p>
+        <img 
+          v-for="(item, index) in firstCount" 
+          :key="index" 
+          :style="{left: (2.5 + item * 0.5) + 'rem'}"
+          src="@/assets/img/step-green-2.png"
+          class="green_2"
+        >
+        <img 
+          v-for="(item, index) in secondCount" 
+          :key="index" 
+          src="@/assets/img/step-green-1.png" 
+          class="green_1"
+          :style="{left: (secondScore + item * 0.5) + 'rem'}"
+        >
       </div>
-      <p class="content">· 小结节是影像学的一种表现，小于6MM一般以随访，生活调理为主。</p>
-      <p class="content">· 距离你上次体检已过去1年，研究表明，定期体检有助于减少大病晚期风险。</p>
-      <p class="content">· 冬季进补：多吃这几类蔬果，有助于养肺</p>
-      <a class="a_href" href="">瓜果蔬菜，秋梨膏></a>
-      <p class="content">· 社保保险比例50%，已被97家保险公司除外保险，看看还有哪一种保险可以购买。</p>
-      <a class="a_href" href="">你也可以点这里详细看看你的保险情况></a>
-      <p class="content">· 多做这几种动作，有助于提高肺功能</p>                
-      <a class="a_href" href="">有关疾病的详细原理，你可以点击这里></a>
+      <div class="zindex_0" v-if="pushType !== 4">
+        <div v-for="(item, index) in doctorOrderList" :key="index">
+          <div v-html="item.content"></div>
+        </div>
+      </div>
+      <div class="zindex_0" v-else>
+        <div v-html="doctorOrderList[0].content1"></div>
+        <a target="_blank" :href="doctorOrderList[0].content1_link">
+          <img class="detail_img" src="@/assets/img/detail-1.png" alt="">
+        </a>
+        <div v-html="doctorOrderList[0].content2"></div>
+        <a target="_blank" :href="doctorOrderList[0].content2_link">
+          <img class="detail_img" src="@/assets/img/detail-2.png" alt="">
+        </a>
+        <div v-html="doctorOrderList[0].content3"></div>
+        <a target="_blank" :href="doctorOrderList[0].content3_link">
+          <img class="detail_img" src="@/assets/img/detail-3.png" alt="">
+        </a>
+        <div v-html="doctorOrderList[0].content4"></div>
+        <a target="_blank" :href="doctorOrderList[0].content4_link">
+          <img class="detail_img" src="@/assets/img/detail-4.png" alt="">
+        </a>
+      </div>
     </section>
     <footer>
-      <img src="./../assets/img/bottom.png" class="bottom" alt />
+      <img src="@/assets/img/bottom.png" class="bottom" alt />
       <p>如果觉得情况不符合，可以进行调整或给我留言</p>
-      <p class="doctor_name">胡洋</p>
+      <img class="signature_url" v-if="doctorOrderList[0].signature_url" :src="doctorOrderList[0].signature_url" alt="">
+      <p v-else class="doctor_name">{{doctorOrderList[0].doctorName}}</p>
     </footer>
   </div>
 </template>
 <script>
 import url from "./../apiconfig";
-import { count, getStrParam, queryUserInfo } from "./../count";
+import { count, getStrParam, queryUserInfo, showHtml } from "./../count";
 import echarts from "echarts";
 export default {
+  name: 'DoctorsOrder',
   data() {
     return {
-      doctor_warn:
-        "张先生，离开我的诊室40天了根据临床数据，目前您的病情可以按照这个报告进行康复。"
+      doctorOrderList: [],
+      pushType: '',
+      push_id: '',
+      token: '',
+      ill_score: 0,
+      firstCount: 0,
+      secondCount: 0,
+      secondScore: 0,
     };
   },
   mounted() {
-    this.$nextTick(function() {
-      this.drawPie("main");
-    });
     // let href = window.location.href
-    let href = "https://www.okginko.com/index.html?token=ouYrs1YZ2D4DVAbxbmBCgjMUv72Y&push_id=2";
+    let href =
+      "https://www.okginko.com/index.html?token=ouYrs1Y3ri3ke2Wyk-7Q7njCAE4o&push_id=48&type=1";
     this.token = getStrParam(href, "token");
     this.push_id = getStrParam(href, "push_id");
-    this.getDoctorOrder();
-    // count(this.push_id, this.token);
+    this.type = getStrParam(href, "type");
+    count(this.push_id, this.token);
     sessionStorage.setItem("token", this.token);
-    // queryUserInfo(this.token, 2, "/RegisterPatient");
+    this.getDoctorOrder()
+    this.computeScore()
   },
   methods: {
-    drawPie() {
-      var charts = echarts.init(document.getElementById("leidatu"));
-      var option = {
-        tooltip: {},
-        title: { text: null }, // 隐藏图表标题
-        radar: {
-          shape: "circle",
-          name: {
-            textStyle: {
-              color: "#333",
-              padding: [-8, 5]
-            }
-          },
-          indicator: [
-            { name: "疾病治疗", max: 6500 },
-            { name: "知识掌握", max: 16000 },
-            { name: "大病筛查", max: 30000 },
-            { name: "生活习惯", max: 38000 },
-            { name: "经济预防", max: 52000 }
-          ]
-        },
-        splitArea: {
-          show: true,
-          areaStyle: {
-            color: ["#fff"] // 图表背景网格的颜色
-          }
-        },
-        series: [
-          {
-            type: "radar",
-            // areaStyle: {normal: {}},
-            data: [
-              {
-                value: [4300, 10000, 28000, 35000, 50000, 19000],
-                // 设置区域边框和区域的颜色
-                itemStyle: {
-                  normal: {
-                    color: "#FF7676",
-                    lineStyle: {
-                      color: "#FF7676"
-                    }
-                  }
-                },
-                areaStyle: {
-                  opacity: 0.75, // 图表中各个图区域的透明度
-                  color: "#FF7676" // 图表中各个图区域的颜色
-                }
-              }
-            ]
-          }
-        ]
-      };
-      charts.setOption(option);
+    computeScore() {
+      let count = 18
+      this.firstCount = Math.round(count * this.ill_score / 100)
+      this.secondCount = count - this.firstCount
+      this.secondScore = this.firstCount * 0.5 + 2.5
     },
     getDoctorOrder () {
       this.axios
         .post(url.doctorsOrder, {
           token: this.token,
-          type: 1,
-          pushId: 46
+          type: this.type,
+          pushId: this.push_id
         })
         .then(res => {
           console.log('getDoctorOrder', res)
           if (res.data.code === 0) {
+            let item = res.data.data[0]
+            this.ill_score = item.illness_score
+            this.doctorOrderList = JSON.parse(showHtml(JSON.stringify(res.data.data)))
+            this.pushType = res.data.pushType
+            console.log(this.doctorOrderList)
           }
         })
         .catch(err => {});
@@ -131,7 +123,7 @@ export default {
   box-sizing: border-box;
   background: linear-gradient(#35af4d, #16a332);
   position: relative;
-  z-index: -2;
+  z-index: 0;
   overflow: hidden;
   &::before {
     width: 17rem;
@@ -174,7 +166,7 @@ export default {
     .warn {
       font-size: 0.48rem;
       color: #e1fce7;
-      width: 6.28rem;
+      width: 8rem;
       font-weight: 400;
       line-height: 0.8rem;
     }
@@ -191,9 +183,39 @@ export default {
     margin-top: 0.8rem;
     padding: 0.8rem 0.8rem 7.5rem;
     box-sizing: border-box;
-    #leidatu {
-      width: 100%;
-      height: 6.4rem;
+    .zindex_0{
+      z-index: 2;
+    }
+    .detail_img{
+      width: 12.2rem;
+      height: 4rem;
+      border-radius: .2rem;
+      display: block;
+      margin: .6rem 0;
+    }
+    .score_box{
+      width: 12.6rem;
+      height: 2.52rem;
+      margin-bottom: .74rem;
+      position: relative;
+      .step{
+        width: 100%;
+        height: 100%;
+      }
+      p{
+        font-size: .6rem;
+        color: #1FA63A;
+        font-weight: bold;
+        position: absolute;
+        left: 3.64rem;
+        top: .2rem;
+      }
+      .green_1,.green_2{
+        width: .78rem;
+        height: .84rem;
+        position: absolute;
+        top: 1.16rem;
+      }
     }
     .warn_title{
       width:13.8rem;
@@ -245,10 +267,17 @@ export default {
       top: 0.6rem;
       z-index: 2;
     }
+    .signature_url{
+      width: 3.6rem;
+      height: auto;
+      z-index: 2;
+      position: absolute;
+      right: 0.5rem;
+    }
     p {
       font-size: 0.6rem;
       color: #fefefe;
-      width: 9.56rem;
+      width: 9.3rem;
       line-height: 0.96rem;
       z-index: 3;
       position: absolute;

@@ -1,11 +1,8 @@
 <template>
   <div class="doctorsDetails">
     <header>
-      <h1>
-        缺血性
-        <br />视神经病变
-      </h1>
-      <img src="./../assets/img/detail.png" alt />
+      <h1>{{vanTabs[0].illness_name}}</h1>
+      <img src="@/assets/img/detail.png" alt />
     </header>
     <section>
       <van-tabs v-model="active" animated>
@@ -14,8 +11,7 @@
           :key="index"
           :title="item.module_name"
           v-html="item.content"
-        >
-        </van-tab>
+        ></van-tab>
       </van-tabs>
     </section>
   </div>
@@ -23,7 +19,7 @@
 
 <script>
 import url from "./../apiconfig";
-import { count, getStrParam, queryUserInfo } from "./../count";
+import { count, getStrParam, queryUserInfo, showHtml } from "./../count";
 export default {
   name: "doctorsDetails",
   data() {
@@ -31,42 +27,43 @@ export default {
       active: 0,
       vanTabs: [],
       token: '',
+      illnessId: '',
+      type: '',
     };
   },
   mounted() {
+    this.token = sessionStorage.getItem("token");
     // let href = window.location.href
-    let href = "https://www.okginko.com/index.html?token=ouYrs1Y3ri3ke2Wyk-7Q7njCAE4o&push_id=2";
-    this.token = getStrParam(href, "token");
-    this.push_id = getStrParam(href, "push_id");
+    let href = "https://www.okginko.com/DoctorsDetails.html?illnessId=2&type=8";
+    this.illnessId = getStrParam(href, "illnessId");
+    this.type = getStrParam(href, "type");
     this.getTheoryInfo();
-    // count(this.push_id, this.token);
-    sessionStorage.setItem("token", this.token);
-    // queryUserInfo(this.token, 2, "/RegisterPatient");
+    switch(this.type) {
+      case '8':
+        this.active = 2
+        break
+      case '10':
+        this.active = 3
+        break
+      case '11':
+        this.active = 0
+        break
+      case '12':
+        this.active = 1
+        break
+      
+    }
   },
   methods: {
-    showHtml(str) {
-      return str
-      .replace(str ? /&(?!#?\w+;)/g : /&/g, '&amp;')
-      .replace(/&amp;nbsp;/g,"")
-      .replace(/&lt;/g,"<")
-      .replace(/&gt;/g,">")
-      .replace(/&quot;/g,"\"")
-      .replace(/&#39;/g, "\'")
-    },
     getTheoryInfo() {
       this.axios
         .post(url.theoryInfo, {
           token: this.token,
-          illnessId: 2
+          illnessId: this.illnessId
         })
         .then(res => {
-          console.log('getTheoryInfo', res)
           if (res.data.code === 0) {
-            // this.radioList = res.data.data;
-            // this.vanTabs = res.data.data
-            this.vanTabs = JSON.parse(this.showHtml(JSON.stringify(res.data.data)))
-            // this.vanTabs.replace(/&lt;/g, '<').replace(/&gt;/g, '>')
-            console.log(this.vanTabs)
+            this.vanTabs = JSON.parse(showHtml(JSON.stringify(res.data.data)))
           }
         })
         .catch(err => {});
@@ -76,6 +73,20 @@ export default {
 </script>
 
 <style lang="scss">
+.van-tab__pane, .van-tab__pane-wrapper {   
+  padding: 0 20px;
+  box-sizing: border-box;
+  background: #fff;
+  height: 75vh;
+  overflow: scroll;
+  img,video{
+    width: 100%;
+    height: auto;
+    margin: 20px auto;
+    display: block;
+    border-radius: 10px;
+  }
+}
 header {
   margin: 0.6rem;
   width: 13.8rem;
@@ -123,8 +134,12 @@ header {
   h1 {
     font-size: 1.2rem;
     color: #dbfbe1;
-    line-height: 1.6rem;
     font-weight: 600;
+    width: 7.44rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   img {
     width: 3.3rem;
