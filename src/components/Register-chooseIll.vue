@@ -1,8 +1,8 @@
 <template>
   <div class="hello">
-    <div class="search-box">
+    <!-- <div class="search-box">
       <input class="search" type="text" v-model="search_data" placeholder="输入疾病名称或编码" />
-    </div>
+    </div> -->
 
     <van-radio-group v-model="radio">
       <van-cell-group>
@@ -36,8 +36,8 @@ export default {
     };
   },
   mounted() {
-    // let href = window.location.href
-    let href = "https://www.okginko.com/index.html?token=ouYrs1Y3ri3ke2Wyk-7Q7njCAE4o&push_id=2";
+    let href = window.location.href
+    // let href = "https://www.okginko.com/index.html?token=ouYrs1Y3ri3ke2Wyk-7Q7njCAE4o&push_id=2";
     this.token = getStrParam(href, "token");
     this.push_id = getStrParam(href, "push_id");
     this.getIllList();
@@ -66,6 +66,8 @@ export default {
         .then(res => {
           if (res.data.code === 0) {
             this.radioList = res.data.data;
+          } else {
+            this.$toast(res.data.msg)
           }
         })
         .catch(err => {});
@@ -79,6 +81,8 @@ export default {
         .then(res => {
           if (res.data.code === 0) {
             this.$router.push("/RegisterPatient");
+          } else {
+            this.$toast(res.data.msg)
           }
         });
     }

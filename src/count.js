@@ -44,4 +44,6 @@ function showHtml(str) {
     .replace(/&#39;/g, "\'")
     .replace(/&amp;/g,"&")
 }
-export { count, getStrParam, queryUserInfo, showHtml }
+const uploadBase64_url = "https://admin.okginko.com/ginkgo-admin/sys/oss/uploadBase64"
+
+export { count, getStrParam, queryUserInfo, showHtml, uploadBase64_url }

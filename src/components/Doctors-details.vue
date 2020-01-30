@@ -19,7 +19,7 @@
 
 <script>
 import url from "./../apiconfig";
-import { count, getStrParam, queryUserInfo, showHtml } from "./../count";
+import { count, getStrParam, showHtml } from "./../count";
 export default {
   name: "doctorsDetails",
   data() {
@@ -33,8 +33,8 @@ export default {
   },
   mounted() {
     this.token = sessionStorage.getItem("token");
-    // let href = window.location.href
-    let href = "https://www.okginko.com/DoctorsDetails.html?illnessId=2&type=8";
+    let href = window.location.href
+    // let href = "https://www.okginko.com/DoctorsDetails.html?illnessId=2&type=8";
     this.illnessId = getStrParam(href, "illnessId");
     this.type = getStrParam(href, "type");
     this.getTheoryInfo();
@@ -64,6 +64,8 @@ export default {
         .then(res => {
           if (res.data.code === 0) {
             this.vanTabs = JSON.parse(showHtml(JSON.stringify(res.data.data)))
+          } else {
+            this.$toast(res.data.msg)
           }
         })
         .catch(err => {});

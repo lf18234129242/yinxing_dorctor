@@ -57,7 +57,7 @@
 </template>
 <script>
 import url from "./../apiconfig";
-import { count, getStrParam, queryUserInfo, showHtml } from "./../count";
+import { count, getStrParam, showHtml } from "./../count";
 import echarts from "echarts";
 export default {
   name: 'DoctorsOrder',
@@ -67,6 +67,7 @@ export default {
       pushType: '',
       push_id: '',
       token: '',
+      type: '',
       ill_score: 0,
       firstCount: 0,
       secondCount: 0,
@@ -74,9 +75,8 @@ export default {
     };
   },
   mounted() {
-    // let href = window.location.href
-    let href =
-      "https://www.okginko.com/index.html?token=ouYrs1Y3ri3ke2Wyk-7Q7njCAE4o&push_id=48&type=1";
+    let href = window.location.href
+    // let href = "https://www.okginko.com/index.html?token=ouYrs1Y3ri3ke2Wyk-7Q7njCAE4o&push_id=48&type=1";
     this.token = getStrParam(href, "token");
     this.push_id = getStrParam(href, "push_id");
     this.type = getStrParam(href, "type");
@@ -100,13 +100,13 @@ export default {
           pushId: this.push_id
         })
         .then(res => {
-          console.log('getDoctorOrder', res)
           if (res.data.code === 0) {
             let item = res.data.data[0]
             this.ill_score = item.illness_score
             this.doctorOrderList = JSON.parse(showHtml(JSON.stringify(res.data.data)))
             this.pushType = res.data.pushType
-            console.log(this.doctorOrderList)
+          } else {
+            this.$toast(res.data.msg)
           }
         })
         .catch(err => {});

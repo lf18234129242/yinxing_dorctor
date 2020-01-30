@@ -16,14 +16,12 @@
 <script>
 import url from "./../apiconfig";
 import { Toast } from 'vant';
-import { count, getStrParam, queryUserInfo } from "./../count";
+import { count, getStrParam, uploadBase64_url } from "./../count";
 export default {
   data() {
     return {
       textarea: "",
       fileList: [],
-      uploadBase64_url:
-        "https://admin.okginko.com/ginkgo-admin/sys/oss/uploadBase64",
       fileArr: [],
       token: "",
       push_id: ""
@@ -36,9 +34,8 @@ export default {
     this.token = token;
     this.push_id = push_id;
     if (!token) {
-      // let href = window.location.href
-      let href =
-        "https://www.okginko.com/index.html?token=ouYrs1Y3ri3ke2Wyk-7Q7njCAE4o&push_id=2";
+      let href = window.location.href
+      // let href = "https://www.okginko.com/index.html?token=ouYrs1Y3ri3ke2Wyk-7Q7njCAE4o&push_id=2";
       this.token = getStrParam(href, "token");
       this.push_id = getStrParam(href, "push_id");
       count(this.push_id, this.token);
@@ -57,11 +54,12 @@ export default {
             token: this.token
           })
           .then(res => {
-            console.log(res);
             if (res.data.code === 0) {
               this.fileArr = [];
               this.textarea = "";
               this.$router.push("/WechatCode")
+            } else {
+              this.$toast(res.data.msg)
             }
           });
       } else {
@@ -76,13 +74,15 @@ export default {
         forbidClick: true
       })
       this.axios
-        .post(this.uploadBase64_url, {
+        .post(uploadBase64_url, {
           base64: file.content
         })
         .then(res => {
           this.$toast.success("上传成功");
           if (res.data.code === 0) {
             this.fileArr.push(res.data.url);
+          } else {
+            this.$toast(res.data.msg)
           }
         });
     },
