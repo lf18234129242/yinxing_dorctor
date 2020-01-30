@@ -69,7 +69,7 @@ export default {
         })
         .then(res => {
           if (res.data.code === 0) {
-            this.$router.push("/RegisterSubmitPicture");
+            this.$router.push("/RegisterPatient");
           } else {
             this.$toast(res.data.msg)
           }

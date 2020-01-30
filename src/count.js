@@ -6,10 +6,6 @@ function count(id, token) {
     axios.post(url.userpush_save, {
         token: token,
         pushId: id
-    }).then(res => {
-        console.log(res)
-    }).catch(err => {
-        console.log(err)
     })
 }
 function getStrParam(href, name) {
@@ -19,19 +15,6 @@ function getStrParam(href, name) {
     var r = str.match(reg);
     if (r != null) return r[2];
     return "";
-}
-function queryUserInfo(token,type,router){ // 首次进入页面，查询是否有记录
-    axios.post(url.query_user_info, {
-        token: token,
-        type: type
-    }).then(res => {
-        console.log(res)
-        if(res.data.userStatus === 2){
-            router.push(router)
-        }
-    }).catch(err => {
-        console.log(err)
-    })
 }
 // 解析富文本使用
 function showHtml(str) {

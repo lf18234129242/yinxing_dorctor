@@ -37,13 +37,13 @@ export default {
   },
   mounted() {
     let href = window.location.href
-    // let href = "https://www.okginko.com/index.html?token=ouYrs1Y3ri3ke2Wyk-7Q7njCAE4o&push_id=2";
+    // let href = "https://admin.okginko.com/ginkgo-admin/wx/api/wxRoute?token=ouYrs1YZ2D4DVAbxbmBCgjMUv72Y&push_id=57";
     this.token = getStrParam(href, "token");
     this.push_id = getStrParam(href, "push_id");
-    this.getIllList();
     count(this.push_id, this.token);
     sessionStorage.setItem("token", this.token);
     sessionStorage.setItem("push_id", this.push_id);
+    this.getIllList();
   },
   computed: {
     newRadioList() {
@@ -80,7 +80,7 @@ export default {
         })
         .then(res => {
           if (res.data.code === 0) {
-            this.$router.push("/RegisterPatient");
+            this.$router.push("/RegisterChooseIllStep");
           } else {
             this.$toast(res.data.msg)
           }

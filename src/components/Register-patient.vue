@@ -7,11 +7,11 @@
     </div>
     <div class="cell-box select-arrow" @click="selectSex">
       <p>性别</p>
-      <input type="text" v-model="usersex" placeholder="点击选择" />
+      <input disabled type="text" v-model="usersex" placeholder="点击选择" />
     </div>
     <div class="cell-box select-arrow" @click="selectAge">
       <p>年龄</p>
-      <input type="text" v-model="userage" placeholder="点击选择" />
+      <input disabled type="text" v-model="userage" placeholder="点击选择" />
     </div>
 
     <!-- 选择性别弹出框 -->
@@ -174,6 +174,7 @@ export default {
       border: none;
       font-size: 0.52rem;
       padding: 0;
+      background: #fff;
     }
     p::after {
       content: "";

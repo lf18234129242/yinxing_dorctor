@@ -6,7 +6,7 @@
 
 <script>
 import url from "./../apiconfig";
-import { getStrParam } from "./../count";
+import { getStrParam, count } from "./../count";
 export default {
   data() {
     return {

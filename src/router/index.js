@@ -40,11 +40,21 @@ export default new Router({
       }
     },
     {
+      path: '/RegisterChooseIllStep',
+      name: 'RegisterChooseIllStep',
+      component: loadView('Register-chooseIllStep'),
+      meta:{
+        index:2,
+        auth:true,
+        title:'选择病程'
+      }
+    },
+    {
       path: '/RegisterPatient',
       name: 'RegisterPatient',
       component: loadView('Register-patient'),
       meta:{
-        index:2,
+        index:3,
         auth:true,
         title:'患者信息'
       }
@@ -54,19 +64,9 @@ export default new Router({
       name: 'RegisterBindPhoneNum',
       component: loadView('Register-bindPhoneNum'),
       meta:{
-        index:3,
-        auth:true,
-        title:'绑定手机号'
-      }
-    },
-    {
-      path: '/RegisterChooseIllStep',
-      name: 'RegisterChooseIllStep',
-      component: loadView('Register-chooseIllStep'),
-      meta:{
         index:4,
         auth:true,
-        title:'选择病程'
+        title:'绑定手机号'
       }
     },
     {
@@ -84,7 +84,7 @@ export default new Router({
       name: 'WechatCode',
       component: loadView('WechatCode'),
       meta:{
-        index:1,
+        index:6,
         auth:true,
         title:'二维码'
       }

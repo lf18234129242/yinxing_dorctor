@@ -64,7 +64,8 @@ export default {
         .then(res => {
           if (res.data.code === 0) {
             this.$router.push({
-              path: "/RegisterChooseIllStep"
+              path: "/WechatCode"
+              // path: "/RegisterSubmitPicture"
             });
           } else {
             this.$toast(res.data.msg)
@@ -140,7 +141,7 @@ export default {
     input {
       border: none;
       width: 9.8rem;
-      height: 0.6rem;
+      height: 1rem;
       font-size: 0.56rem;
     }
     .get-reg-num {

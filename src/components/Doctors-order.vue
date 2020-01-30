@@ -1,7 +1,7 @@
 <template>
   <div class="Doctors-order">
     <div class="title_box">
-      <p class="warn">{{doctorOrderList[0].text1}}</p>
+      <p class="warn">{{doctorOrderList[0].user_name ? doctorOrderList[0].user_name : '你好'}}，{{doctorOrderList[0].text1}}</p>
       <img class="doctor" :src="doctorOrderList[0].avatar_url" alt />
     </div>
     <section>
@@ -23,28 +23,39 @@
           :style="{left: (secondScore + item * 0.5) + 'rem'}"
         >
       </div>
-      <div class="zindex_0" v-if="pushType !== 4">
+      <div class="warn_date">
+        {{doctorOrderList[0].create_time | filterDate}} {{doctorOrderList[0].recovery}}
+      </div>
+      <div class="zindex_0 padding8" v-if="pushType !== 4">
         <div v-for="(item, index) in doctorOrderList" :key="index">
           <div v-html="item.content"></div>
         </div>
       </div>
       <div class="zindex_0" v-else>
-        <div v-html="doctorOrderList[0].content1"></div>
-        <a target="_blank" :href="doctorOrderList[0].content1_link">
-          <img class="detail_img" src="@/assets/img/detail-1.png" alt="">
-        </a>
-        <div v-html="doctorOrderList[0].content2"></div>
-        <a target="_blank" :href="doctorOrderList[0].content2_link">
-          <img class="detail_img" src="@/assets/img/detail-2.png" alt="">
-        </a>
-        <div v-html="doctorOrderList[0].content3"></div>
-        <a target="_blank" :href="doctorOrderList[0].content3_link">
-          <img class="detail_img" src="@/assets/img/detail-3.png" alt="">
-        </a>
-        <div v-html="doctorOrderList[0].content4"></div>
-        <a target="_blank" :href="doctorOrderList[0].content4_link">
-          <img class="detail_img" src="@/assets/img/detail-4.png" alt="">
-        </a>
+        <div class="padding8">
+          <div v-html="doctorOrderList[0].content1"></div>
+          <a :href="doctorOrderList[0].content1_link" v-if="doctorOrderList[0].content1_link">
+            <img class="detail_img" src="@/assets/img/detail-1.png" alt="">
+          </a>
+        </div>
+        <div class="padding8" style="background:#ECF5EE!important">
+          <div v-html="doctorOrderList[0].content2"></div>
+          <a :href="doctorOrderList[0].content2_link" v-if="doctorOrderList[0].content2_link">
+            <img class="detail_img" src="@/assets/img/detail-2.png" alt="">
+          </a>
+        </div>
+        <div class="padding8">
+          <div v-html="doctorOrderList[0].content3"></div>
+          <a :href="doctorOrderList[0].content3_link" v-if="doctorOrderList[0].content3_link">
+            <img class="detail_img" src="@/assets/img/detail-3.png" alt="">
+          </a>
+        </div>
+        <div class="padding8" style="background:#ECF5EE!important">
+          <div v-html="doctorOrderList[0].content4"></div>
+          <a :href="doctorOrderList[0].content4_link" v-if="doctorOrderList[0].content4_link">
+            <img class="detail_img" src="@/assets/img/detail-4.png" alt="">
+          </a>
+        </div>
       </div>
     </section>
     <footer>
@@ -76,14 +87,18 @@ export default {
   },
   mounted() {
     let href = window.location.href
-    // let href = "https://www.okginko.com/index.html?token=ouYrs1Y3ri3ke2Wyk-7Q7njCAE4o&push_id=48&type=1";
+    // let href = "https://www.okginko.com/index.html?token=ouYrs1Y3ri3ke2Wyk-7Q7njCAE4o&push_id=64&type=1";
     this.token = getStrParam(href, "token");
     this.push_id = getStrParam(href, "push_id");
     this.type = getStrParam(href, "type");
-    count(this.push_id, this.token);
     sessionStorage.setItem("token", this.token);
+    count(this.push_id, this.token);
     this.getDoctorOrder()
-    this.computeScore()
+  },
+  filters: {
+    filterDate(val) {
+      return val.replace(/-/g, '月') + '日'
+    }
   },
   methods: {
     computeScore() {
@@ -105,6 +120,7 @@ export default {
             this.ill_score = item.illness_score
             this.doctorOrderList = JSON.parse(showHtml(JSON.stringify(res.data.data)))
             this.pushType = res.data.pushType
+            this.computeScore()
           } else {
             this.$toast(res.data.msg)
           }
@@ -181,8 +197,12 @@ export default {
     background: #fff;
     border-radius: 0.4rem;
     margin-top: 0.8rem;
-    padding: 0.8rem 0.8rem 7.5rem;
+    padding: 0.8rem 0 7.5rem;
     box-sizing: border-box;
+    .padding8{
+      padding: 0.8rem;
+      box-sizing: border-box;
+    }
     .zindex_0{
       z-index: 2;
     }
@@ -191,12 +211,12 @@ export default {
       height: 4rem;
       border-radius: .2rem;
       display: block;
-      margin: .6rem 0;
+      margin: .6rem 0 0 0;
     }
     .score_box{
       width: 12.6rem;
       height: 2.52rem;
-      margin-bottom: .74rem;
+      margin: 0 .8rem .74rem;
       position: relative;
       .step{
         width: 100%;
@@ -216,6 +236,17 @@ export default {
         position: absolute;
         top: 1.16rem;
       }
+    }
+    .warn_date{
+      width: 13.8rem;
+      height: 1.76rem;
+      background: #ECF5EE;
+      display: flex;
+      align-items: center;
+      font-size: .6rem;
+      color: #010101;
+      padding: 0 .78rem;
+      box-sizing: border-box;
     }
     .warn_title{
       width:13.8rem;
@@ -254,7 +285,7 @@ export default {
   footer {
     width: 100%;
     height: 6.68rem;
-    position: fixed;
+    position: absolute;
     left: 0;
     bottom: 0;
     padding: 2.4rem 1.2rem 0;
