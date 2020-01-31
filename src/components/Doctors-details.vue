@@ -31,12 +31,10 @@ export default {
       type: '',
     };
   },
-  mounted() {
-    let href = window.location.href
-    // let href = "https://www.okginko.com/DoctorsDetails.html?illnessId=2&type=8&token=ouYrs1Y3ri3ke2Wyk-7Q7njCAE4o";
-    this.illnessId = getStrParam(href, "illnessId");
-    this.type = getStrParam(href, "type");
-    this.token = getStrParam(href, "token");
+  activated() {
+    this.token = sessionStorage.getItem("token");
+    this.illnessId = this.$route.query.illnessId
+    this.type = this.$route.query.type
     this.getTheoryInfo();
     switch(this.type) {
       case '8':
@@ -51,7 +49,6 @@ export default {
       case '12':
         this.active = 1
         break
-      
     }
   },
   methods: {

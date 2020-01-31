@@ -34,35 +34,36 @@
       <div class="zindex_0" v-else>
         <div class="padding8">
           <div v-html="doctorOrderList[0].content1"></div>
-          <a :href="doctorOrderList[0].content1_link" v-if="doctorOrderList[0].content1_link">
+          <router-link :to="{path:'/DoctorsDetails', query:{illnessId: illnessId, type: type_1}}"  v-if="doctorOrderList[0].content1_link">
             <img class="detail_img" src="@/assets/img/detail-1.png" alt="">
-          </a>
+          </router-link>
         </div>
         <div class="padding8" style="background:#ECF5EE!important">
           <div v-html="doctorOrderList[0].content2"></div>
-          <a :href="doctorOrderList[0].content2_link" v-if="doctorOrderList[0].content2_link">
+          <router-link :to="{path:'/DoctorsDetails', query:{illnessId: illnessId, type: type_2}}"  v-if="doctorOrderList[0].content2_link">
             <img class="detail_img" src="@/assets/img/detail-2.png" alt="">
-          </a>
+          </router-link>
         </div>
         <div class="padding8">
           <div v-html="doctorOrderList[0].content3"></div>
-          <a :href="doctorOrderList[0].content3_link" v-if="doctorOrderList[0].content3_link">
+          <router-link :to="{path:'/DoctorsDetails', query:{illnessId: illnessId, type: type_3}}"  v-if="doctorOrderList[0].content3_link">
             <img class="detail_img" src="@/assets/img/detail-3.png" alt="">
-          </a>
+          </router-link>
         </div>
         <div class="padding8" style="background:#ECF5EE!important">
           <div v-html="doctorOrderList[0].content4"></div>
-          <a :href="doctorOrderList[0].content4_link" v-if="doctorOrderList[0].content4_link">
+          <router-link :to="{path:'/DoctorsDetails', query:{illnessId: illnessId, type: type_4}}"  v-if="doctorOrderList[0].content4_link">
             <img class="detail_img" src="@/assets/img/detail-4.png" alt="">
-          </a>
+          </router-link>
         </div>
       </div>
     </section>
     <footer>
       <img src="@/assets/img/bottom.png" class="bottom" alt />
       <p>如果觉得情况不符合，可以进行调整或给我留言</p>
-      <img class="signature_url" v-if="doctorOrderList[0].signature_url" :src="doctorOrderList[0].signature_url" alt="">
-      <p v-else class="doctor_name">{{doctorOrderList[0].doctorName}}</p>
+      <!-- <img class="signature_url" v-if="doctorOrderList[0].signature_url" :src="doctorOrderList[0].signature_url" alt="">
+      <p v-else class="doctor_name">{{doctorOrderList[0].doctorName}}</p> -->
+      <p class="doctor_name">{{doctorOrderList[0].doctorName}}</p>
     </footer>
   </div>
 </template>
@@ -83,6 +84,11 @@ export default {
       firstCount: 0,
       secondCount: 0,
       secondScore: 0,
+      illnessId: 0,
+      type_1: 0,
+      type_2: 0,
+      type_3: 0,
+      type_4: 0,
     };
   },
   mounted() {
@@ -92,6 +98,8 @@ export default {
     this.push_id = getStrParam(href, "push_id");
     this.type = getStrParam(href, "type");
     sessionStorage.setItem("token", this.token);
+    sessionStorage.setItem("push_id", this.push_id);
+    sessionStorage.setItem("type", this.type);
     count(this.push_id, this.token);
     this.getDoctorOrder()
   },
@@ -121,6 +129,13 @@ export default {
             this.doctorOrderList = JSON.parse(showHtml(JSON.stringify(res.data.data)))
             this.pushType = res.data.pushType
             this.computeScore()
+            if (res.data.pushType === 4) {
+              this.illnessId = getStrParam((item.content1_link).replace(/amp;/, ''), 'illnessId')
+              this.type_1 = getStrParam((item.content1_link).replace(/amp;/, ''), 'type')
+              this.type_2 = getStrParam((item.content2_link).replace(/amp;/, ''), 'type')
+              this.type_3 = getStrParam((item.content3_link).replace(/amp;/, ''), 'type')
+              this.type_4 = getStrParam((item.content4_link).replace(/amp;/, ''), 'type')
+            }
           } else {
             this.$toast(res.data.msg)
           }
