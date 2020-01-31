@@ -130,7 +130,15 @@ export default {
             this.pushType = res.data.pushType
             this.computeScore()
             if (res.data.pushType === 4) {
-              this.illnessId = getStrParam((item.content1_link).replace(/amp;/, ''), 'illnessId')
+              if (item.content1_link) {
+                this.illnessId = getStrParam((item.content1_link).replace(/amp;/, ''), 'illnessId')
+              } else if (item.content2_link) {
+                this.illnessId = getStrParam((item.content2_link).replace(/amp;/, ''), 'illnessId')
+              } else if (item.content3_link) {
+                this.illnessId = getStrParam((item.content3_link).replace(/amp;/, ''), 'illnessId')
+              } else if (item.content4_link) {
+                this.illnessId = getStrParam((item.content4_link).replace(/amp;/, ''), 'illnessId')
+              }
               this.type_1 = getStrParam((item.content1_link).replace(/amp;/, ''), 'type')
               this.type_2 = getStrParam((item.content2_link).replace(/amp;/, ''), 'type')
               this.type_3 = getStrParam((item.content3_link).replace(/amp;/, ''), 'type')
