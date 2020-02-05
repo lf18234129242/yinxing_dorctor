@@ -38,16 +38,16 @@ export default {
     this.getTheoryInfo();
     switch(this.type) {
       case '8':
-        this.active = 2
-        break
-      case '10':
-        this.active = 3
-        break
-      case '11':
         this.active = 0
         break
-      case '12':
+      case '10':
         this.active = 1
+        break
+      case '11':
+        this.active = 2
+        break
+      case '12':
+        this.active = 3
         break
     }
   },

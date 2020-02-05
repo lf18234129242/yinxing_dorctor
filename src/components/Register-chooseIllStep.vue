@@ -69,7 +69,8 @@ export default {
         })
         .then(res => {
           if (res.data.code === 0) {
-            this.$router.push("/RegisterPatient");
+            this.$router.push("/WechatCode");
+            // this.$router.push("/RegisterPatient");
           } else {
             this.$toast(res.data.msg)
           }

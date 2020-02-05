@@ -51,8 +51,8 @@ export default {
 
 <style lang="scss" scoped>
 img{
-	width:10rem;
-	height: 10rem;
+	width: 10rem;
+	height: auto;
 	display: block;
 	margin: 50px auto;
 }
