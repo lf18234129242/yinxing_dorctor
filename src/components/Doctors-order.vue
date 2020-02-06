@@ -132,17 +132,20 @@ export default {
             if (res.data.pushType === 4) {
               if (item.content1_link) {
                 this.illnessId = getStrParam((item.content1_link).replace(/amp;/, ''), 'illnessId')
-              } else if (item.content2_link) {
-                this.illnessId = getStrParam((item.content2_link).replace(/amp;/, ''), 'illnessId')
-              } else if (item.content3_link) {
-                this.illnessId = getStrParam((item.content3_link).replace(/amp;/, ''), 'illnessId')
-              } else if (item.content4_link) {
-                this.illnessId = getStrParam((item.content4_link).replace(/amp;/, ''), 'illnessId')
+                this.type_1 = getStrParam((item.content1_link).replace(/amp;/, ''), 'type')
               }
-              this.type_1 = getStrParam((item.content1_link).replace(/amp;/, ''), 'type')
-              this.type_2 = getStrParam((item.content2_link).replace(/amp;/, ''), 'type')
-              this.type_3 = getStrParam((item.content3_link).replace(/amp;/, ''), 'type')
-              this.type_4 = getStrParam((item.content4_link).replace(/amp;/, ''), 'type')
+              if (item.content2_link) {
+                this.illnessId = getStrParam((item.content2_link).replace(/amp;/, ''), 'illnessId')
+                this.type_2 = getStrParam((item.content2_link).replace(/amp;/, ''), 'type')
+              }
+              if (item.content3_link) {
+                this.illnessId = getStrParam((item.content3_link).replace(/amp;/, ''), 'illnessId')
+                this.type_3 = getStrParam((item.content3_link).replace(/amp;/, ''), 'type')
+              }
+              if (item.content4_link) {
+                this.illnessId = getStrParam((item.content4_link).replace(/amp;/, ''), 'illnessId')
+                this.type_4 = getStrParam((item.content4_link).replace(/amp;/, ''), 'type')
+              }
             }
           } else {
             this.$toast(res.data.msg)

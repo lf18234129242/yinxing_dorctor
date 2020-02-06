@@ -14,7 +14,7 @@ export default new Router({
       name: 'DoctorsDetails',
       component: loadView('Doctors-details'),
       meta:{
-        index:1,
+        index:2,
         auth:true,
         title:'疾病详情'
       }
