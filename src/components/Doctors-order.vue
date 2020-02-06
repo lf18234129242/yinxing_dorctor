@@ -35,25 +35,37 @@
         <div class="padding8">
           <div v-html="doctorOrderList[0].content1"></div>
           <router-link :to="{path:'/DoctorsDetails', query:{illnessId: illnessId, type: type_1}}"  v-if="doctorOrderList[0].content1_link">
-            <img class="detail_img" src="@/assets/img/detail-1.png" alt="">
+            <img v-if="type_1 == 8" class="detail_img" src="@/assets/img/detail-1.png" alt="">
+            <img v-else-if="type_1 == 10" class="detail_img" src="@/assets/img/detail-3.png" alt="">
+            <img v-else-if="type_1 == 11" class="detail_img" src="@/assets/img/detail-2.png" alt="">
+            <img v-else-if="type_1 == 12" class="detail_img" src="@/assets/img/detail-4.png" alt="">
           </router-link>
         </div>
         <div class="padding8" style="background:#ECF5EE!important">
           <div v-html="doctorOrderList[0].content2"></div>
           <router-link :to="{path:'/DoctorsDetails', query:{illnessId: illnessId, type: type_2}}"  v-if="doctorOrderList[0].content2_link">
-            <img class="detail_img" src="@/assets/img/detail-2.png" alt="">
+            <img v-if="type_2 == 8" class="detail_img" src="@/assets/img/detail-1.png" alt="">
+            <img v-else-if="type_2 == 10" class="detail_img" src="@/assets/img/detail-3.png" alt="">
+            <img v-else-if="type_2 == 11" class="detail_img" src="@/assets/img/detail-2.png" alt="">
+            <img v-else-if="type_2 == 12" class="detail_img" src="@/assets/img/detail-4.png" alt="">
           </router-link>
         </div>
         <div class="padding8">
           <div v-html="doctorOrderList[0].content3"></div>
           <router-link :to="{path:'/DoctorsDetails', query:{illnessId: illnessId, type: type_3}}"  v-if="doctorOrderList[0].content3_link">
-            <img class="detail_img" src="@/assets/img/detail-3.png" alt="">
+            <img v-if="type_3 == 8" class="detail_img" src="@/assets/img/detail-1.png" alt="">
+            <img v-else-if="type_3 == 10" class="detail_img" src="@/assets/img/detail-3.png" alt="">
+            <img v-else-if="type_3 == 11" class="detail_img" src="@/assets/img/detail-2.png" alt="">
+            <img v-else-if="type_3 == 12" class="detail_img" src="@/assets/img/detail-4.png" alt="">
           </router-link>
         </div>
         <div class="padding8" style="background:#ECF5EE!important">
           <div v-html="doctorOrderList[0].content4"></div>
           <router-link :to="{path:'/DoctorsDetails', query:{illnessId: illnessId, type: type_4}}"  v-if="doctorOrderList[0].content4_link">
-            <img class="detail_img" src="@/assets/img/detail-4.png" alt="">
+            <img v-if="type_4 == 8" class="detail_img" src="@/assets/img/detail-1.png" alt="">
+            <img v-else-if="type_4 == 10" class="detail_img" src="@/assets/img/detail-3.png" alt="">
+            <img v-else-if="type_4 == 11" class="detail_img" src="@/assets/img/detail-2.png" alt="">
+            <img v-else-if="type_4 == 12" class="detail_img" src="@/assets/img/detail-4.png" alt="">
           </router-link>
         </div>
       </div>
