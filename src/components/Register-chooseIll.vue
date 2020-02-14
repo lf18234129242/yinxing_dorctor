@@ -29,7 +29,7 @@ export default {
   data() {
     return {
       search_data: "", //搜索内容
-      radio: 1,
+      radio: null,
       radioList: [],
       token: "",
       push_id: ""
@@ -73,6 +73,10 @@ export default {
         .catch(err => {});
     },
     submit() {
+      if (!this.radio) {
+        this.$toast('请选择疾病')
+        return false
+      }
       this.axios
         .post(url.illness_save, {
           illnessId: this.radio,

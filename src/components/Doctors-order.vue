@@ -169,6 +169,19 @@ export default {
 };
 </script>
 
+<style lang="scss">
+p{
+  a{
+    img {
+      width: 12.2rem;
+      height: auto;
+      border-radius: .2rem;
+      display: block;
+      margin: .6rem 0 0 0;
+    }
+  }
+}
+</style>
 <style lang="scss" scoped>
 .Doctors-order {
   width: 100%;
