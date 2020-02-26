@@ -1,6 +1,11 @@
 <template>
-  <div>
+  <div class="wechatCode">
+    <h1 v-if="flag == '1'">您的信息已经提交。</h1>
+    <h2>亲爱的{{userName}}，下面是我的公益服务群，欢迎您的加入。我会不定期做一些分享和科普。</h2>
+    <h3>————{{doctorName}}医生</h3>
     <img :src="doctorCode" />
+    <li>1. 长按中间的二维码</li>
+    <li>2. 前往图中的群聊</li>
   </div>
 </template>
 
@@ -13,6 +18,9 @@ export default {
       doctorCode: "",
       token: "",
       push_id: "",
+      doctorName: '',
+      userName: '',
+      flag: '',
     };
   },
   mounted() {
@@ -40,6 +48,9 @@ export default {
         .then(res => {
           if (res.data.code === 0) {
             this.doctorCode = res.data.groupCode
+            this.doctorName = res.data.doctorName
+            this.userName = res.data.userName
+            this.flag = res.data.flag
           } else {
             this.$toast(res.data.msg)
           }
@@ -50,10 +61,28 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.wechatCode{
+  padding: .6rem;
+  box-sizing: border-box;
+}
 img{
 	width: 10rem;
 	height: auto;
 	display: block;
-	margin: 50px auto;
+	margin: 20px auto;
+}
+h1,h2,h3,li{
+  width: 100%;
+  padding: 0 .4rem;
+  font-size: .28rem;
+  color: #252525;
+  line-height: .9rem;
+  box-sizing: border-box;
+}
+h1{
+  color: red;
+}
+h3{
+  text-align: right;
 }
 </style>

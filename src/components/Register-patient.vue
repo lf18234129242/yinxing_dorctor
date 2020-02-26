@@ -94,9 +94,10 @@ export default {
         })
         .then(res => {
           if (res.data.code === 0) {
-            this.$router.push({
-              path: "/RegisterBindPhoneNum"
-            });
+            this.$router.push("/WechatCode");
+            // this.$router.push({
+              // path: "/RegisterBindPhoneNum"
+            // });
           } else {
             this.$toast(res.data.msg)
           }
