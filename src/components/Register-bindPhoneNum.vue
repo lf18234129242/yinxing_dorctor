@@ -14,8 +14,8 @@
 </template>
 
 <script>
-import url from "./../apiconfig";
-import { count, getStrParam } from "./../count";
+import { yinxing } from "@/utils/http"
+import { count, getStrParam } from "@/utils/count";
 export default {
   data() {
     return {
@@ -56,21 +56,17 @@ export default {
       }
     },
     savePhoneNum() {
-      this.axios
-        .post(url.phone_save, {
-          phoneNumber: this.phone_num,
-          token: this.token
-        })
-        .then(res => {
-          if (res.data.code === 0) {
-            this.$router.push({
-              path: "/WechatCode"
-              // path: "/RegisterSubmitPicture"
-            });
-          } else {
-            this.$toast(res.data.msg)
-          }
-        });
+      yinxing.phoneSave({
+        phoneNumber: this.phone_num,
+        token: this.token
+      }).then(res => {
+        if (res.data.code === 0) {
+          this.$router.push({
+            path: "/WechatCode"
+            // path: "/RegisterSubmitPicture"
+          })
+        }
+      })
     },
     // 获取验证码
     getRegNum() {
@@ -101,15 +97,13 @@ export default {
       this.getPhoneCode();
     },
     getPhoneCode() {
-      this.axios
-        .post(url.phone_code, {
-          phoneNumber: this.phone_num,
-          token: this.token
-        })
-        .then(res => {
-          this.$toast("验证码发送成功");
-          this.phoneCode = res.data.code;
-        });
+      yinxing.getPhoneCode({
+        phoneNumber: this.phone_num,
+        token: this.token
+      }).then(res => {
+        this.$toast("验证码发送成功")
+        this.phoneCode = res.data.code
+      })
     }
   }
 };

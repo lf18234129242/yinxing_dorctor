@@ -20,8 +20,8 @@
 </template>
 
 <script>
-import url from "./../apiconfig";
-import { count, getStrParam } from "./../count";
+import { yinxing } from "@/utils/http"
+import { count, getStrParam } from "@/utils/count";
 export default {
   data() {
     return {
@@ -38,42 +38,32 @@ export default {
     this.push_id = push_id;
     if (!token) {
       let href = window.location.href
-      // let href = "https://www.okginko.com/index.html?token=ouYrs1Y3ri3ke2Wyk-7Q7njCAE4o&push_id=2";
+      // let href = "https://www.okginko.com/index.html?token=ouYrs1YZ2D4DVAbxbmBCgjMUv72Y&push_id=2";
       this.token = getStrParam(href, "token");
       this.push_id = getStrParam(href, "push_id");
       count(this.push_id, this.token);
       sessionStorage.setItem("token", this.token);
       sessionStorage.setItem("push_id", this.push_id);
     }
-    this.getIllStep();
+    this.getIllStep()
   },
   methods: {
     getIllStep() {
-      this.axios
-        .post(url.process_list, {
-          token: this.token
-        })
-        .then(res => {
-          if (res.data.code === 0) {
-            this.radioList = res.data.data;
-          } else {
-            this.$toast(res.data.msg)
-          }
-        })
+      yinxing.getProcessList({token: this.token}).then(res => {
+        if (res.data.code === 0) {
+          this.radioList = res.data.data;
+        }
+      })
     },
     next() {
-      this.axios
-        .post(url.process_save, {
-          token: this.token,
-          processId: this.radio
-        })
-        .then(res => {
-          if (res.data.code === 0) {
-            this.$router.push("/RegisterPatient");
-          } else {
-            this.$toast(res.data.msg)
-          }
-        })
+      yinxing.processSave({
+        token: this.token,
+        processId: this.radio
+      }).then(res => {
+        if (res.data.code === 0) {
+          this.$router.push("/RegisterPatient");
+        }
+      })
     }
   }
 };

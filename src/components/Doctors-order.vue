@@ -80,8 +80,8 @@
   </div>
 </template>
 <script>
-import url from "./../apiconfig";
-import { count, getStrParam, showHtml } from "./../count";
+import { yinxing } from "@/utils/http"
+import { count, getStrParam, showHtml } from "@/utils/count";
 import echarts from "echarts";
 export default {
   name: 'DoctorsOrder',
@@ -128,42 +128,37 @@ export default {
       this.secondScore = this.firstCount * 0.5 + 2.5
     },
     getDoctorOrder () {
-      this.axios
-        .post(url.doctorsOrder, {
-          token: this.token,
-          type: this.type,
-          pushId: this.push_id
-        })
-        .then(res => {
-          if (res.data.code === 0) {
-            let item = res.data.data[0]
-            this.ill_score = item.illness_score
-            this.doctorOrderList = JSON.parse(showHtml(JSON.stringify(res.data.data)))
-            this.pushType = res.data.pushType
-            this.computeScore()
-            if (res.data.pushType === 4) {
-              if (item.content1_link) {
-                this.illnessId = getStrParam((item.content1_link).replace(/amp;/, ''), 'illnessId')
-                this.type_1 = getStrParam((item.content1_link).replace(/amp;/, ''), 'type')
-              }
-              if (item.content2_link) {
-                this.illnessId = getStrParam((item.content2_link).replace(/amp;/, ''), 'illnessId')
-                this.type_2 = getStrParam((item.content2_link).replace(/amp;/, ''), 'type')
-              }
-              if (item.content3_link) {
-                this.illnessId = getStrParam((item.content3_link).replace(/amp;/, ''), 'illnessId')
-                this.type_3 = getStrParam((item.content3_link).replace(/amp;/, ''), 'type')
-              }
-              if (item.content4_link) {
-                this.illnessId = getStrParam((item.content4_link).replace(/amp;/, ''), 'illnessId')
-                this.type_4 = getStrParam((item.content4_link).replace(/amp;/, ''), 'type')
-              }
+      yinxing.doctorsOrder({
+        token: this.token,
+        type: this.type,
+        pushId: this.push_id
+      }).then(res => {
+        if (res.data.code === 0) {
+          let item = res.data.data[0]
+          this.ill_score = item.illness_score
+          this.doctorOrderList = JSON.parse(showHtml(JSON.stringify(res.data.data)))
+          this.pushType = res.data.pushType
+          this.computeScore()
+          if (res.data.pushType === 4) {
+            if (item.content1_link) {
+              this.illnessId = getStrParam((item.content1_link).replace(/amp;/, ''), 'illnessId')
+              this.type_1 = getStrParam((item.content1_link).replace(/amp;/, ''), 'type')
             }
-          } else {
-            this.$toast(res.data.msg)
+            if (item.content2_link) {
+              this.illnessId = getStrParam((item.content2_link).replace(/amp;/, ''), 'illnessId')
+              this.type_2 = getStrParam((item.content2_link).replace(/amp;/, ''), 'type')
+            }
+            if (item.content3_link) {
+              this.illnessId = getStrParam((item.content3_link).replace(/amp;/, ''), 'illnessId')
+              this.type_3 = getStrParam((item.content3_link).replace(/amp;/, ''), 'type')
+            }
+            if (item.content4_link) {
+              this.illnessId = getStrParam((item.content4_link).replace(/amp;/, ''), 'illnessId')
+              this.type_4 = getStrParam((item.content4_link).replace(/amp;/, ''), 'type')
+            }
           }
-        })
-        .catch(err => {});
+        }
+      })
     }
   }
 };

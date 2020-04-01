@@ -18,8 +18,8 @@
 </template>
 
 <script>
-import url from "./../apiconfig";
-import { count, getStrParam, showHtml } from "./../count";
+import { yinxing } from "@/utils/http"
+import { count, getStrParam, showHtml } from "@/utils/count";
 export default {
   name: "doctorsDetails",
   data() {
@@ -53,19 +53,14 @@ export default {
   },
   methods: {
     getTheoryInfo() {
-      this.axios
-        .post(url.theoryInfo, {
-          token: this.token,
-          illnessId: this.illnessId
-        })
-        .then(res => {
-          if (res.data.code === 0) {
-            this.vanTabs = JSON.parse(showHtml(JSON.stringify(res.data.data)))
-          } else {
-            this.$toast(res.data.msg)
-          }
-        })
-        .catch(err => {});
+      yinxing.theoryInfo({
+        token: this.token,
+        illnessId: this.illnessId
+      }).then(res => {
+        if (res.data.code === 0) {
+          this.vanTabs = JSON.parse(showHtml(JSON.stringify(res.data.data)))
+        }
+      })
     }
   }
 };

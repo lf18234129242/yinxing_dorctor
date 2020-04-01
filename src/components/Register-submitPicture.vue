@@ -14,9 +14,9 @@
 </template>
 
 <script>
-import url from "./../apiconfig";
+import { yinxing } from "@/utils/http"
 import { Toast } from 'vant';
-import { count, getStrParam, uploadBase64_url } from "./../count";
+import { count, getStrParam, uploadBase64_url } from "@/utils/count";
 export default {
   data() {
     return {
@@ -47,21 +47,17 @@ export default {
     next() {
       let fileStr = this.fileArr.join(",");
       if (this.textarea) {
-        this.axios
-          .post(url.datum_save, {
-            content: this.textarea,
-            imgUrl: fileStr,
-            token: this.token
-          })
-          .then(res => {
-            if (res.data.code === 0) {
-              this.fileArr = [];
-              this.textarea = "";
-              this.$router.push("/WechatCode")
-            } else {
-              this.$toast(res.data.msg)
-            }
-          });
+        yinxing.datumSave({
+          content: this.textarea,
+          imgUrl: fileStr,
+          token: this.token
+        }).then(res => {
+          if (res.data.code === 0) {
+            this.fileArr = [];
+            this.textarea = "";
+            this.$router.push("/WechatCode")
+          }
+        })
       } else {
         this.$toast("请输入患者病情资料或上传报告单");
       }
@@ -73,18 +69,14 @@ export default {
         duration:0,
         forbidClick: true
       })
-      this.axios
-        .post(uploadBase64_url, {
-          base64: file.content
-        })
-        .then(res => {
+      yinxing.uploadBase64Url({
+        base64: file.content
+      }).then(res => {
+        if (res.data.code === 0) {
           this.$toast.success("上传成功");
-          if (res.data.code === 0) {
-            this.fileArr.push(res.data.url);
-          } else {
-            this.$toast(res.data.msg)
-          }
-        });
+          this.fileArr.push(res.data.url);
+        }
+      })
     },
     // 返回布尔值
     beforeRead(file) {

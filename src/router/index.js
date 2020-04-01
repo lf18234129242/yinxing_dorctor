@@ -56,7 +56,7 @@ export default new Router({
       meta:{
         index:3,
         auth:true,
-        title:'患者信息'
+        title:'填写信息'
       }
     },
     {

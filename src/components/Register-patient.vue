@@ -1,6 +1,6 @@
 <template>
   <div class="patient-box">
-    <h1>请输入患者信息</h1>
+    <h1>请输入您的信息</h1>
     <div class="cell-box">
       <p>姓名</p>
       <input type="text" v-model="username" placeholder="请输入您的姓名" />
@@ -38,8 +38,8 @@
 </template>
 
 <script>
-import url from "./../apiconfig";
-import { count, getStrParam } from "./../count";
+import { yinxing } from "@/utils/http"
+import { count, getStrParam } from "@/utils/count";
 export default {
   data() {
     return {
@@ -85,23 +85,19 @@ export default {
         this.$toast("请选择您的年龄");
         return false;
       }
-      this.axios
-        .post(url.message_save, {
-          age: this.userage,
-          gender: this.gender,
-          name: this.username,
-          token: this.token
-        })
-        .then(res => {
-          if (res.data.code === 0) {
-            this.$router.push("/WechatCode");
-            // this.$router.push({
-              // path: "/RegisterBindPhoneNum"
-            // });
-          } else {
-            this.$toast(res.data.msg)
-          }
-        });
+      yinxing.messageSave({
+        age: this.userage,
+        gender: this.gender,
+        name: this.username,
+        token: this.token
+      }).then(res => {
+        if (res.data.code === 0) {
+          this.$router.push("/WechatCode");
+          // this.$router.push({
+            // path: "/RegisterBindPhoneNum"
+          // });
+        }
+      })
     },
     selectSex() {
       this.show_sex = true;

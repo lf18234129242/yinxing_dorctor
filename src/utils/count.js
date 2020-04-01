@@ -1,12 +1,13 @@
 import axios from 'axios'
 import url from './apiconfig'
+import { yinxing } from './http'
 import Vue from 'vue'
-import router from './router'
+import router from '../router'
 function count(id, token) {
-    axios.post(url.userpush_save, {
-        token: token,
+	yinxing.userpushSave({
+		token: token,
         pushId: id
-    })
+	})
 }
 function getStrParam(href, name) {
     let splitIndex = href.indexOf("?");
@@ -29,4 +30,10 @@ function showHtml(str) {
 }
 const uploadBase64_url = "https://admin.okginko.com/ginkgo-admin/sys/oss/uploadBase64"
 
-export { count, getStrParam, queryUserInfo, showHtml, uploadBase64_url }
+export { 
+	count, 
+	getStrParam, 
+	queryUserInfo, 
+	showHtml, 
+	uploadBase64_url 
+}

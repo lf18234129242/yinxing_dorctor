@@ -10,8 +10,8 @@
 </template>
 
 <script>
-import url from "./../apiconfig";
-import { getStrParam, count } from "./../count";
+import { yinxing } from "@/utils/http"
+import { getStrParam, count } from "@/utils/count"
 export default {
   data() {
     return {
@@ -41,20 +41,16 @@ export default {
   },
   methods: {
     getCode() {
-      this.axios
-        .post(url.doctor_code, {
-          token: this.token
-        })
-        .then(res => {
-          if (res.data.code === 0) {
-            this.doctorCode = res.data.groupCode
-            this.doctorName = res.data.doctorName
-            this.userName = res.data.userName
-            this.flag = res.data.flag
-          } else {
-            this.$toast(res.data.msg)
-          }
-        });
+      yinxing.getDoctorCode({
+        token: this.token
+      }).then(res => {
+        if (res.data.code === 0) {
+          this.doctorCode = res.data.groupCode
+          this.doctorName = res.data.doctorName
+          this.userName = res.data.userName
+          this.flag = res.data.flag
+        }
+      })
     }
   }
 };
@@ -74,15 +70,19 @@ img{
 h1,h2,h3,li{
   width: 100%;
   padding: 0 .4rem;
-  font-size: .28rem;
+  font-size: .8rem;
   color: #252525;
-  line-height: .9rem;
+  line-height: 1.4rem;
   box-sizing: border-box;
 }
 h1{
-  color: red;
+  font-weight: bold;
 }
 h3{
   text-align: right;
+}
+li{
+  font-size: 1rem;
+  line-height: 1.4rem;
 }
 </style>

@@ -22,8 +22,8 @@
 </template>
 
 <script>
-import url from "./../apiconfig";
-import { count, getStrParam } from "./../count";
+import { yinxing } from "@/utils/http"
+import { count, getStrParam } from "@/utils/count"
 export default {
   name: "Register-chooseIll",
   data() {
@@ -38,6 +38,7 @@ export default {
   mounted() {
     let href = window.location.href
     // let href = "https://admin.okginko.com/ginkgo-admin/wx/api/wxRoute?token=ouYrs1YZ2D4DVAbxbmBCgjMUv72Y&push_id=57";
+    console.log(href)
     this.token = getStrParam(href, "token");
     this.push_id = getStrParam(href, "push_id");
     count(this.push_id, this.token);
@@ -59,36 +60,28 @@ export default {
   },
   methods: {
     getIllList() {
-      this.axios
-        .post(url.ill_list, {
-          token: this.token
-        })
-        .then(res => {
-          if (res.data.code === 0) {
-            this.radioList = res.data.data;
-          } else {
-            this.$toast(res.data.msg)
-          }
-        })
-        .catch(err => {});
+      console.log('getIllList')
+      yinxing.getIllList({
+        token: this.token
+      }).then(res => {
+        if (res.data.code === 0) {
+          this.radioList = res.data.data;
+        }
+      })
     },
     submit() {
       if (!this.radio) {
         this.$toast('请选择疾病')
         return false
       }
-      this.axios
-        .post(url.illness_save, {
-          illnessId: this.radio,
-          token: this.token
-        })
-        .then(res => {
-          if (res.data.code === 0) {
-            this.$router.push("/RegisterChooseIllStep");
-          } else {
-            this.$toast(res.data.msg)
-          }
-        });
+      yinxing.illnessSave({
+        illnessId: this.radio,
+        token: this.token
+      }).then(res => {
+        if (res.data.code === 0) {
+          this.$router.push("/RegisterChooseIllStep");
+        }
+      })
     }
   }
 };
