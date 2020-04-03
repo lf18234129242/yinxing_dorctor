@@ -2,7 +2,13 @@
   <div class="Doctors-order">
     <div class="title_box">
       <p class="warn">{{doctorOrderList[0].user_name ? doctorOrderList[0].user_name : '你好'}}，{{doctorOrderList[0].text1}}</p>
-      <img class="doctor" :src="doctorOrderList[0].avatar_url" alt />
+      <van-image
+        width="3.88rem"
+        height="3.88rem"
+        fit="contain"
+        lazy-load
+        :src="doctorOrderList[0].avatar_url"
+      />
     </div>
     <section>
       <div class="score_box">
@@ -17,7 +23,7 @@
         >
         <img 
           v-for="(item, index) in secondCount" 
-          :key="index" 
+          :key="index + '-label'" 
           src="@/assets/img/step-green-1.png" 
           class="green_1"
           :style="{left: (secondScore + item * 0.5) + 'rem'}"
@@ -35,37 +41,25 @@
         <div class="padding8">
           <div v-html="doctorOrderList[0].content1"></div>
           <router-link :to="{path:'/DoctorsDetails', query:{illnessId: illnessId, type: type_1}}"  v-if="doctorOrderList[0].content1_link">
-            <img v-if="type_1 == 8" class="detail_img" src="@/assets/img/detail-1.png" alt="">
-            <img v-else-if="type_1 == 10" class="detail_img" src="@/assets/img/detail-3.png" alt="">
-            <img v-else-if="type_1 == 11" class="detail_img" src="@/assets/img/detail-2.png" alt="">
-            <img v-else-if="type_1 == 12" class="detail_img" src="@/assets/img/detail-4.png" alt="">
+            <img class="detail_img" :src="type_1 == 8 ? doctorImg_1 : type_1 == 10 ? doctorImg_3 : type_1 == 11 ? doctorImg_2 : type_1 == 12 ? doctorImg_4 : ''" alt="">
           </router-link>
         </div>
         <div class="padding8" style="background:#ECF5EE!important">
           <div v-html="doctorOrderList[0].content2"></div>
           <router-link :to="{path:'/DoctorsDetails', query:{illnessId: illnessId, type: type_2}}"  v-if="doctorOrderList[0].content2_link">
-            <img v-if="type_2 == 8" class="detail_img" src="@/assets/img/detail-1.png" alt="">
-            <img v-else-if="type_2 == 10" class="detail_img" src="@/assets/img/detail-3.png" alt="">
-            <img v-else-if="type_2 == 11" class="detail_img" src="@/assets/img/detail-2.png" alt="">
-            <img v-else-if="type_2 == 12" class="detail_img" src="@/assets/img/detail-4.png" alt="">
+            <img class="detail_img" :src="type_2== 8 ? doctorImg_1 : type_2== 10 ? doctorImg_3 : type_2== 11 ? doctorImg_2 : type_2== 12 ? doctorImg_4 : ''" alt="">
           </router-link>
         </div>
         <div class="padding8">
           <div v-html="doctorOrderList[0].content3"></div>
           <router-link :to="{path:'/DoctorsDetails', query:{illnessId: illnessId, type: type_3}}"  v-if="doctorOrderList[0].content3_link">
-            <img v-if="type_3 == 8" class="detail_img" src="@/assets/img/detail-1.png" alt="">
-            <img v-else-if="type_3 == 10" class="detail_img" src="@/assets/img/detail-3.png" alt="">
-            <img v-else-if="type_3 == 11" class="detail_img" src="@/assets/img/detail-2.png" alt="">
-            <img v-else-if="type_3 == 12" class="detail_img" src="@/assets/img/detail-4.png" alt="">
+            <img class="detail_img" :src="type_3 == 8 ? doctorImg_1 : type_3 == 10 ? doctorImg_3 : type_3 == 11 ? doctorImg_2 : type_3 == 12 ? doctorImg_4 : ''" alt="">
           </router-link>
         </div>
         <div class="padding8" style="background:#ECF5EE!important">
           <div v-html="doctorOrderList[0].content4"></div>
           <router-link :to="{path:'/DoctorsDetails', query:{illnessId: illnessId, type: type_4}}"  v-if="doctorOrderList[0].content4_link">
-            <img v-if="type_4 == 8" class="detail_img" src="@/assets/img/detail-1.png" alt="">
-            <img v-else-if="type_4 == 10" class="detail_img" src="@/assets/img/detail-3.png" alt="">
-            <img v-else-if="type_4 == 11" class="detail_img" src="@/assets/img/detail-2.png" alt="">
-            <img v-else-if="type_4 == 12" class="detail_img" src="@/assets/img/detail-4.png" alt="">
+            <img class="detail_img" :src="type_4 == 8 ? doctorImg_1 : type_4 == 10 ? doctorImg_3 : type_4 == 11 ? doctorImg_2 : type_4 == 12 ? doctorImg_4 : ''" alt="">
           </router-link>
         </div>
       </div>
@@ -87,7 +81,23 @@ export default {
   name: 'DoctorsOrder',
   data() {
     return {
-      doctorOrderList: [],
+      doctorOrderList: [{
+        user_name: '',
+        create_time: '',
+        recovery: '',
+        text1: '',
+        avatar_url: '',
+        content1: '',
+        content1_link: '',
+        content2: '',
+        content2_link: '',
+        content3: '',
+        content3_link: '',
+        content4: '',
+        content4_link: '',
+        doctorName: '',
+        signature_url: '',
+      }],
       pushType: '',
       push_id: '',
       token: '',
@@ -101,7 +111,11 @@ export default {
       type_2: 0,
       type_3: 0,
       type_4: 0,
-    };
+      doctorImg_1: require('@/assets/img/detail-1.png'),
+      doctorImg_2: require('@/assets/img/detail-2.png'),
+      doctorImg_3: require('@/assets/img/detail-3.png'),
+      doctorImg_4: require('@/assets/img/detail-4.png'),
+    }
   },
   mounted() {
     let href = window.location.href

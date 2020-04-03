@@ -6,6 +6,10 @@ Vue.use(Toast)
 const http = request => {
     return new Promise((resolve, reject) => {
         request.then(res => {
+            if (res.data === null) {
+                Toast('暂无数据，请稍后再试')
+                return false
+            }
             if (res.data.code === 0) {
                 return resolve(res)
             } else {

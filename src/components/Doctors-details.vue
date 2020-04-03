@@ -25,7 +25,9 @@ export default {
   data() {
     return {
       active: 0,
-      vanTabs: [],
+      vanTabs: [{
+        illness_name: '',
+      }],
       token: '',
       illnessId: '',
       type: '',
@@ -71,7 +73,7 @@ export default {
   padding: 0 20px;
   box-sizing: border-box;
   background: #fff;
-  height: 75vh;
+  height: 71vh;
   overflow: scroll;
   img,video{
     width: 100%;

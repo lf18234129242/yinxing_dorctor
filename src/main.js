@@ -6,9 +6,35 @@ import router from './router'
 import axios from 'axios'
 import './assets/css/base.css'
 import './assets/js/fontsize.js'
-import { RadioGroup, Radio, CellGroup, Cell, Button, Popup, Picker, Toast, Uploader, Tabs, Tab } from 'vant';
+import {
+	RadioGroup, 
+	Radio, 
+	CellGroup, 
+	Cell, 
+	Button, 
+	Popup, 
+	Picker, 
+	Toast, 
+	Uploader, 
+	Tabs, 
+	Tab,
+	Image,
+	Lazyload
+} from 'vant';
 
-Vue.use(RadioGroup).use(Radio).use(CellGroup).use(Cell).use(Button).use(Popup).use(Picker).use(Toast).use(Uploader).use(Tabs).use(Tab);
+Vue.use(RadioGroup)
+	.use(Radio)
+	.use(CellGroup)
+	.use(Cell)
+	.use(Button)
+	.use(Popup)
+	.use(Picker)
+	.use(Toast)
+	.use(Uploader)
+	.use(Tabs)
+	.use(Tab)
+	.use(Image)
+	.use(Lazyload)
 
 //把 `******` 加到 `Vue` 的原型中
 Vue.prototype.axios = axios
