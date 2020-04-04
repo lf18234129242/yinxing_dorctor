@@ -4,6 +4,9 @@ import Router from 'vue-router'
 Vue.use(Router)
 
 function loadView(view) {
+  return () => import(/* webpackChunkName: "view-[request]" */ `@/view/kangduoduo/${view}.vue`)
+}
+function loadYinxing(view) {
   return () => import(/* webpackChunkName: "view-[request]" */ `@/components/${view}.vue`)
 }
 
@@ -12,7 +15,7 @@ export default new Router({
     {
       path: '/DoctorsDetails',
       name: 'DoctorsDetails',
-      component: loadView('Doctors-details'),
+      component: loadYinxing('Doctors-details'),
       meta:{
         index:2,
         auth:true,
@@ -22,7 +25,7 @@ export default new Router({
     {
       path: '/DoctorsOrder',
       name: 'DoctorsOrder',
-      component: loadView('Doctors-order'),
+      component: loadYinxing('Doctors-order'),
       meta:{
         index:1,
         auth:true,
@@ -32,7 +35,7 @@ export default new Router({
     {
       path: '/',
       name: 'RegisterChooseIll',
-      component: loadView('Register-chooseIll'),
+      component: loadYinxing('Register-chooseIll'),
       meta:{
         index:1,
         auth:true,
@@ -42,7 +45,7 @@ export default new Router({
     {
       path: '/RegisterChooseIllStep',
       name: 'RegisterChooseIllStep',
-      component: loadView('Register-chooseIllStep'),
+      component: loadYinxing('Register-chooseIllStep'),
       meta:{
         index:2,
         auth:true,
@@ -52,7 +55,7 @@ export default new Router({
     {
       path: '/RegisterPatient',
       name: 'RegisterPatient',
-      component: loadView('Register-patient'),
+      component: loadYinxing('Register-patient'),
       meta:{
         index:3,
         auth:true,
@@ -62,7 +65,7 @@ export default new Router({
     {
       path: '/RegisterBindPhoneNum',
       name: 'RegisterBindPhoneNum',
-      component: loadView('Register-bindPhoneNum'),
+      component: loadYinxing('Register-bindPhoneNum'),
       meta:{
         index:4,
         auth:true,
@@ -72,7 +75,7 @@ export default new Router({
     {
       path: '/RegisterSubmitPicture',
       name: 'RegisterSubmitPicture',
-      component: loadView('Register-submitPicture'),
+      component: loadYinxing('Register-submitPicture'),
       meta:{
         index:5,
         auth:true,
@@ -82,11 +85,21 @@ export default new Router({
     {
       path: '/WechatCode',
       name: 'WechatCode',
-      component: loadView('WechatCode'),
+      component: loadYinxing('WechatCode'),
       meta:{
         index:6,
         auth:true,
         title:'二维码'
+      }
+    },
+    {
+      path: '/Share',
+      name: 'Share',
+      component: loadView('Share'),
+      meta:{
+        index:1,
+        auth:true,
+        title:'转发领积分'
       }
     },
   ]
