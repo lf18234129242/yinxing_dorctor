@@ -102,5 +102,35 @@ export default new Router({
         title:'转发领积分'
       }
     },
+    {
+      path: '/SubmitTheIllness',
+      name: 'SubmitTheIllness',
+      component: loadView('SubmitTheIllness'),
+      meta:{
+        index:1,
+        auth:true,
+        title:''
+      }
+    },
+    {
+      path: '/Chating',
+      name: 'Chating',
+      component: loadView('Chating'),
+      meta:{
+        index:1,
+        auth:true,
+        title:''
+      }
+    },
+    {
+      path: '/QuestionList',
+      name: 'QuestionList',
+      component: loadView('QuestionList'),
+      meta:{
+        index:1,
+        auth:true,
+        title:'问题列表'
+      }
+    },
   ]
 })

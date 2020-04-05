@@ -19,7 +19,7 @@ import {
 	Tabs, 
 	Tab,
 	Image,
-	Lazyload
+	Lazyload,
 } from 'vant';
 
 Vue.use(RadioGroup)
