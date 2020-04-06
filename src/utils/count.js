@@ -33,7 +33,6 @@ const uploadBase64_url = "https://admin.okginko.com/ginkgo-admin/sys/oss/uploadB
 export { 
 	count, 
 	getStrParam, 
-	queryUserInfo, 
 	showHtml, 
 	uploadBase64_url 
 }

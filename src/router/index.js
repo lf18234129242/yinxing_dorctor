@@ -117,7 +117,7 @@ export default new Router({
       name: 'Chating',
       component: loadView('Chating'),
       meta:{
-        index:1,
+        index:2,
         auth:true,
         title:''
       }
