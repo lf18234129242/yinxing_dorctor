@@ -21,6 +21,7 @@ export default {
       doctorName: '',
       userName: '',
       flag: '',
+      type: ''
     };
   },
   mounted() {
@@ -28,11 +29,13 @@ export default {
     let push_id = sessionStorage.getItem("push_id");
     this.token = token;
     this.push_id = push_id;
-    if (!token) {
+    if (!token || !this.doctorId || !this.type) {
       let href = window.location.href
-      // let href = "https://www.okginko.com/index.html?token=ouYrs1Y3ri3ke2Wyk-7Q7njCAE4o&push_id=2";
+      // let href = "https://www.okginko.com/index.html#/WechatCode?token=ouYrs1YZ2D4DVAbxbmBCgjMUv72Y&push_id=2031&doctor_id=6&type=1";
       this.token = getStrParam(href, "token");
       this.push_id = getStrParam(href, "push_id");
+      this.doctorId = getStrParam(href, "doctor_id");
+      this.type = getStrParam(href, "type");
       count(this.push_id, this.token);
       sessionStorage.setItem("token", this.token);
       sessionStorage.setItem("push_id", this.push_id);
@@ -42,7 +45,9 @@ export default {
   methods: {
     getCode() {
       yinxing.getDoctorCode({
-        token: this.token
+        token: this.token,
+        doctorId: this.doctorId,
+        type: this.type
       }).then(res => {
         if (res.data.code === 0) {
           this.doctorCode = res.data.groupCode

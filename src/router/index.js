@@ -132,5 +132,15 @@ export default new Router({
         title:'问题列表'
       }
     },
+    {
+      path: '/BindDoctor',
+      name: 'BindDoctor',
+      component: loadView('BindDoctor'),
+      meta:{
+        index:1,
+        auth:true,
+        title:'绑定医生'
+      }
+    },
   ]
 })

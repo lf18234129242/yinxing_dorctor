@@ -18,7 +18,8 @@
     "postcss-plugin-px2rem": "^0.8.1",
     "vant": "^2.2.15",
     "vue": "^2.5.2",
-    "vue-router": "^3.0.1"
+    "vue-router": "^3.0.1",
+    "vue2-better-scroll": "^1.2.1"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
