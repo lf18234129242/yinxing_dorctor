@@ -14,10 +14,12 @@
 </template>
 
 <script>
+import url from "@/utils/apiconfig.js";
 import { yinxing } from "@/utils/http"
 import { Toast } from 'vant';
 import { count, getStrParam, uploadBase64_url } from "@/utils/count";
 export default {
+  name: 'Register-submitPicture',
   data() {
     return {
       textarea: "",
@@ -69,14 +71,18 @@ export default {
         duration:0,
         forbidClick: true
       })
-      yinxing.uploadBase64Url({
-        base64: file.content
-      }).then(res => {
-        if (res.data.code === 0) {
+      this.axios
+        .post(uploadBase64_url, {
+          base64: file.content
+        })
+        .then(res => {
           this.$toast.success("上传成功");
-          this.fileArr.push(res.data.url);
-        }
-      })
+          if (res.data.code === 0) {
+            this.fileArr.push(res.data.url);
+          } else {
+            this.$toast(res.data.msg)
+          }
+        });
     },
     // 返回布尔值
     beforeRead(file) {

@@ -1,22 +1,24 @@
 <template>
   <div class="chating">
-		<header class="illness_desc">
-			<h2>病情描述</h2>
-			<p>{{illnessDesc}}</p>
-			<img 
-				v-for="(item, index) in imgList" 
-				:key="index" 
-				:src="item" 
-				alt=""
-				lazy-load
-				@click="previewImage(index)"
-			>
-		</header>
-		<section class="answer">
-			<h2>医生回答</h2>
-			<p>{{answerText}}</p>
-			<van-button round class="put_question_again" @click="putQuestionAgain">继续提问</van-button>
-		</section>
+		<div 
+			class="illness_desc"
+			v-for="(item, index) in questionInfoList"
+			:key="index"
+		>
+			<h2>{{item.consult_flag === 1 ? '医生回答' : '病情描述'}}</h2>
+			<p>{{item.sick_desc}}</p>
+			<div v-if="item.imgArr[0]">
+				<img 
+					v-for="(jtem, index) in item.imgArr" 
+					:key="index"
+					:src="jtem"
+					alt=""
+					lazy-load
+					@click="previewImage(index)"
+				>
+			</div>
+		</div>
+		<van-button round class="put_question_again" @click="putQuestionAgain">继续提问</van-button>
 		<footer>
 			<h3>温馨提示</h3>
 			<li>1.提交详细信息，医生可以给更准确的回复</li>
@@ -27,20 +29,26 @@
 </template>
 
 <script>
+import { duoduo } from "@/utils/http"
+import { getStrParam } from "@/utils/count";
+import { Toast } from 'vant';
 import { ImagePreview } from 'vant'
 export default {
 	name: 'chating',
   data() {
     return {
-			illnessDesc: "患者女，百度20岁，近日在遇寒冷天气，寒风，冷水后双上肢，双腿出现麻疹风团，风团出发红，发痒，皮温热，解除寒冷环境后风团逐渐消失，无其他不适既往无过敏史，无家族史。",
-			imgList: [
-				'https://image.doulaoban.com/applet/car_icon.png',
-				'https://image.doulaoban.com/applet/doubi_mall.png',
-				'https://image.doulaoban.com/applet/car_icon.png',
-				'https://image.doulaoban.com/applet/doubi_mall.png',
-			],
-			answerText: '病情分析：这个荨麻疹是跟过敏因素有关系的，如果不注意过敏源是会反复复发的。意见建议：可吃些消风止痒颗粒或氯雷他定来治疗，配合中成药防风通圣丸同用。避免食用一些刺激性食物，如葱、姜、蒜、浓茶、咖啡、酒类及其他容易引起过敏的食物，如鱼、虾等海味。'
-    };
+			questionInfoList: [],
+			token: '',
+			consultId: '',
+			limit: 10,
+			page: 0,
+			next_page: true
+    }
+	},
+	mounted() {
+		this.consultId = this.$route.query.consult_id
+		this.token = this.$route.query.token
+		this.getQuestionInfo()
 	},
 	methods: {
 		previewImage(num) {
@@ -50,7 +58,37 @@ export default {
 			})
 		},
 		putQuestionAgain() {
-			console.log('putQuestionAgain')
+			this.$router.push({
+				path: '/SubmitTheIllness',
+				query: {
+					token: this.token,
+					doctor_id: this.questionInfoList[0].doctor_id
+				}
+			})
+		},
+		getQuestionInfo() {
+			if (!this.next_page) {
+				Toast('没有更多数据了')
+				return false
+			}
+			let params = {
+				consultId: this.consultId,
+				limit: this.limit,
+				page: this.page,
+				token: this.token
+			}
+			duoduo.getQuestionInfo(params).then(res => {
+				if (res.data.list && res.data.list.length > 0) {
+					this.questionInfoList = this.questionInfoList.concat(res.data.list)
+					this.next_page = true
+				} else {
+					this.next_page = false
+				}
+				this.questionInfoList.forEach(item => {
+					item.imgArr = item.disease_imgs.split(',')
+				})
+				console.log(this.questionInfoList)
+			})
 		}
 	},
 };
@@ -62,7 +100,7 @@ export default {
 	width: 100%;
 	min-height: 100vh;
 	padding-bottom: .6rem;
-	.illness_desc, .answer{
+	.illness_desc{
 		padding: .6rem;
 		box-sizing: border-box;
 		background: #fff;
@@ -86,19 +124,19 @@ export default {
 			height: 4rem;
 			margin: 0 .6rem .6rem 0;
 		}
-		.put_question_again{
-			width:8.4rem;
-			height:1.76rem;
-			background:linear-gradient(90deg,rgba(0,181,140,1) 0%,rgba(0,104,82,1) 99%);
-			box-shadow:0px .1rem .2rem 0px rgba(0,106,84,0.3);
-			color: #fff;
-			font-weight:600;
-			border: none;
-			margin: 1rem auto 1rem;
-			display: block;
-			span{
-				font-size: .72rem;
-			}
+	}
+	.put_question_again{
+		width:8.4rem;
+		height:1.76rem;
+		background:linear-gradient(90deg,rgba(0,181,140,1) 0%,rgba(0,104,82,1) 99%);
+		box-shadow:0px .1rem .2rem 0px rgba(0,106,84,0.3);
+		color: #fff;
+		font-weight:600;
+		border: none;
+		margin: 1rem auto 1rem;
+		display: block;
+		span{
+			font-size: .72rem;
 		}
 	}
 	footer{

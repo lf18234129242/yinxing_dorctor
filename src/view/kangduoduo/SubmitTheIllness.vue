@@ -31,9 +31,10 @@
 </template>
 
 <script>
-import { yinxing } from "@/utils/http"
+import url from "@/utils/apiconfig.js";
+import { yinxing, duoduo } from "@/utils/http"
 import { Toast } from 'vant';
-import { count, getStrParam } from "@/utils/count";
+import { count, getStrParam, uploadBase64_url } from "@/utils/count";
 export default {
   name: "SubmitTheIllness",
   data() {
@@ -41,29 +42,67 @@ export default {
       illness_desc: "",
       fileList: [],
       fileArr: [],
+			doctorId: '',
+			integral: 10,
+			token: ''
     }
+	},
+	mounted () {
+    let href = window.location.href
+    // let href = "https://www.okginko.com/index.html?token=ouYrs1Y3ri3ke2Wyk-7Q7njCAE4o&push_id=64&type=1";
+    this.token = getStrParam(href, "token");
+    this.doctorId = getStrParam(href, "doctor_id");
+    sessionStorage.setItem("token", this.token);
 	},
 	methods: {
 		handleSubmit() {
-      let fileStr = this.fileArr.join(",");
+			if (!this.illness_desc) {
+				Toast('请您先填写病情描述哦！')
+				return false
+			}
+			let fileStr = this.fileArr.join(",")
+			let params = {
+				diseaseImgs: fileStr,
+				doctorId: 10,
+				integral: this.integral,
+				sickDesc: this.illness_desc.trim(),
+				token: this.token
+			}
+			duoduo.submitQuestionSave(params).then(res => {
+				if (res.data.code === 0) {
+					Toast('提交成功')
+					this.illness_desc = ''
+					this.fileArr = []
+					this.$router.push({
+						path: '/QuestionList', 
+						query: {
+							token: this.token
+						}
+					})
+				}
+			})
 		},
     // 上传图片
     afterRead(file) {
       file.status = 'uploading'
       file.message = '上传中...'
-      // Toast.loading({
-      //   message:'正在上传中...',
-      //   duration:0,
-      //   forbidClick: true
-      // })
-      yinxing.uploadBase64Url({
-        base64: file.content
-      }).then(res => {
-        if (res.data.code === 0) {
+      Toast.loading({
+        message:'正在上传中...',
+        duration:0,
+        forbidClick: true
+			})
+      this.axios
+        .post(uploadBase64_url, {
+          base64: file.content
+        })
+        .then(res => {
           this.$toast.success("上传成功");
-          this.fileArr.push(res.data.url);
-        }
-      })
+          if (res.data.code === 0) {
+            this.fileArr.push(res.data.url);
+          } else {
+            this.$toast(res.data.msg)
+          }
+        });
     },
     // 返回布尔值
     beforeRead(file) {

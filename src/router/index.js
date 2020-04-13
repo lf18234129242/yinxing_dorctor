@@ -117,7 +117,7 @@ export default new Router({
       name: 'Chating',
       component: loadView('Chating'),
       meta:{
-        index:2,
+        index:3,
         auth:true,
         title:''
       }
@@ -127,7 +127,7 @@ export default new Router({
       name: 'QuestionList',
       component: loadView('QuestionList'),
       meta:{
-        index:1,
+        index:2,
         auth:true,
         title:'问题列表'
       }

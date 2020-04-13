@@ -10,14 +10,14 @@
 				v-for="(item,index) in questionList"
 				:key="index"
 			>
-				<router-link to="/Chating">
+				<router-link :to="{path: '/Chating', query: {token: token, consult_id: item.consult_id}}">
 					<div class="question">
-						<span :class="['question_status', item.call_back_status === 1 ? 'yes' : 'no']">{{item.call_back_status === 1 ? '已回复' : '未回复'}}</span>
-						{{item.question}}
+						<span :class="['question_status', item.type === 2 ? 'yes' : 'no']">{{item.type === 2 ? '已回复' : '未回复'}}</span>
+						{{item.sick_desc}}
 					</div>
 					<div class="question_imgs">
 						<img 
-							v-for="(jtem, idx) in item.imgs" 
+							v-for="(jtem, idx) in item.imgList" 
 							:key="idx" 
 							:src="jtem" 
 							alt=""
@@ -31,37 +31,59 @@
 </template>
 
 <script>
+import { duoduo } from "@/utils/http"
+import { getStrParam } from "@/utils/count";
+import { Toast } from 'vant';
 export default {
   name: "QuestionList",
   data() {
     return {
-      questionList: [
-				{
-					call_back_status: 1,
-					question: '患者女，百度20岁，近日在遇寒冷天气，寒风，冷水后双上肢，双腿出现麻疹风团患者女，百度20岁，近日在遇寒冷天气，寒风，冷水后双上肢，双腿出现麻疹风团',
-					imgs: [
-						'https://image.doulaoban.com/applet/car_icon.png',
-						'https://image.doulaoban.com/applet/doubi_mall.png',
-						'https://image.doulaoban.com/applet/car_icon.png'
-					],
-					url: ''
-				},
-				{
-					call_back_status: 2,
-					question: '麻疹风团患百冷水后双肢，双腿出现麻疹度20者女，岁，近日在遇寒冷天气，寒风，上肢，双腿出现患者女，百度20岁，近日在遇寒冷天气，寒风，冷水后双上风团',
-					imgs: [
-						'https://image.doulaoban.com/applet/doubi_mall.png',
-						'https://image.doulaoban.com/applet/car_icon.png',
-						'https://image.doulaoban.com/applet/doubi_mall.png',
-					],
-					url: ''
-				},
-			]
+      questionList: [],
+			token: '',
+			page: 0,
+			limit: 10,
+			next_page: true
     };
+	},
+	mounted () {
+    let href = window.location.href
+    this.token = getStrParam(href, "token")
+		sessionStorage.setItem("token", this.token)
+		this.getQuestionList()
 	},
 	methods: {
 		putQuestion() {
-			console.log('putQuestion')
+			this.$router.push({
+				path: '/SubmitTheIllness',
+				query: {
+					token: this.token,
+					doctor_id: this.questionList[0].doctor_id
+				}
+			})
+		},
+		getQuestionList() {
+			if (!this.next_page) {
+				Toast('没有更多数据了')
+				return false
+			}
+			let params = {
+				limit: this.limit,
+				page: this.page,
+				token: this.token
+			}
+			duoduo.getQuestionList(params).then(res => {
+				if (res.data.code === 0) {
+					if (res.data.list && res.data.list.length > 0) {
+						this.questionList = this.questionList.concat(res.data.list)
+						this.next_page = true
+					} else {
+						this.next_page = false
+					}
+					this.questionList.forEach(item => {
+						item.imgList = item.disease_imgs.split(',')
+					})
+				}
+			})
 		}
 	},
 };
