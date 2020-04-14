@@ -27,6 +27,41 @@ const http = request => {
 }
 
 export const duoduo = {
+	bindDoctor: async(params) => {
+		const res = await http(axios.post(api.bind_doctor, params))
+		if (res) {
+			return Promise.resolve(res)
+		}
+		return Promise.reject(false)
+	},
+	getDoctorList: async(params) => {
+		const res = await http(axios.post(api.doctor_list, params))
+		if (res) {
+			return Promise.resolve(res)
+		}
+		return Promise.reject(false)
+	},
+	getDoctorInfo: async(params) => {
+		const res = await http(axios.post(api.doctor_info, params))
+		if (res) {
+			return Promise.resolve(res)
+		}
+		return Promise.reject(false)
+	},
+	getTotalIntegral: async(params) => {
+		const res = await http(axios.post(api.totalIntegral, params))
+		if (res) {
+			return Promise.resolve(res)
+		}
+		return Promise.reject(false)
+	},
+	userIntegralSave: async(params) => {
+		const res = await http(axios.post(api.userintegral_save, params))
+		if (res) {
+			return Promise.resolve(res)
+		}
+		return Promise.reject(false)
+	},
 	getQuestionInfo: async(params) => {
 		const res = await http(axios.post(api.question_info, params))
 		if (res) {

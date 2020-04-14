@@ -6,11 +6,11 @@
 		</div>
 		<header>
 			<div class="avatar_box">
-				<img src="@/assets/img/duoduo/building_bg_small.png" alt="">
+				<img :src="doctorInfo.avatar_url" alt="">
 			</div>
 			<div class="info">
-				<li>上海市肺科医院</li>
-				<li>呼吸科&nbsp;&nbsp;&nbsp;&nbsp;胡洋</li>
+				<li>{{doctorInfo.practice_hospital}}</li>
+				<li>{{doctorInfo.dept_name}}&nbsp;&nbsp;&nbsp;&nbsp;{{doctorInfo.doctor_name}}</li>
 			</div>
 			<div class="code_img_box">
 				<img src="@/assets/img/duoduo/building_bg_small.png" alt="">
@@ -28,63 +28,82 @@
 					@click="handleChooseDoctor(item)"
 				>
 					<div class="pr avatar">
-						<img :src="item.avatar" alt="">
-						<div class="model" v-show="item.seledted">已选择</div>
+						<img :src="item.avatar_url" alt="">
+						<div class="model" v-if="item.seledted">已选择</div>
 					</div>
-					<div class="doctor_name">{{item.object}}&nbsp;&nbsp;&nbsp;&nbsp;{{item.doc_name}}</div>
+					<div class="doctor_name">{{item.dept_name}}&nbsp;&nbsp;&nbsp;&nbsp;{{item.doctor_name}}</div>
 				</li>
 			</ul>
 		</section>
+		<div class="kong"></div>
+		<footer>
+			<van-button class="btn" @click="bindDoctor">免费聘请</van-button>
+		</footer>
 	</div>
 </template>
 
 <script>
-// https://juejin.im/post/5b836fdff265da4379348fc9
+import { duoduo } from "@/utils/http"
+import { getStrParam } from "@/utils/count";
+import { Toast } from 'vant';
 export default {
 	name: 'BindDoctor',
   data() {
     return {
-      doctorList: [
-				{
-					id: 1,
-					doc_name: '胡洋',
-					object: '骨科',
-					avatar: require('./../../assets/img/duoduo/building_bg_small.png'),
-					seledted: false
-				},
-				{
-					id: 2,
-					doc_name: '胡洋',
-					object: '骨科',
-					avatar: require('./../../assets/img/duoduo/building_bg_small.png'),
-					seledted: false
-				},
-				{
-					id: 3,
-					doc_name: '胡洋',
-					object: '骨科',
-					avatar: require('./../../assets/img/duoduo/building_bg_small.png'),
-					seledted: false
-				},
-				{
-					id: 4,
-					doc_name: '胡洋',
-					object: '骨科',
-					avatar: require('./../../assets/img/duoduo/building_bg_small.png'),
-					seledted: false
-				},
-				{
-					id: 5,
-					doc_name: '胡洋',
-					object: '骨科',
-					avatar: require('./../../assets/img/duoduo/building_bg_small.png'),
-					seledted: false
-				}
-			],
-			seledtedArr: []
+      doctorList: [],
+			seledtedArr: [],
+			token: '',
+			userId: '',
+			doctorId: '',
+			doctorInfo: {}
     }
 	},
+	mounted () {
+    let href = window.location.href
+    this.token = getStrParam(href, "token")
+    this.userId = getStrParam(href, "user_id")
+    this.doctorId = getStrParam(href, "doctor_id")
+		sessionStorage.setItem("token", this.token)
+		this.getDoctorInfo()
+		this.getDoctorList()
+	},
 	methods: {
+		bindDoctor() {
+			let params = {
+				doctorId: this.doctorIds,
+				token: this.token
+			}
+			duoduo.bindDoctor(params).then(res => {
+				console.log(res)
+			})
+		},
+		getDoctorInfo() {
+			let params = {
+				doctor: this.doctorId,
+				token: this.token
+			}
+			duoduo.getDoctorInfo(params).then(res => {
+				if (res.data.code === 0) {
+					this.doctorInfo = res.data
+				}
+			})
+		},
+		getDoctorList() {
+			let params = {
+				doctor: this.doctorId,
+				token: this.token,
+				limit: 9,
+				page: 0
+			}
+			duoduo.getDoctorList(params).then(res => {
+				if (res.data.code === 0) {
+					this.doctorList.push(res.data)
+					this.doctorList.forEach(item => {
+						item.seledted = false
+					})
+				}
+			})
+		},
 		handleChooseDoctor(data) {
 			this.doctorList.forEach(item => {
 				if (item.id === data.id) {
@@ -97,6 +116,7 @@ export default {
 					}
 				}
 			})
+			this.doctorIds = this.seledtedArr.toString()
 		}
 	}
 };
@@ -281,6 +301,31 @@ export default {
 					color: #00221A;
 				}
 			}
+		}
+	}
+	.kong{
+		width: 100%;
+		height: 4.24rem;
+	}
+	footer{
+		width: 100%;
+		height: 4.24rem;
+		position: fixed;
+		left: 0;
+		bottom: 0;
+		.btn{
+			width:8.4rem;
+			height:1.76rem;
+			background:linear-gradient(90deg,rgba(0,181,140,1) 0%,rgba(0,104,82,1) 99%);
+			box-shadow:0 .36rem 1.3rem 0 rgba(0,106,84,0.3);
+			border-radius:.88rem;
+			display: block;
+			margin: 0 auto;
+			color: #fff;
+			font-size: .72rem;
+			font-weight:600;
+			border: none;
+			letter-spacing: .08rem;
 		}
 	}
 }

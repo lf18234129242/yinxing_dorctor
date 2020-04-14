@@ -14,7 +14,7 @@
 					:src="jtem"
 					alt=""
 					lazy-load
-					@click="previewImage(index)"
+					@click="previewImage(index, item.imgArr)"
 				>
 			</div>
 		</div>
@@ -51,9 +51,18 @@ export default {
 		this.getQuestionInfo()
 	},
 	methods: {
-		previewImage(num) {
+		getDoctorInfo(doctorId) {
+			let params = {
+				doctor: doctorId,
+				token: this.token
+			}
+			duoduo.getDoctorInfo(params).then(res => {
+				document.title = `请${res.data.doctor_name}医生帮忙`
+			})
+		},
+		previewImage(num, imgList) {
 			ImagePreview({
-				images: this.imgList,
+				images: imgList,
 				startPosition: num
 			})
 		},
@@ -80,6 +89,7 @@ export default {
 			duoduo.getQuestionInfo(params).then(res => {
 				if (res.data.list && res.data.list.length > 0) {
 					this.questionInfoList = this.questionInfoList.concat(res.data.list)
+					this.getDoctorInfo(this.questionInfoList[0].doctor_id)
 					this.next_page = true
 				} else {
 					this.next_page = false
@@ -87,7 +97,6 @@ export default {
 				this.questionInfoList.forEach(item => {
 					item.imgArr = item.disease_imgs.split(',')
 				})
-				console.log(this.questionInfoList)
 			})
 		}
 	},

@@ -49,12 +49,21 @@ export default {
 	},
 	mounted () {
     let href = window.location.href
-    // let href = "https://www.okginko.com/index.html?token=ouYrs1Y3ri3ke2Wyk-7Q7njCAE4o&push_id=64&type=1";
     this.token = getStrParam(href, "token");
     this.doctorId = getStrParam(href, "doctor_id");
-    sessionStorage.setItem("token", this.token);
+		sessionStorage.setItem("token", this.token);
+		this.getDoctorInfo()
 	},
 	methods: {
+		getDoctorInfo() {
+			let params = {
+				doctor: this.doctorId,
+				token: this.token
+			}
+			duoduo.getDoctorInfo(params).then(res => {
+				document.title = `请${res.data.doctor_name}医生帮忙`
+			})
+		},
 		handleSubmit() {
 			if (!this.illness_desc) {
 				Toast('请您先填写病情描述哦！')
@@ -63,7 +72,7 @@ export default {
 			let fileStr = this.fileArr.join(",")
 			let params = {
 				diseaseImgs: fileStr,
-				doctorId: 10,
+				doctorId: this.doctorId,
 				integral: this.integral,
 				sickDesc: this.illness_desc.trim(),
 				token: this.token

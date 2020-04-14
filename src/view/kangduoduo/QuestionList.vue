@@ -19,6 +19,7 @@
 						<img 
 							v-for="(jtem, idx) in item.imgList" 
 							:key="idx" 
+							v-show="idx < 3"
 							:src="jtem" 
 							alt=""
 						>
@@ -42,8 +43,8 @@ export default {
 			token: '',
 			page: 0,
 			limit: 10,
-			next_page: true
-    };
+			next_page: true,
+    }
 	},
 	mounted () {
     let href = window.location.href

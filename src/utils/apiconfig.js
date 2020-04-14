@@ -17,6 +17,12 @@ const URL = {
 	question_info: BASEURL + '/api/userconsult/info', // 单条记录接口
 	question_list: BASEURL + '/api/userconsult/list', // 列表接口
 	question_save: BASEURL + '/api/userconsult/save', // 咨询保存接口
+	userintegral_save: BASEURL + '/api/userintegral/save', // 积分消耗或转发保存
+	totalIntegral: BASEURL + '/api/userintegral/totalIntegral', // 总积分
+	doctor_info: BASEURL + '/api/doctor/info', // 医生资料（详细信息）
+	doctor_list: BASEURL + '/api/doctor/areaRecommended', // 同地区医生推荐列表
+	bind_doctor: BASEURL + '/api/userdoctor/save', // 绑定（保存）医生
+	
 }
 
 module.exports = URL

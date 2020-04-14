@@ -2,19 +2,19 @@
 	<div class="sharePage pr">
 		<img src="@/assets/img/duoduo/leaf-bg.png" alt="" class="leaf">
 		<div class="now_coin">
-			<span>当前金币：{{nowCoin}}</span>
+			<span>当前金币：{{total_integral}}</span>
 		</div>
 		<div class="text_content">
-			<h3>消耗10个金币，请医生帮忙</h3>
+			<h3>消耗{{ONCECOST}}个金币，请医生帮忙</h3>
 			<h2>转发赚金币</h2>
-			<h3>转发一次赚2个金币</h3>
+			<h3>转发一次赚{{INTERGRAL}}个金币</h3>
 		</div>
 		<div class="doctor_info">
-			<img src="@/assets/img/duoduo/leaf-bg.png" alt="" class="avatar">
+			<img :src="avatar_url" alt="" class="avatar">
 			<li class="hospital">{{hospitalName}}</li>
 			<li class="doctor_name">{{doctorDepartment}} {{doctorName}}</li>
 			<li class="share_text">“帮我转一下，有事我帮你”</li>
-			<li class="share_times">*免费帮助还需转发{{freeShareTimes}}次</li>
+			<li v-if="freeShareTimes" class="share_times">*免费帮助还需转发{{freeShareTimes}}次</li>
 			<img class="red_bg" src="@/assets/img/duoduo/red_bg_.png" alt="">
 			<img class="half_coin" src="@/assets/img/duoduo/coin_half.png" alt="">
 			<button class="share_btn">立即转发</button>
@@ -23,18 +23,89 @@
 </template>
 
 <script>
-	export default {
-		name: 'share-page',
-		data() {
-			return {
-				nowCoin: 0,
-				hospitalName: '上海市肺科医院',
-				doctorDepartment: '呼吸科',
-				doctorName: '胡杨',
-				freeShareTimes: 4,
+import { duoduo } from "@/utils/http"
+import { getStrParam } from "@/utils/count";
+import { Toast } from 'vant';
+export default {
+	name: 'share-page',
+	data() {
+		return {
+			INTERGRAL: 3,
+			ONCECOST: 10,
+			total_integral: 0,
+			hospitalName: '',
+			doctorDepartment: '',
+			doctorName: '',
+			avatar_url: '',
+			token: '',
+			userId: '',
+			doctorId: ''
+		}
+	},
+	mounted () {
+    let href = window.location.href
+    this.token = getStrParam(href, "token")
+    this.userId = getStrParam(href, "user_id")
+    this.doctorId = getStrParam(href, "doctor_id")
+		this.getDoctorInfo()
+		this.getTotalIntegral()
+	},
+	computed: {
+		freeShareTimes() {
+			if (this.total_integral >= this.ONCECOST) {
+				return 0
+			} else {
+				let num = this.total_integral % this.INTERGRAL
+				if (num > 0) {
+					return Math.floor(this.total_integral / this.INTERGRAL) + 1
+				} else {
+					return Math.floor(this.total_integral / this.INTERGRAL)
+				}
 			}
+		}
+	},
+	methods: {
+		getDoctorInfo() {
+			let params = {
+				doctor: this.doctorId,
+				token: this.token
+			}
+			duoduo.getDoctorInfo(params).then(res => {
+				this.hospitalName = res.data.practice_hospital
+				this.doctorDepartment = res.data.dept_name
+				this.doctorName = res.data.doctor_name
+				this.avatar_url = res.data.avatar_url
+			})
 		},
+		getTotalIntegral() {
+			duoduo.getTotalIntegral({token: this.token}).then(res => {
+				if (res.data.code === 0) {
+					this.total_integral = res.data.totalIntegral
+					// if (this.total_integral >= this.ONCECOST) {
+					// 	this.$router.push({
+					// 		path: '/注册页面', // TODO
+					// 		query: {
+					// 			token: this.token,
+					// 			user_id: this.userId,
+					// 			doctor_id: this.doctorId
+					// 		}
+					// 	})
+					// }
+				}
+			})
+		},
+		userIntegralSave() {
+			let params = {
+				integral: this.INTERGRAL,
+				token: this.token,
+				type: 1
+			}
+			duoduo.userIntegralSave(params).then(res => {
+				console.log(res)
+			})
+		}
 	}
+}
 </script>
 
 <style lang="scss" scoped>
