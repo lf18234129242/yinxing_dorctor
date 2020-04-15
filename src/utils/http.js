@@ -27,6 +27,13 @@ const http = request => {
 }
 
 export const duoduo = {
+	jsInit: async(params) => {
+		const res = await http(axios.post(api.jsInit, params))
+		if (res) {
+			return Promise.resolve(res)
+		}
+		return Promise.reject(false)
+	},
 	bindDoctor: async(params) => {
 		const res = await http(axios.post(api.bind_doctor, params))
 		if (res) {

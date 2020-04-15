@@ -1,8 +1,8 @@
 <template>
   <div class="BindDoctor">
 		<div class="header_title">
-			<h3>交个医生朋友<br>病时医生来帮忙</h3>
-			<h4>每个家庭总需要在医院有个熟人</h4>
+			<h3>每个家庭都需要<br>有几个医生微信</h3>
+			<h4>微信群免费问问题，公益科普</h4>
 		</div>
 		<header>
 			<div class="avatar_box">
@@ -13,13 +13,13 @@
 				<li>{{doctorInfo.dept_name}}&nbsp;&nbsp;&nbsp;&nbsp;{{doctorInfo.doctor_name}}</li>
 			</div>
 			<div class="code_img_box">
-				<img src="@/assets/img/duoduo/building_bg_small.png" alt="">
+				<img :src="'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=' + doctorInfo.share_ticket" alt="">
 			</div>
 			<li class="code_desc">扫码绑定，即可免费提问</li>
 		</header>
 		<section>
 			<h4>下滑看看其他科室</h4>
-			<h5 class="sixedge">点击头像 可同时聘请多个医生</h5>
+			<h5 class="sixedge">点击头像 可同时关注多个医生</h5>
 			<ul class="doctor_list">
 				<li 
 					class="doctor_item"
@@ -37,8 +37,30 @@
 		</section>
 		<div class="kong"></div>
 		<footer>
-			<van-button class="btn" @click="bindDoctor">免费聘请</van-button>
+			<van-button class="btn" @click="bindDoctor">一键关注</van-button>
 		</footer>
+		<div class="thanks_for_share" v-if="showThanksBox">
+			<img @click="showThanksBox = false" class="close" src="@/assets/img/duoduo/icon_close.png" alt="">
+			<img class="banner" src="@/assets/img/duoduo/share_banner.png" alt="">
+			<div class="content">
+				<h3>我已成功聘请</h3>
+				<h4>
+					呼吸科张医生<br>
+					为我的家庭医生
+				</h4>
+				<van-button @click="showThanksBox = false" class="btn">我也要聘请医生</van-button>
+			</div>
+		</div>
+		<div v-if="showBindDoctorCode" class="bind_doctor_code_box">
+			<img @click="showBindDoctorCode = false" class="close" src="@/assets/img/duoduo/icon_close.png" alt="">
+			<div class="content">
+				<div class="sixedge" style="width:6.6rem;"> 扫一扫二维码并关注</div>
+				<p>立即聘请所选医生</p>
+				<div class="code_box">
+					<img :src="'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=' + doctorInfo.share_ticket" alt="">
+				</div>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -50,6 +72,8 @@ export default {
 	name: 'BindDoctor',
   data() {
     return {
+			showBindDoctorCode: false,
+			showThanksBox: true,
       doctorList: [],
 			seledtedArr: [],
 			token: '',
@@ -70,11 +94,14 @@ export default {
 	methods: {
 		bindDoctor() {
 			let params = {
-				doctorId: this.doctorIds,
+				doctorIds: this.doctorIds,
 				token: this.token
 			}
 			duoduo.bindDoctor(params).then(res => {
-				console.log(res)
+				if (res.data.code === 0) {
+					this.showBindDoctorCode = true
+					this.getDoctorInfo()
+				}
 			})
 		},
 		getDoctorInfo() {
@@ -97,7 +124,7 @@ export default {
 			}
 			duoduo.getDoctorList(params).then(res => {
 				if (res.data.code === 0) {
-					this.doctorList.push(res.data)
+					this.doctorList = res.data.data
 					this.doctorList.forEach(item => {
 						item.seledted = false
 					})
@@ -129,6 +156,49 @@ export default {
 	background-size: 100% auto;
 	padding: .6rem .7rem;
 	box-sizing: border-box;
+	.sixedge{
+		width: 9.4rem;
+		height: 1.36rem;
+		padding: 0 .5rem;
+		position:relative;
+		background: linear-gradient(90deg,rgba(0,181,140,1) 0%,rgba(0,104,82,1) 99%);
+		box-shadow:0px .1rem .2rem 0px rgba(0,106,84,0.3);
+		margin: 0 auto .92rem;
+		color: #fff;
+		font-size: .6rem;
+		text-align: center;
+		line-height: 1.36rem;
+		&::after{
+			content: '';
+			position: absolute;
+			background-color: transparent;
+			top: .2rem;
+			right: -0.5rem;
+			width: .95rem;
+			height: .95rem;
+			transform: rotate(45deg);
+			-ms-transform: rotate(45deg);
+			-moz-transform: rotate(45deg);
+			-webkit-transform: rotate(45deg);
+			-o-transform: rotate(45deg);
+			background: linear-gradient(180deg,#00715B 0%,#006852 99%)
+		}
+		&::before{
+			content: '';
+			position: absolute;
+			background-color: transparent;
+			top: .2rem;
+			left: -0.5rem;
+			width: .95rem;
+			height: .95rem;
+			transform: rotate(45deg);
+			-ms-transform: rotate(45deg);
+			-moz-transform: rotate(45deg);
+			-webkit-transform: rotate(45deg);
+			-o-transform: rotate(45deg);
+			background: linear-gradient(180deg,#00B58C 0%,#00AD85 99%);
+		}
+	}
 	.header_title{
 		color: #6D2700;
 		text-align: center;
@@ -213,49 +283,6 @@ export default {
 			line-height: 1.8rem;
 			text-align: center;
 		}
-		.sixedge{
-			width: 9.4rem;
-			height: 1.36rem;
-			padding: 0 .5rem;
-			position:relative;
-			background: linear-gradient(90deg,rgba(0,181,140,1) 0%,rgba(0,104,82,1) 99%);
-			box-shadow:0px .1rem .2rem 0px rgba(0,106,84,0.3);
-			margin: 0 auto .92rem;
-			color: #fff;
-			font-size: .6rem;
-			text-align: center;
-			line-height: 1.36rem;
-			&::after{
-				content: '';
-				position: absolute;
-				background-color: transparent;
-				top: .18rem;
-				right: -0.5rem;
-				width: 1rem;
-				height: 1rem;
-				transform: rotate(45deg);
-				-ms-transform: rotate(45deg);
-				-moz-transform: rotate(45deg);
-				-webkit-transform: rotate(45deg);
-				-o-transform: rotate(45deg);
-				background: linear-gradient(180deg,#00715B 0%,#006852 99%)
-			}
-			&::before{
-				content: '';
-				position: absolute;
-				background-color: transparent;
-				top: .18rem;
-				left: -0.5rem;
-				width: 1rem;
-				height: 1rem;
-				transform: rotate(45deg);
-				-ms-transform: rotate(45deg);
-				-moz-transform: rotate(45deg);
-				-webkit-transform: rotate(45deg);
-				-o-transform: rotate(45deg);
-				background: linear-gradient(180deg,#00B58C 0%,#00AD85 99%);
-			}
-		}
 		.doctor_list{
 			width: 100%;
 			padding: 0 0 4rem .86rem;
@@ -326,6 +353,119 @@ export default {
 			font-weight:600;
 			border: none;
 			letter-spacing: .08rem;
+		}
+	}
+	.bind_doctor_code_box{
+		width: 100%;
+		height: 100vh;
+		background: rgba(0,0,0,0.8);
+		position: fixed;
+		left: 0;
+		bottom: 0;
+		.close{
+			width: 1.2rem;
+			height: 1.2rem;
+			position: absolute;
+			left: 11.3rem;
+			top: 2.94rem;
+		}
+		.content{
+			width:11.34rem;
+			height:10.44rem;
+			background:rgba(255,255,255,1);
+			border-radius:.4rem;
+			padding: .8rem 0;
+			box-sizing: border-box;
+			position: absolute;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			top: 0;
+			margin: auto;
+			p{
+				width: 100%;
+				height: 1rem;
+				line-height: 1rem;
+				text-align: center;
+				font-size: .72rem;
+				font-weight: 600;
+				margin-top: -.4rem;
+			}
+			.code_box{
+				width:5.2rem;
+				height:5.2rem;
+				background:rgba(255,255,255,1);
+				border:1px solid rgba(255, 169, 124, 1);
+				box-shadow:-.28rem .28rem 0px 0px rgba(255,230,213,1);
+				border-radius:.4rem;
+				display: block;
+				margin: .3rem auto 0;
+				img{
+					width:5.2rem;
+					height:5.2rem;
+					border-radius:.4rem;
+				}
+			}
+		}
+	}
+	.thanks_for_share{
+		width: 100%;
+		height: 100vh;
+		background: rgba(0,0,0,0.8);
+		position: fixed;
+		left: 0;
+		bottom: 0;
+		.close{
+			width: 1.2rem;
+			height: 1.2rem;
+			position: absolute;
+			left: 11.3rem;
+			top: 2.94rem;
+		}
+		.banner{
+			width: 12.04rem;
+			height: 3.24rem;
+			position: absolute;
+			left: 1.46rem;
+			top: 5.4rem;
+		}
+		.content{
+			width:9.94rem;
+			height:8.36rem;
+			background:rgba(255,255,255,1);
+			border-radius:.4rem;
+			text-align: center;
+			color: #00221A;
+			padding: 1.2rem 0 .8rem;
+			box-sizing: border-box;
+			position: absolute;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			top: 0;
+			margin: auto;
+			h3{
+				font-size: .96rem;
+				margin-bottom: .3rem;
+				font-weight: bold;
+			}
+			h4{
+				font-size: .72rem;
+				line-height: 1.2rem;
+			}
+			.btn{
+				width:8.4rem;
+				height:1.76rem;
+				background:linear-gradient(90deg,rgba(0,181,140,1) 0%,rgba(0,104,82,1) 99%);
+				box-shadow:0px .1rem .2rem 0px rgba(0,106,84,0.3);
+				border-radius:.88rem;
+				color: #fff;
+				border: none;
+				font-size: .72rem;
+				font-weight: bold;
+				margin-top: .6rem;
+				letter-spacing: .1rem;
+			}
 		}
 	}
 }

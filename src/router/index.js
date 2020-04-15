@@ -142,5 +142,15 @@ export default new Router({
         title:'绑定医生'
       }
     },
+    {
+      path: '/RegisterAll',
+      name: 'RegisterAll',
+      component: loadView('RegisterAll'),
+      meta:{
+        index:0,
+        auth:true,
+        title:'绑定医生'
+      }
+    },
   ]
 })

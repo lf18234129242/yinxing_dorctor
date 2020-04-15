@@ -22,6 +22,7 @@ const URL = {
 	doctor_info: BASEURL + '/api/doctor/info', // 医生资料（详细信息）
 	doctor_list: BASEURL + '/api/doctor/areaRecommended', // 同地区医生推荐列表
 	bind_doctor: BASEURL + '/api/userdoctor/save', // 绑定（保存）医生
+	jsInit: BASEURL + '/api/wx/jsInit', // 绑定（保存）医生
 	
 }
 

@@ -1,35 +1,48 @@
 <template>
 	<div class="sharePage pr">
 		<img src="@/assets/img/duoduo/leaf-bg.png" alt="" class="leaf">
-		<div class="now_coin">
+		<!-- <div class="now_coin">
 			<span>当前金币：{{total_integral}}</span>
-		</div>
+		</div> -->
 		<div class="text_content">
+			<h2>转发<span>{{freeShareTimes}}</span>次<br>可免费帮忙</h2>
+		</div>
+		<!-- <div class="text_content">
 			<h3>消耗{{ONCECOST}}个金币，请医生帮忙</h3>
 			<h2>转发赚金币</h2>
 			<h3>转发一次赚{{INTERGRAL}}个金币</h3>
-		</div>
+		</div> -->
 		<div class="doctor_info">
 			<img :src="avatar_url" alt="" class="avatar">
 			<li class="hospital">{{hospitalName}}</li>
 			<li class="doctor_name">{{doctorDepartment}} {{doctorName}}</li>
-			<li class="share_text">“帮我转一下，有事我帮你”</li>
+			<li class="share_text">“我正在参加公益健康科普活动
+请分享给更多的人帮我助力”</li>
+			<!-- <li class="share_text">“帮我转一下，有事我帮你”</li> -->
 			<li v-if="freeShareTimes" class="share_times">*免费帮助还需转发{{freeShareTimes}}次</li>
 			<img class="red_bg" src="@/assets/img/duoduo/red_bg_.png" alt="">
 			<img class="half_coin" src="@/assets/img/duoduo/coin_half.png" alt="">
-			<button class="share_btn">立即转发</button>
+			<button @click="showShareArrow = true
+			" class="share_btn">立即转发</button>
+
+			<div v-if="showShareArrow" class="share_arrow" @click="showShareArrow = false">
+				<img src="@/assets/img/duoduo/share_arrow.png" alt="">
+			</div>
 		</div>
 	</div>
 </template>
 
 <script>
+import wx from 'weixin-js-sdk'
 import { duoduo } from "@/utils/http"
 import { getStrParam } from "@/utils/count";
+import wxShare from '@/utils/share'
 import { Toast } from 'vant';
 export default {
 	name: 'share-page',
 	data() {
 		return {
+			showShareArrow: false,
 			INTERGRAL: 3,
 			ONCECOST: 10,
 			total_integral: 0,
@@ -39,16 +52,20 @@ export default {
 			avatar_url: '',
 			token: '',
 			userId: '',
-			doctorId: ''
+			doctorId: '',
+			location_url: '',
+			type: 1, // 类型{1：分享好友 2：分享群聊3：分享朋友圈 4：留言消耗}
 		}
 	},
 	mounted () {
     let href = window.location.href
     this.token = getStrParam(href, "token")
     this.userId = getStrParam(href, "user_id")
-    this.doctorId = getStrParam(href, "doctor_id")
+		this.doctorId = getStrParam(href, "doctor_id")
+		this.location_url = href.slice(0, href.indexOf('#'))
 		this.getDoctorInfo()
 		this.getTotalIntegral()
+		this.shareFuc()
 	},
 	computed: {
 		freeShareTimes() {
@@ -57,14 +74,46 @@ export default {
 			} else {
 				let num = this.total_integral % this.INTERGRAL
 				if (num > 0) {
-					return Math.floor(this.total_integral / this.INTERGRAL) + 1
+					return 4 - Math.floor(this.total_integral / this.INTERGRAL) + 1
 				} else {
-					return Math.floor(this.total_integral / this.INTERGRAL)
+					return 4 - Math.floor(this.total_integral / this.INTERGRAL)
 				}
 			}
 		}
 	},
 	methods: {
+		shareFuc() {
+			wxShare(this.location_url).then(res => {
+				// 分享到群聊
+				wx.updateAppMessageShareData({ 
+					title: `帮我点一下，我正在参加${this.doctorName}医生的网络公益服务活动。`,
+					desc: `你也快来参加吧！可以免费向医生提问。`,
+					link: `https://admin.okginko.com/ginkgo-admin/wx/api/share?userId=${this.userId}&doctorId=${this.doctorId}`,
+					imgUrl: this.avatar_url,
+					success: function () {
+						this.type = 1
+						this.userIntegralSave()
+					},
+					cancel: function() {
+						// 分享失败
+					}
+				})
+				// 分享到朋友圈
+				wx.updateTimelineShareData({ 
+					title: `帮我点一下，我正在参加${this.doctorName}医生的网络公益服务活动。`,
+					link: `https://admin.okginko.com/ginkgo-admin/wx/api/share?userId=${this.userId}&doctorId=${this.doctorId}`,
+					imgUrl: this.avatar_url,
+					success: function () {
+						this.type = 3
+						this.userIntegralSave()
+					},
+					cancel: function() {
+						// 分享失败
+					}
+				})
+			})
+
+		},
 		getDoctorInfo() {
 			let params = {
 				doctor: this.doctorId,
@@ -81,16 +130,16 @@ export default {
 			duoduo.getTotalIntegral({token: this.token}).then(res => {
 				if (res.data.code === 0) {
 					this.total_integral = res.data.totalIntegral
-					// if (this.total_integral >= this.ONCECOST) {
-					// 	this.$router.push({
-					// 		path: '/注册页面', // TODO
-					// 		query: {
-					// 			token: this.token,
-					// 			user_id: this.userId,
-					// 			doctor_id: this.doctorId
-					// 		}
-					// 	})
-					// }
+					if (this.total_integral >= this.ONCECOST) {
+						this.$router.push({
+							path: '/RegisterAll',
+							query: {
+								token: this.token,
+								user_id: this.userId,
+								doctor_id: this.doctorId
+							}
+						})
+					}
 				}
 			})
 		},
@@ -98,10 +147,13 @@ export default {
 			let params = {
 				integral: this.INTERGRAL,
 				token: this.token,
-				type: 1
+				type: this.type
 			}
 			duoduo.userIntegralSave(params).then(res => {
 				console.log(res)
+				if (res.data.code === 0) {
+					this.getTotalIntegral()
+				}
 			})
 		}
 	}
@@ -114,6 +166,8 @@ export default {
 	height: 100vh;
 	background: #FFDBCA url('./../../assets/img/duoduo/building_bg.png') no-repeat center bottom;
 	background-size: 15rem auto;
+	border-top: 1px solid #FFDBCA;
+	box-sizing: border-box;
 	.leaf{
 		width: 5.8rem;
 		height: 6.4rem;
@@ -140,7 +194,8 @@ export default {
 	.text_content{
 		width: 100%;
 		text-align: center;
-		margin-top: .4rem;
+		// margin-top: .4rem;
+		margin-top: 2rem;
 		color: #6D2700;
 		font-style:italic;
 		transform: rotate(-3deg);
@@ -149,6 +204,10 @@ export default {
 			line-height: 2.6rem;
 			font-weight: bold;
 			text-shadow:-9px 5px 4px rgba(247,121,81,0.3);
+			span{
+				font-size: 3.24rem;
+				color: #FFFC2A;
+			}
 		}
 		h3{
 			font-size: .72rem;
@@ -202,7 +261,8 @@ export default {
 		}
 		.share_text{
 			margin-top: .7rem;
-			font-size: .92rem;
+			// font-size: .92rem;
+			font-size: .72rem;
 			color: #FF0000;
 			font-weight: 600;
 		}
@@ -242,6 +302,22 @@ export default {
 			position: absolute;
 			left: -1.1rem;
 			top: 5.1rem;
+		}
+	}
+	.share_arrow{
+		width: 100%;
+		height: 100vh;
+		background: rgba(0,0,0,0.8);
+		position: fixed;
+		left: 0;
+		top: 0;
+		z-index: 10;
+		img{
+			width: 9.28rem;
+			height: 7.28rem;
+			position: absolute;
+			left: 5.1rem;
+			top: 1.42rem;
 		}
 	}
 }
