@@ -58,7 +58,7 @@ export default {
 				path: '/SubmitTheIllness',
 				query: {
 					token: this.token,
-					doctor_id: this.questionList[0].doctor_id
+					doctorId: this.questionList[0].doctor_id
 				}
 			})
 		},

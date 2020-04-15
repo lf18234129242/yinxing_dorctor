@@ -85,8 +85,8 @@ export default {
 	mounted () {
     let href = window.location.href
     this.token = getStrParam(href, "token")
-    this.userId = getStrParam(href, "user_id")
-    this.doctorId = getStrParam(href, "doctor_id")
+    this.userId = getStrParam(href, "userId")
+    this.doctorId = getStrParam(href, "doctorId")
 		sessionStorage.setItem("token", this.token)
 		this.getDoctorInfo()
 		this.getDoctorList()

@@ -50,7 +50,7 @@ export default {
 	mounted () {
     let href = window.location.href
     this.token = getStrParam(href, "token");
-    this.doctorId = getStrParam(href, "doctor_id");
+    this.doctorId = getStrParam(href, "doctorId");
 		sessionStorage.setItem("token", this.token);
 		this.getDoctorInfo()
 	},

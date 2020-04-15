@@ -53,16 +53,15 @@ export default {
 			token: '',
 			userId: '',
 			doctorId: '',
-			location_url: '',
 			type: 1, // 类型{1：分享好友 2：分享群聊3：分享朋友圈 4：留言消耗}
 		}
 	},
-	mounted () {
+	created () {
     let href = window.location.href
     this.token = getStrParam(href, "token")
-    this.userId = getStrParam(href, "user_id")
-		this.doctorId = getStrParam(href, "doctor_id")
-		this.location_url = href.slice(0, href.indexOf('#'))
+    this.userId = getStrParam(href, "userId")
+		this.doctorId = getStrParam(href, "doctorId")
+		sessionStorage.setItem('token', this.token)
 		this.getDoctorInfo()
 		this.getTotalIntegral()
 		this.shareFuc()
@@ -83,7 +82,9 @@ export default {
 	},
 	methods: {
 		shareFuc() {
-			wxShare(this.location_url).then(res => {
+			wxShare(
+				window.location.href.split('#')[0]
+			).then(res => {
 				// 分享到群聊
 				wx.updateAppMessageShareData({ 
 					title: `帮我点一下，我正在参加${this.doctorName}医生的网络公益服务活动。`,
@@ -91,11 +92,7 @@ export default {
 					link: `https://admin.okginko.com/ginkgo-admin/wx/api/share?userId=${this.userId}&doctorId=${this.doctorId}`,
 					imgUrl: this.avatar_url,
 					success: function () {
-						this.type = 1
-						this.userIntegralSave()
-					},
-					cancel: function() {
-						// 分享失败
+						console.log('好友分享设置成功')
 					}
 				})
 				// 分享到朋友圈
@@ -104,13 +101,12 @@ export default {
 					link: `https://admin.okginko.com/ginkgo-admin/wx/api/share?userId=${this.userId}&doctorId=${this.doctorId}`,
 					imgUrl: this.avatar_url,
 					success: function () {
-						this.type = 3
-						this.userIntegralSave()
-					},
-					cancel: function() {
-						// 分享失败
+						console.log('朋友圈分享设置成功')
 					}
 				})
+				this.showShareArrow = false
+				this.type = 1
+				this.userIntegralSave()
 			})
 
 		},
@@ -135,8 +131,8 @@ export default {
 							path: '/RegisterAll',
 							query: {
 								token: this.token,
-								user_id: this.userId,
-								doctor_id: this.doctorId
+								userId: this.userId,
+								doctorId: this.doctorId
 							}
 						})
 					}
@@ -150,7 +146,6 @@ export default {
 				type: this.type
 			}
 			duoduo.userIntegralSave(params).then(res => {
-				console.log(res)
 				if (res.data.code === 0) {
 					this.getTotalIntegral()
 				}

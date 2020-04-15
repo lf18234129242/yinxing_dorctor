@@ -80,8 +80,8 @@ export default {
     let href = window.location.href
     // let href = "https://www.okginko.com/index.html??token=ouYrs1YZ2D4DVAbxbmBCgjMUv72Y&user_id=1&doctor_id=10";
     this.token = getStrParam(href, "token");
-    this.userId = getStrParam(href, "user_id");
-    this.doctorId = getStrParam(href, "doctor_id");
+    this.userId = getStrParam(href, "userId");
+    this.doctorId = getStrParam(href, "doctorId");
     sessionStorage.setItem("token", this.token);
   },
   methods: {
@@ -119,13 +119,12 @@ export default {
         token: this.token
       }).then(res => {
         if (res.data.code === 0) {
-          this.$router.push("/WechatCode");
           this.$router.push({
             path: "/SubmitTheIllness",
             query: {
               token: this.token,
-              user_id: this.userId,
-              doctor_id: this.doctorId
+              userId: this.userId,
+              doctorId: this.doctorId
             }
           });
         }

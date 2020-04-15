@@ -38,7 +38,6 @@ export default {
   mounted() {
     let href = window.location.href
     // let href = "https://admin.okginko.com/ginkgo-admin/wx/api/wxRoute?token=ouYrs1YZ2D4DVAbxbmBCgjMUv72Y&push_id=57";
-    console.log(href)
     this.token = getStrParam(href, "token");
     this.push_id = getStrParam(href, "push_id");
     count(this.push_id, this.token);
@@ -60,7 +59,6 @@ export default {
   },
   methods: {
     getIllList() {
-      console.log('getIllList')
       yinxing.getIllList({
         token: this.token
       }).then(res => {
