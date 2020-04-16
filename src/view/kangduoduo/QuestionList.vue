@@ -10,12 +10,12 @@
 				v-for="(item,index) in questionList"
 				:key="index"
 			>
-				<router-link :to="{path: '/Chating', query: {token: token, consult_id: item.consult_id}}">
+				<router-link :to="{path: '/Chating', query: {token: token, consultId: item.consult_id}}">
 					<div class="question">
 						<span :class="['question_status', item.type === 2 ? 'yes' : 'no']">{{item.type === 2 ? '已回复' : '未回复'}}</span>
 						{{item.sick_desc}}
 					</div>
-					<div class="question_imgs">
+					<div class="question_imgs" v-if="item.imgList[0] !== ''">
 						<img 
 							v-for="(jtem, idx) in item.imgList" 
 							:key="idx" 
@@ -55,7 +55,7 @@ export default {
 	methods: {
 		putQuestion() {
 			this.$router.push({
-				path: '/SubmitTheIllness',
+				path: '*',
 				query: {
 					token: this.token,
 					doctorId: this.questionList[0].doctor_id

@@ -18,9 +18,9 @@ const http = request => {
 				}
 			}
 		}).catch(err => {
-			// if (err.data.msg) {
-			// 	Toast(err.data.msg)
-			// }
+			if (err.data.msg) {
+				Toast(err.data.msg)
+			}
 			return reject(err)
 		})
 	})

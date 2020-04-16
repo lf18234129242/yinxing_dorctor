@@ -1,6 +1,6 @@
 <template>
   <div class="SubmitTheIllness">
-		<header>
+		<div class="header">
 			<h2>描述病情</h2>
 			<textarea 
 				id="illness_desc" 
@@ -19,7 +19,7 @@
 				:after-read="afterRead"
 				class="uploader"
 			/>
-		</header>
+		</div>
 		<footer>
 			<h3>温馨提示</h3>
 			<li>1.提交详细信息，医生可以给更准确的回复</li>
@@ -43,6 +43,7 @@ export default {
       fileList: [],
       fileArr: [],
 			doctorId: '',
+			consultId: '',
 			integral: 10,
 			token: ''
     }
@@ -50,9 +51,19 @@ export default {
 	mounted () {
     let href = window.location.href
     this.token = getStrParam(href, "token");
-    this.doctorId = getStrParam(href, "doctorId");
+		this.doctorId = getStrParam(href, "doctorId");
+		if (getStrParam(href, "consultId")) {
+			console.log(getStrParam(href, "consultId"))
+			this.consultId = getStrParam(href, "consultId");
+		} else {
+			this.consultId = ''
+		}
 		sessionStorage.setItem("token", this.token);
 		this.getDoctorInfo()
+	},
+	destroyed() {
+		console.log('destroyed')
+		this.consultId = ''
 	},
 	methods: {
 		getDoctorInfo() {
@@ -71,6 +82,7 @@ export default {
 			}
 			let fileStr = this.fileArr.join(",")
 			let params = {
+				consultId: this.consultId,
 				diseaseImgs: fileStr,
 				doctorId: this.doctorId,
 				integral: this.integral,
@@ -143,7 +155,7 @@ export default {
 </style>
 <style lang="scss" scoped>
 .SubmitTheIllness{
-	header{
+	.header{
 		width: 100%;
 		background: #fff;
 		padding: .6rem;

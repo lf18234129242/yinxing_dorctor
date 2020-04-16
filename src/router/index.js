@@ -113,6 +113,10 @@ export default new Router({
       }
     },
     {
+      path: '*',
+      redirect:{path:'/SubmitTheIllness'}
+    },
+    {
       path: '/Chating',
       name: 'Chating',
       component: loadView('Chating'),

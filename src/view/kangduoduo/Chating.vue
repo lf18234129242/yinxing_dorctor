@@ -1,11 +1,11 @@
 <template>
-  <div class="chating">
+  <div class="chating" ref="mescroll">
 		<div 
 			class="illness_desc"
 			v-for="(item, index) in questionInfoList"
 			:key="index"
 		>
-			<h2>{{item.consult_flag === 1 ? '医生回答' : '病情描述'}}</h2>
+			<h2>{{item.consult_flag === 1 ? '医生回答' : '病情描述'}} <span>{{item.create_time}}</span></h2>
 			<p>{{item.sick_desc}}</p>
 			<div v-if="item.imgArr[0]">
 				<img 
@@ -29,10 +29,15 @@
 </template>
 
 <script>
+// import MeScroll from 'mescroll.js'
+// import 'mescroll.js/mescroll.min.css'
 import { duoduo } from "@/utils/http"
 import { getStrParam } from "@/utils/count";
 import { Toast } from 'vant';
 import { ImagePreview } from 'vant'
+function scrollY () {
+	return window.pageYOffset || window.document.documentElement.scrollTop
+}
 export default {
 	name: 'chating',
   data() {
@@ -42,15 +47,28 @@ export default {
 			consultId: '',
 			limit: 10,
 			page: 0,
-			next_page: true
+			next_page: true,
     }
 	},
 	mounted() {
-		this.consultId = this.$route.query.consult_id
+		this.consultId = this.$route.query.consultId
 		this.token = this.$route.query.token
+		sessionStorage.setItem('consultId', this.consultId)
 		this.getQuestionInfo()
+		this.loadmore()
+	},
+	destroyed() {
+		window.removeEventListener('scroll')
 	},
 	methods: {
+		loadmore() {
+			window.addEventListener('scroll', () => {
+				const isBottom = scrollY() >= (document.body.scrollHeight - document.documentElement.clientHeight)
+				if (isBottom) {
+					this.getQuestionInfo()
+				}
+			})
+		},
 		getDoctorInfo(doctorId) {
 			let params = {
 				doctor: doctorId,
@@ -68,22 +86,22 @@ export default {
 		},
 		putQuestionAgain() {
 			this.$router.push({
-				path: '/SubmitTheIllness',
+				path: '*',
 				query: {
 					token: this.token,
-					doctorId: this.questionInfoList[0].doctor_id
+					doctorId: this.questionInfoList[0].doctor_id,
+					consultId: this.consultId
 				}
 			})
 		},
 		getQuestionInfo() {
 			if (!this.next_page) {
-				Toast('没有更多数据了')
 				return false
 			}
 			let params = {
 				consultId: this.consultId,
 				limit: this.limit,
-				page: this.page,
+				page: this.page * this.limit,
 				token: this.token
 			}
 			duoduo.getQuestionInfo(params).then(res => {
@@ -91,6 +109,7 @@ export default {
 					this.questionInfoList = this.questionInfoList.concat(res.data.list)
 					this.getDoctorInfo(this.questionInfoList[0].doctor_id)
 					this.next_page = true
+					this.page++
 				} else {
 					this.next_page = false
 				}
@@ -121,6 +140,10 @@ export default {
 			margin-bottom: .4rem;
 			height: 1.32rem;
 			line-height: 1.32rem;
+			span{
+				font-size: .5rem;
+				color: #666;
+			}
 		}
 		p{
 			font-size: .6rem;

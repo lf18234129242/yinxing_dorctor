@@ -56,7 +56,7 @@ export default {
 			type: 1, // 类型{1：分享好友 2：分享群聊3：分享朋友圈 4：留言消耗}
 		}
 	},
-	created () {
+	mounted () {
     let href = window.location.href
     this.token = getStrParam(href, "token")
     this.userId = getStrParam(href, "userId")
@@ -64,7 +64,6 @@ export default {
 		sessionStorage.setItem('token', this.token)
 		this.getDoctorInfo()
 		this.getTotalIntegral()
-		this.shareFuc()
 	},
 	computed: {
 		freeShareTimes() {
@@ -90,23 +89,17 @@ export default {
 					title: `帮我点一下，我正在参加${this.doctorName}医生的网络公益服务活动。`,
 					desc: `你也快来参加吧！可以免费向医生提问。`,
 					link: `https://admin.okginko.com/ginkgo-admin/wx/api/share?userId=${this.userId}&doctorId=${this.doctorId}`,
-					imgUrl: this.avatar_url,
-					success: function () {
-						console.log('好友分享设置成功')
-					}
+					imgUrl: this.avatar_url
 				})
 				// 分享到朋友圈
 				wx.updateTimelineShareData({ 
 					title: `帮我点一下，我正在参加${this.doctorName}医生的网络公益服务活动。`,
 					link: `https://admin.okginko.com/ginkgo-admin/wx/api/share?userId=${this.userId}&doctorId=${this.doctorId}`,
-					imgUrl: this.avatar_url,
-					success: function () {
-						console.log('朋友圈分享设置成功')
-					}
+					imgUrl: this.avatar_url
 				})
-				this.showShareArrow = false
-				this.type = 1
-				this.userIntegralSave()
+				// this.showShareArrow = false
+				// this.type = 1
+				// this.userIntegralSave()
 			})
 
 		},
@@ -189,8 +182,7 @@ export default {
 	.text_content{
 		width: 100%;
 		text-align: center;
-		// margin-top: .4rem;
-		margin-top: 2rem;
+		margin-top: .4rem;
 		color: #6D2700;
 		font-style:italic;
 		transform: rotate(-3deg);
