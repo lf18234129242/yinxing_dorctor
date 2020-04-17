@@ -27,6 +27,13 @@ const http = request => {
 }
 
 export const duoduo = {
+	usershareSave: async(params) => {
+		const res = await http(axios.post(api.usershare_save, params))
+		if (res) {
+			return Promise.resolve(res)
+		}
+		return Promise.reject(false)
+	},
 	jsInit: async(params) => {
 		const res = await http(axios.post(api.jsInit, params))
 		if (res) {

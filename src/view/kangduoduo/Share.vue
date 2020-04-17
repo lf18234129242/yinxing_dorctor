@@ -22,9 +22,24 @@
 			<li v-if="freeShareTimes" class="share_times">*免费帮助还需转发{{freeShareTimes}}次</li>
 			<img class="red_bg" src="@/assets/img/duoduo/red_bg_.png" alt="">
 			<img class="half_coin" src="@/assets/img/duoduo/coin_half.png" alt="">
-			<button @click="showShareArrow = true
-			" class="share_btn">立即转发</button>
-
+			<button 
+				v-show="isShowShareBtn" 
+				@click="showShareArrow = true" 
+				class="share_btn"
+			>立即转发 {{second}}</button>
+			<router-link :to="{
+				path: '/SubmitTheIllness',
+				query: {
+					token: token,
+					doctorId: doctorId,
+					userId: userId
+				}
+			}">
+				<button 
+					v-show="!isShowShareBtn" 
+					class="question_btn"
+				>立即提问</button>
+			</router-link>
 			<div v-if="showShareArrow" class="share_arrow" @click="showShareArrow = false">
 				<img src="@/assets/img/duoduo/share_arrow.png" alt="">
 			</div>
@@ -34,14 +49,16 @@
 
 <script>
 import wx from 'weixin-js-sdk'
+import wxShare from '@/utils/share'
 import { duoduo } from "@/utils/http"
 import { getStrParam } from "@/utils/count";
-import wxShare from '@/utils/share'
 import { Toast } from 'vant';
 export default {
 	name: 'share-page',
 	data() {
 		return {
+			second: 10,
+			isShowShareBtn: true,
 			showShareArrow: false,
 			INTERGRAL: 3,
 			ONCECOST: 10,
@@ -64,6 +81,8 @@ export default {
 		sessionStorage.setItem('token', this.token)
 		this.getDoctorInfo()
 		this.getTotalIntegral()
+		this.isShowShareBtn = true
+		this.timeout()
 	},
 	computed: {
 		freeShareTimes() {
@@ -80,6 +99,15 @@ export default {
 		}
 	},
 	methods: {
+		timeout() {
+			let timer = setInterval(() => {
+				this.second--
+				if (this.second <= 0) {
+					this.isShowShareBtn = false
+					clearInterval(timer)
+				}
+			}, 1000);
+		},
 		shareFuc() {
 			wxShare(
 				window.location.href.split('#')[0]
@@ -97,11 +125,7 @@ export default {
 					link: `https://admin.okginko.com/ginkgo-admin/wx/api/share?userId=${this.userId}&doctorId=${this.doctorId}`,
 					imgUrl: this.avatar_url
 				})
-				// this.showShareArrow = false
-				// this.type = 1
-				// this.userIntegralSave()
 			})
-
 		},
 		getDoctorInfo() {
 			let params = {
@@ -282,6 +306,25 @@ export default {
 			color: #6D2700;
 			font-weight: bold;
 			z-index: 3;
+		}
+		.question_btn{
+			width:8.4rem;
+			height:1.76rem;
+			background:linear-gradient(90deg,rgba(0,181,140,1) 0%,rgba(0,104,82,1) 99%);
+			box-shadow:0 .36rem 1.3rem 0 rgba(0,106,84,0.3);
+			border-radius:.88rem;
+			display: block;
+			color: #fff;
+			font-size: .72rem;
+			font-weight:600;
+			border: none;
+			letter-spacing: .08rem;
+			z-index: 3;
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			margin: auto;
 		}
 		.half_coin{
 			width: 1.14rem;

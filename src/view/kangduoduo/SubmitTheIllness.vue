@@ -22,9 +22,9 @@
 		</div>
 		<footer>
 			<h3>温馨提示</h3>
-			<li>1.提交详细信息，医生可以给更准确的回复</li>
-			<li>2.该服务是医生利用空闲时间进行的免费帮忙</li>
-			<li>3.本服务为免费帮忙，内容仅供参考，如具体病情请及时前往门诊就医。</li>
+			<li>1.提交详细的资料有助于医生给您更好的建议</li>
+			<li>2.本服务系为您提供的免费帮忙，如需诊疗，请前往医院就医</li>
+			<li>3.医生平时工作较忙，本次帮忙会在1-2个工作日内回复</li>
 			<van-button round class="submit" @click="handleSubmit">立即提交</van-button>
 		</footer>
 	</div>
@@ -53,7 +53,6 @@ export default {
     this.token = getStrParam(href, "token");
 		this.doctorId = getStrParam(href, "doctorId");
 		if (getStrParam(href, "consultId")) {
-			console.log(getStrParam(href, "consultId"))
 			this.consultId = getStrParam(href, "consultId");
 		} else {
 			this.consultId = ''
@@ -62,7 +61,6 @@ export default {
 		this.getDoctorInfo()
 	},
 	destroyed() {
-		console.log('destroyed')
 		this.consultId = ''
 	},
 	methods: {
@@ -85,7 +83,7 @@ export default {
 				consultId: this.consultId,
 				diseaseImgs: fileStr,
 				doctorId: this.doctorId,
-				integral: this.integral,
+				// integral: this.integral,
 				sickDesc: this.illness_desc.trim(),
 				token: this.token
 			}

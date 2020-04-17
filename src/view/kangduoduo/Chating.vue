@@ -29,8 +29,6 @@
 </template>
 
 <script>
-// import MeScroll from 'mescroll.js'
-// import 'mescroll.js/mescroll.min.css'
 import { duoduo } from "@/utils/http"
 import { getStrParam } from "@/utils/count";
 import { Toast } from 'vant';

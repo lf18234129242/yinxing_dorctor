@@ -35,7 +35,7 @@
 				</li>
 			</ul>
 		</section>
-		<div class="kong"></div>
+		<!-- <div class="kong"></div> -->
 		<footer>
 			<van-button class="btn" @click="bindDoctor">一键关注</van-button>
 		</footer>
@@ -90,8 +90,30 @@ export default {
 		sessionStorage.setItem("token", this.token)
 		this.getDoctorInfo()
 		this.getDoctorList()
+		this.usershareSave()
+		this.userIntegralSave()
 	},
 	methods: {
+		userIntegralSave() {
+			let params = {
+				integral: 3,
+				token: this.token,
+				type: 1
+			}
+			duoduo.userIntegralSave(params).then(res => {
+				console.log(res)
+			})
+		},
+		usershareSave() {
+			let params = {
+				doctorId: this.doctorId,
+				token: this.token,
+				userId: this.userId
+			}
+			duoduo.usershareSave(params).then(res => {
+				console.log(res)
+			})
+		},
 		bindDoctor() {
 			let params = {
 				doctorIds: this.doctorIds,
@@ -330,16 +352,17 @@ export default {
 			}
 		}
 	}
-	.kong{
-		width: 100%;
-		height: 4.24rem;
-	}
+	// .kong{
+		// width: 100%;
+		// height: 4.24rem;
+	// }
 	footer{
 		width: 100%;
-		height: 4.24rem;
-		position: fixed;
-		left: 0;
-		bottom: 0;
+		height: 3.24rem;
+		margin-top: 1rem;
+		// position: absolute;
+		// left: 0;
+		// bottom: 0;
 		.btn{
 			width:8.4rem;
 			height:1.76rem;
