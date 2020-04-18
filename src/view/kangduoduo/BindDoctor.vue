@@ -29,9 +29,13 @@
 				>
 					<div class="pr avatar">
 						<img :src="item.avatar_url" alt="">
-						<div class="model" v-if="item.seledted">已选择</div>
+						<div class="model" v-show="item.seledted">已选择</div>
 					</div>
-					<div class="doctor_name">{{item.dept_name}}&nbsp;&nbsp;&nbsp;&nbsp;{{item.doctor_name}}</div>
+					<div class="doctor_name">
+						<span>{{item.dept_name}}</span>
+						<span>{{item.doctor_name}}</span>
+						<!-- <span>{{item.practice_hospital}}</span> -->
+					</div>
 				</li>
 			</ul>
 		</section>
@@ -54,7 +58,7 @@
 		<div v-if="showBindDoctorCode" class="bind_doctor_code_box">
 			<img @click="showBindDoctorCode = false" class="close" src="@/assets/img/duoduo/icon_close.png" alt="">
 			<div class="content">
-				<div class="sixedge" style="width:6.6rem;"> 扫一扫二维码并关注</div>
+				<div class="sixedge" style="width:6.6rem;">长按二维码并关注</div>
 				<p>立即聘请所选医生</p>
 				<div class="code_box">
 					<img :src="'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=' + doctorInfo.share_ticket" alt="">
@@ -80,7 +84,8 @@ export default {
 			token: '',
 			userId: '',
 			doctorId: '',
-			doctorInfo: {}
+			doctorInfo: {},
+			doctorListArr: []
     }
 	},
 	mounted () {
@@ -118,7 +123,7 @@ export default {
 		},
 		bindDoctor() {
 			let params = {
-				doctorIds: this.doctorIds,
+				doctorIds: this.doctorIds ? this.doctorIds : this.doctorListArr.toString(),
 				token: this.token
 			}
 			duoduo.bindDoctor(params).then(res => {
@@ -152,7 +157,10 @@ export default {
 						this.haveOtherDoctor = true
 						this.doctorList = res.data.data
 						this.doctorList.forEach(item => {
-							item.seledted = false
+							this.$set(item, 'seledted', false)
+						})
+						this.doctorList.forEach(item => {
+							this.doctorListArr.push(item.id)
 						})
 					} else {
 						this.haveOtherDoctor = false
@@ -164,10 +172,10 @@ export default {
 			this.doctorList.forEach(item => {
 				if (item.id === data.id) {
 					if (item.seledted) {
-						item.seledted = false
+						this.$set(item, 'seledted', false)
 						this.seledtedArr.splice(this.seledtedArr.indexOf(item.id),1)
 					} else {
-						item.seledted = true
+						this.$set(item, 'seledted', true)
 						this.seledtedArr.push(item.id)
 					}
 				}
@@ -273,10 +281,12 @@ export default {
 		}
 		.info{
 			text-align: center;
-			font-size: .6rem;
-			color: #00221A;
-			line-height: .96rem;
 			margin-bottom: 1rem;
+			li{
+				font-size: .6rem;
+				color: #00221A;
+				line-height: .96rem;
+			}
 		}
 		.code_img_box{
 			width: 5.2rem;
@@ -317,13 +327,13 @@ export default {
 		}
 		.doctor_list{
 			width: 100%;
-			padding: 0 0 4rem .86rem;
+			padding: 0 0 1rem .86rem;
 			box-sizing: border-box;
 			display: flex;
 			flex-wrap: wrap;			
 			.doctor_item{
 				width: 3.6rem;
-				height: 5.4rem;
+				height: 6rem;
 				margin: 0 .6rem 0 0;
 				.avatar{
 					width: 3.6rem;
@@ -358,6 +368,8 @@ export default {
 					line-height: 1rem;
 					font-size: .48rem;
 					color: #00221A;
+					display: flex;
+					flex-direction: column;
 				}
 			}
 		}
@@ -382,10 +394,13 @@ export default {
 			display: block;
 			margin: 0 auto;
 			color: #fff;
-			font-size: .72rem;
 			font-weight:600;
 			border: none;
 			letter-spacing: .08rem;
+			padding: 0;
+			span{
+				font-size: .8rem;
+			}
 		}
 	}
 	.bind_doctor_code_box{

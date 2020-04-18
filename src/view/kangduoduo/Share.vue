@@ -85,9 +85,9 @@ export default {
 		this.doctorId = getStrParam(href, "doctorId")
 		sessionStorage.setItem('token', this.token)
 		this.getDoctorInfo()
-		// this.getTotalIntegral()
-		// this.isShowShareBtn = true
-		// this.timeout()
+		this.getTotalIntegral()
+		this.isShowShareBtn = true
+		this.timeout()
 	},
 	computed: {
 		freeShareTimes() {

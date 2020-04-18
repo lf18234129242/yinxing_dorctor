@@ -125,12 +125,12 @@ export default {
     },
     // 返回布尔值
     beforeRead(file) {
-      if (file.type == "image/jpeg" || file.type == "image/png") {
-        return true;
-      } else {
-        this.$toast("请上传 jpg/png 格式图片");
-        return false;
-      }
+			console.log(file)
+      if (file.type !== 'image/jpeg' && file.type !== 'image/png') {
+				Toast('只允许上传jpg/png格式的图片！')
+				return false
+			}
+			return true
     }
 	}
 }

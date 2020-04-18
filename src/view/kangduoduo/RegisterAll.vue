@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import { yinxing } from "@/utils/http"
+import { yinxing, duoduo } from "@/utils/http"
 import { count, getStrParam } from "@/utils/count";
 export default {
   name: 'RegisterAll',
@@ -69,6 +69,7 @@ export default {
       token: "",
       userId: "",
       doctorId: "",
+      myIntegral: "",
     };
   },
   mounted() {
@@ -119,17 +120,36 @@ export default {
         token: this.token
       }).then(res => {
         if (res.data.code === 0) {
-          this.$router.push({
-            path: "/SubmitTheIllness",
-            query: {
-              token: this.token,
-              userId: this.userId,
-              doctorId: this.doctorId
-            }
-          });
+          this.getTotalIntegral()
         }
       })
     },
+		getTotalIntegral() {
+			duoduo.getTotalIntegral({token: this.token}).then(res => {
+				if (res.data.code === 0) {
+					this.myIntegral = res.data.totalIntegral
+					if (this.myIntegral < 20) {
+						this.$router.push({
+							path: '/Share',
+							query: {
+                userId: this.userId,
+                doctorId: this.doctorId,
+                token: this.token
+							}
+						})
+					} else {
+            this.$router.push({
+              path: "/SubmitTheIllness",
+              query: {
+                token: this.token,
+                userId: this.userId,
+                doctorId: this.doctorId
+              }
+            })
+          }
+				}
+			})
+		},
     selectSex() {
       this.show_sex = true;
     },

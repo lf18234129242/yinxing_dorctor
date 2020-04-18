@@ -1,9 +1,9 @@
 <template>
   <div id="app" ref="app">
     <transition :name="transitionName">
-      <keep-alive exclude="SubmitTheIllness">
+      <!-- <keep-alive exclude="SubmitTheIllness, Chating"> -->
         <router-view/>
-      </keep-alive>
+      <!-- </keep-alive> -->
     </transition>
   </div>
 </template>

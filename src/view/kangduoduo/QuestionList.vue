@@ -29,7 +29,11 @@
 							alt=""
 						>
 					</div>
-					<van-button class="look_detail">查看</van-button>
+					<div v-else></div>
+					<div class="btn_box">
+						<span v-if="item.show_power === 2">消耗10积分</span>
+						<van-button class="look_detail">查看</van-button>
+					</div>
 				</div>
 				<div class="create_time">
 					<span>{{item.update_time}}</span>
@@ -100,6 +104,7 @@ export default {
 			} else if (item.show_power === 2) {
 				duoduo.getTotalIntegral({token: this.token}).then(res => {
 					if (res.data.code === 0) {
+						this.myIntegral = res.data.totalIntegral
 						if (res.data.totalIntegral >= 10) {
 							this.costIntegral(item)
 							this.showShareArrow = false
@@ -287,13 +292,23 @@ export default {
 			}
 		}
 		.question_imgs{
+			width: 100%;
 			display: flex;
+			align-items: center;
+			justify-content: space-between;
 			padding-bottom: .5rem;
 			img{
 				width: 3.2rem;
 				height: 3.2rem;
 				display: inline-block;
 				margin-right: .4rem;
+			}
+			.btn_box{
+				&>span{
+					color: red;
+					font-size: .56rem;
+					text-align: center;
+				}
 			}
 			.look_detail{
 				width:3rem;
@@ -307,7 +322,7 @@ export default {
 				font-weight:600;
 				border: none;
 				letter-spacing: .08rem;
-				margin: auto;
+				margin: auto 0;
 				padding: 0;
 				line-height: 1rem;
 				align-self: flex-end;
