@@ -163,7 +163,7 @@ export default new Router({
       meta:{
         index:0,
         auth:true,
-        title:'绑定医生'
+        title:'转发好医生'
       }
     },
   ]
