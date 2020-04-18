@@ -25,7 +25,7 @@
 			<li>1.提交详细的资料有助于医生给您更好的建议</li>
 			<li>2.本服务系为您提供的免费帮忙，如需诊疗，请前往医院就医</li>
 			<li>3.医生平时工作较忙，本次帮忙会在1-2个工作日内回复</li>
-			<van-button round class="submit" @click="handleSubmit">立即提交</van-button>
+			<van-button round class="submit" :disabled="disabledSub" @click="handleSubmit">立即提交</van-button>
 		</footer>
 	</div>
 </template>
@@ -39,6 +39,7 @@ export default {
   name: "SubmitTheIllness",
   data() {
     return {
+			disabledSub: false,
       illness_desc: "",
       fileList: [],
       fileArr: [],
@@ -50,7 +51,7 @@ export default {
 	},
 	mounted () {
     let href = window.location.href
-    this.token = getStrParam(href, "token");
+		this.token = getStrParam(href, "token");
 		this.doctorId = getStrParam(href, "doctorId");
 		if (getStrParam(href, "consultId")) {
 			this.consultId = getStrParam(href, "consultId");
@@ -59,6 +60,7 @@ export default {
 		}
 		sessionStorage.setItem("token", this.token);
 		this.getDoctorInfo()
+		this.disabledSub = false
 	},
 	destroyed() {
 		this.consultId = ''
@@ -78,6 +80,7 @@ export default {
 				Toast('请您先填写病情描述哦！')
 				return false
 			}
+			this.disabledSub = true
 			let fileStr = this.fileArr.join(",")
 			let params = {
 				consultId: this.consultId,

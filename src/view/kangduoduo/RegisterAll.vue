@@ -42,7 +42,7 @@
         @confirm="onConfirm_age"
       />
     </van-popup>
-    <van-button type="primary" color="#16A332" @click="next">下一步</van-button>
+    <van-button type="primary" color="#16A332" :disabled="disabledNext" @click="next">下一步</van-button>
   </div>
 </template>
 
@@ -53,6 +53,7 @@ export default {
   name: 'RegisterAll',
   data() {
     return {
+      disabledNext: false,
       phone_num: "",
       reg_num: "",
       phoneCode: "",
@@ -85,6 +86,9 @@ export default {
     this.doctorId = getStrParam(href, "doctorId");
     sessionStorage.setItem("token", this.token);
   },
+  mounted () {
+    this.disabledNext = false
+  },
   methods: {
     // 下一步
     next() {
@@ -112,6 +116,7 @@ export default {
         this.$toast("验证码输入错误");
         return false;
       }
+      this.disabledNext = true
       yinxing.messageSave({
         phoneNumber: this.phone_num,
         age: this.userage,

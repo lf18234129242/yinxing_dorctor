@@ -85,24 +85,24 @@ export default {
 		this.doctorId = getStrParam(href, "doctorId")
 		sessionStorage.setItem('token', this.token)
 		this.getDoctorInfo()
-		this.getTotalIntegral()
+		// this.getTotalIntegral()
 		this.isShowShareBtn = true
 		this.timeout()
 	},
-	computed: {
-		freeShareTimes() {
-			if (this.total_integral >= this.ONCECOST) {
-				return 0
-			} else {
-				let num = this.total_integral % this.INTERGRAL
-				if (num > 0) {
-					return 4 - Math.floor(this.total_integral / this.INTERGRAL) + 1
-				} else {
-					return 4 - Math.floor(this.total_integral / this.INTERGRAL)
-				}
-			}
-		}
-	},
+	// computed: {
+	// 	freeShareTimes() {
+	// 		if (this.total_integral >= this.ONCECOST) {
+	// 			return 0
+	// 		} else {
+	// 			let num = this.total_integral % this.INTERGRAL
+	// 			if (num > 0) {
+	// 				return 4 - Math.floor(this.total_integral / this.INTERGRAL) + 1
+	// 			} else {
+	// 				return 4 - Math.floor(this.total_integral / this.INTERGRAL)
+	// 			}
+	// 		}
+	// 	}
+	// },
 	methods: {
 		timeout() {
 			let timer = setInterval(() => {
@@ -135,35 +135,25 @@ export default {
 				this.shareFuc()
 			})
 		},
-		getTotalIntegral() {
-			duoduo.getTotalIntegral({token: this.token}).then(res => {
-				if (res.data.code === 0) {
-					this.total_integral = res.data.totalIntegral
-					if (this.total_integral >= this.ONCECOST) {
-						this.$router.push({
-							path: '/RegisterAll',
-							query: {
-								token: this.token,
-								userId: this.userId,
-								doctorId: this.doctorId
-							}
-						})
-					}
-				}
-			})
-		},
-		userIntegralSave() {
-			let params = {
-				integral: this.INTERGRAL,
-				token: this.token,
-				type: this.type
-			}
-			duoduo.userIntegralSave(params).then(res => {
-				if (res.data.code === 0) {
-					this.getTotalIntegral()
-				}
-			})
-		}
+		// getTotalIntegral() {
+		// 	duoduo.getTotalIntegral({token: this.token}).then(res => {
+		// 		if (res.data.code === 0) {
+		// 			this.total_integral = res.data.totalIntegral
+		// 		}
+		// 	})
+		// },
+		// userIntegralSave() {
+		// 	let params = {
+		// 		integral: this.INTERGRAL,
+		// 		token: this.token,
+		// 		type: this.type
+		// 	}
+		// 	duoduo.userIntegralSave(params).then(res => {
+		// 		if (res.data.code === 0) {
+		// 			this.getTotalIntegral()
+		// 		}
+		// 	})
+		// }
 	}
 }
 </script>
