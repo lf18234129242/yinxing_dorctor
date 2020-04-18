@@ -1,10 +1,10 @@
 <template>
-  <div class="BindDoctor">
+  <div :class="['BindDoctor', haveOtherDoctor ? '' : 'vh100']">
 		<div class="header_title">
 			<h3>每个家庭都需要<br>有几个医生微信</h3>
 			<h4>微信群免费问问题，公益科普</h4>
 		</div>
-		<header>
+		<div class="header">
 			<div class="avatar_box">
 				<img :src="doctorInfo.avatar_url" alt="">
 			</div>
@@ -16,8 +16,8 @@
 				<img :src="'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=' + doctorInfo.share_ticket" alt="">
 			</div>
 			<li class="code_desc">扫码绑定，即可免费提问</li>
-		</header>
-		<section>
+		</div>
+		<section v-if="haveOtherDoctor">
 			<h4>下滑看看其他科室</h4>
 			<h5 class="sixedge">点击头像 可同时关注多个医生</h5>
 			<ul class="doctor_list">
@@ -36,10 +36,10 @@
 			</ul>
 		</section>
 		<!-- <div class="kong"></div> -->
-		<footer>
+		<footer v-if="haveOtherDoctor">
 			<van-button class="btn" @click="bindDoctor">一键关注</van-button>
 		</footer>
-		<div class="thanks_for_share" v-if="showThanksBox">
+		<!-- <div class="thanks_for_share" v-if="showThanksBox">
 			<img @click="showThanksBox = false" class="close" src="@/assets/img/duoduo/icon_close.png" alt="">
 			<img class="banner" src="@/assets/img/duoduo/share_banner.png" alt="">
 			<div class="content">
@@ -50,7 +50,7 @@
 				</h4>
 				<van-button @click="showThanksBox = false" class="btn">我也要聘请医生</van-button>
 			</div>
-		</div>
+		</div> -->
 		<div v-if="showBindDoctorCode" class="bind_doctor_code_box">
 			<img @click="showBindDoctorCode = false" class="close" src="@/assets/img/duoduo/icon_close.png" alt="">
 			<div class="content">
@@ -72,6 +72,7 @@ export default {
 	name: 'BindDoctor',
   data() {
     return {
+			haveOtherDoctor: false,
 			showBindDoctorCode: false,
 			showThanksBox: true,
       doctorList: [],
@@ -92,6 +93,7 @@ export default {
 		this.getDoctorList()
 		this.usershareSave()
 		this.userIntegralSave()
+		Toast('谢谢你的助力！')
 	},
 	methods: {
 		userIntegralSave() {
@@ -146,10 +148,15 @@ export default {
 			}
 			duoduo.getDoctorList(params).then(res => {
 				if (res.data.code === 0) {
-					this.doctorList = res.data.data
-					this.doctorList.forEach(item => {
-						item.seledted = false
-					})
+					if (res.data.data.length > 0) {
+						this.haveOtherDoctor = true
+						this.doctorList = res.data.data
+						this.doctorList.forEach(item => {
+							item.seledted = false
+						})
+					} else {
+						this.haveOtherDoctor = false
+					}
 				}
 			})
 		},
@@ -172,6 +179,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.vh100{
+	height: 100vh;
+}
 .BindDoctor{
 	width: 100%;
 	background: #FFD2B2 url('./../../assets/img/duoduo/building_bg_small.png') no-repeat center 4.76rem;
@@ -237,7 +247,7 @@ export default {
 			line-height: 1.42rem;
 		}
 	}
-	header{
+	.header{
 		width:13.6rem;
 		height:12.56rem;
 		background:rgba(255,255,255,1);

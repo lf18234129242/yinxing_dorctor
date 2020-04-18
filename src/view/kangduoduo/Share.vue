@@ -5,7 +5,8 @@
 			<span>当前金币：{{total_integral}}</span>
 		</div> -->
 		<div class="text_content">
-			<h2>转发<span>{{freeShareTimes}}</span>次<br>可免费帮忙</h2>
+			<!-- <h2>转发<span>{{freeShareTimes}}</span>次<br>可免费帮忙</h2> -->
+			<h2>转发3次<br>免费问问题</h2>
 		</div>
 		<!-- <div class="text_content">
 			<h3>消耗{{ONCECOST}}个金币，请医生帮忙</h3>
@@ -13,13 +14,17 @@
 			<h3>转发一次赚{{INTERGRAL}}个金币</h3>
 		</div> -->
 		<div class="doctor_info">
-			<img :src="avatar_url" alt="" class="avatar">
+			<div class="avatar_box">
+				<img :src="avatar_url" alt="" class="avatar">
+			</div>
 			<li class="hospital">{{hospitalName}}</li>
 			<li class="doctor_name">{{doctorDepartment}} {{doctorName}}</li>
-			<li class="share_text">“我正在参加公益健康科普活动
-请分享给更多的人帮我助力”</li>
+			<li class="share_text">
+				“我正在参加公益健康科普活动<br>
+				请分享给更多的人帮我助力”
+			</li>
 			<!-- <li class="share_text">“帮我转一下，有事我帮你”</li> -->
-			<li v-if="freeShareTimes" class="share_times">*免费帮助还需转发{{freeShareTimes}}次</li>
+			<!-- <li v-if="freeShareTimes" class="share_times">*免费帮助还需转发{{freeShareTimes}}次</li> -->
 			<img class="red_bg" src="@/assets/img/duoduo/red_bg_.png" alt="">
 			<img class="half_coin" src="@/assets/img/duoduo/coin_half.png" alt="">
 			<button 
@@ -80,9 +85,9 @@ export default {
 		this.doctorId = getStrParam(href, "doctorId")
 		sessionStorage.setItem('token', this.token)
 		this.getDoctorInfo()
-		this.getTotalIntegral()
-		this.isShowShareBtn = true
-		this.timeout()
+		// this.getTotalIntegral()
+		// this.isShowShareBtn = true
+		// this.timeout()
 	},
 	computed: {
 		freeShareTimes() {
@@ -110,22 +115,12 @@ export default {
 		},
 		shareFuc() {
 			wxShare(
-				window.location.href.split('#')[0]
-			).then(res => {
-				// 分享到群聊
-				wx.updateAppMessageShareData({ 
-					title: `帮我点一下，我正在参加${this.doctorName}医生的网络公益服务活动。`,
-					desc: `你也快来参加吧！可以免费向医生提问。`,
-					link: `https://admin.okginko.com/ginkgo-admin/wx/api/share?userId=${this.userId}&doctorId=${this.doctorId}`,
-					imgUrl: this.avatar_url
-				})
-				// 分享到朋友圈
-				wx.updateTimelineShareData({ 
-					title: `帮我点一下，我正在参加${this.doctorName}医生的网络公益服务活动。`,
-					link: `https://admin.okginko.com/ginkgo-admin/wx/api/share?userId=${this.userId}&doctorId=${this.doctorId}`,
-					imgUrl: this.avatar_url
-				})
-			})
+				window.location.href.split('#')[0],
+				this.doctorName, 
+				this.userId, 
+				this.doctorId, 
+				this.avatar_url
+			)
 		},
 		getDoctorInfo() {
 			let params = {
@@ -137,6 +132,7 @@ export default {
 				this.doctorDepartment = res.data.dept_name
 				this.doctorName = res.data.doctor_name
 				this.avatar_url = res.data.avatar_url
+				this.shareFuc()
 			})
 		},
 		getTotalIntegral() {
@@ -211,8 +207,9 @@ export default {
 		font-style:italic;
 		transform: rotate(-3deg);
 		h2{
-			font-size: 1.96rem;
-			line-height: 2.6rem;
+			margin-top: 1rem;
+			font-size: 1.5rem;
+			line-height: 2.2rem;
 			font-weight: bold;
 			text-shadow:-9px 5px 4px rgba(247,121,81,0.3);
 			span{
@@ -254,11 +251,20 @@ export default {
 			top: 3.8rem;
 			border-radius: 0 .4rem 0 0;
 		}
+		.avatar_box{
+			width: 4.2rem;
+			height: 4.2rem;
+			background: #fff;
+			border-radius: 50%;
+			margin: -2rem auto 0;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
 		.avatar{
 			width: 4rem;
 			height: 4rem;
 			border-radius: 50%;
-			margin-top: -2rem;
 		}
 		.hospital{
 			font-size: .72rem;
@@ -275,7 +281,7 @@ export default {
 			// font-size: .92rem;
 			font-size: .72rem;
 			color: #FF0000;
-			font-weight: 600;
+			text-align: center;
 		}
 		.share_times{
 			font-size: .72rem;
@@ -315,7 +321,7 @@ export default {
 			border-radius:.88rem;
 			display: block;
 			color: #fff;
-			font-size: .72rem;
+			font-size: .96rem;
 			font-weight:600;
 			border: none;
 			letter-spacing: .08rem;

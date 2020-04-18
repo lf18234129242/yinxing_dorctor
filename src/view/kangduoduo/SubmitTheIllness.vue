@@ -7,7 +7,7 @@
 				cols="30" 
 				rows="10" 
 				maxlength="500" 
-				placeholder="请详细描述您的主要症状，也可上传症状部位的照片或更多资料，会得到医生更详细的知道！"
+				placeholder="请详细描述您的主要症状，也可上传症状部位的照片或更多资料，会得到医生更详细的指导！"
 				v-model="illness_desc"	
 			></textarea>
 			<h2>添加照片</h2>

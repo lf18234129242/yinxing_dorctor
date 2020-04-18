@@ -19,27 +19,31 @@
 					<span :class="['question_status', item.type === 2 ? 'yes' : 'no']">{{item.type === 2 ? '已回复' : '未回复'}}</span>
 					{{item.sick_desc}}
 				</div>
-				<div class="question_imgs" v-if="item.imgList[0] !== ''">
-					<img 
-						v-for="(jtem, idx) in item.imgList" 
-						:key="idx" 
-						v-show="idx < 3"
-						:src="jtem" 
-						alt=""
-					>
+				<div class="question_imgs">
+					<div v-if="item.imgList[0] !== ''">
+						<img 
+							v-for="(jtem, idx) in item.imgList" 
+							:key="idx" 
+							v-show="idx < 3"
+							:src="jtem" 
+							alt=""
+						>
+					</div>
+					<van-button class="look_detail">查看</van-button>
 				</div>
 				<div class="create_time">
 					<span>{{item.update_time}}</span>
-					<span>查看医生回复消耗10积分</span>
+					<!-- <span>查看医生回复消耗10积分</span> -->
 				</div>
 			</div>
 		</template>
-		<van-button class="put_question" @click="putQuestion">立即提问</van-button>
+		<div class="kong"></div>
+		<van-button class="put_question" @click="putQuestion">再次提问</van-button>
 		<div v-if="showShareArrow" class="share_arrow" @click="showShareArrow = false">
 			<img src="@/assets/img/duoduo/share_arrow.png" alt="">
 			<ul>
 				<li>1. 转发给您的好友</li>
-				<li>2. 清好友帮忙点一下链接</li>
+				<li>2. 请好友帮忙点一下链接</li>
 				<li>3. 即可赚取3积分</li>
 			</ul>
 		</div>
@@ -165,22 +169,12 @@ export default {
 		},
 		shareFuc() {
 			wxShare(
-				window.location.href.split('#')[0]
-			).then(res => {
-				// 分享到群聊
-				wx.updateAppMessageShareData({ 
-					title: `帮我点一下，我正在参加${this.doctorName}医生的网络公益服务活动。`,
-					desc: `你也快来参加吧！可以免费向医生提问。`,
-					link: `https://admin.okginko.com/ginkgo-admin/wx/api/share?userId=${this.userId}&doctorId=${this.doctorId}`,
-					imgUrl: this.avatar_url
-				})
-				// 分享到朋友圈
-				wx.updateTimelineShareData({ 
-					title: `帮我点一下，我正在参加${this.doctorName}医生的网络公益服务活动。`,
-					link: `https://admin.okginko.com/ginkgo-admin/wx/api/share?userId=${this.userId}&doctorId=${this.doctorId}`,
-					imgUrl: this.avatar_url
-				})
-			})
+				window.location.href.split('#')[0],
+				this.doctorName, 
+				this.userId, 
+				this.doctorId, 
+				this.avatar_url
+			)
 		},
 		getDoctorInfo() {
 			let params = {
@@ -190,6 +184,7 @@ export default {
 			duoduo.getDoctorInfo(params).then(res => {
 				this.doctorName = res.data.doctor_name
 				this.avatar_url = res.data.avatar_url
+				this.shareFuc()
 			})
 		},
 	}
@@ -214,6 +209,9 @@ export default {
 			line-height: 1.5rem;
 			padding: 0 .4rem;
 			box-sizing: border-box;
+			&:nth-child(2){
+				text-decoration: underline;
+			}
 		}
 	}
 	.no_data{
@@ -233,6 +231,10 @@ export default {
 			font-size: .6rem;
 		}
 	}
+	.kong{
+		width:15rem;
+		height:1.96rem;
+	}
 	.put_question{
 		width:15rem;
 		height:1.96rem;
@@ -250,7 +252,7 @@ export default {
 	}
 	.question_list{
 		width: 100%;
-		height: 6.7rem;
+		// height: 6.7rem;
 		background: #fff;
 		padding: .6rem;
 		box-sizing: border-box;
@@ -286,11 +288,29 @@ export default {
 		}
 		.question_imgs{
 			display: flex;
+			padding-bottom: .5rem;
 			img{
 				width: 3.2rem;
 				height: 3.2rem;
 				display: inline-block;
 				margin-right: .4rem;
+			}
+			.look_detail{
+				width:3rem;
+				height:1rem;
+				background:linear-gradient(90deg,rgba(0,181,140,1) 0%,rgba(0,104,82,1) 99%);
+				box-shadow:0 .36rem 1.3rem 0 rgba(0,106,84,0.3);
+				border-radius:.5rem;
+				display: block;
+				color: #fff;
+				font-size: .6rem;
+				font-weight:600;
+				border: none;
+				letter-spacing: .08rem;
+				margin: auto;
+				padding: 0;
+				line-height: 1rem;
+				align-self: flex-end;
 			}
 		}
 		.create_time{
@@ -324,9 +344,10 @@ export default {
 			color: #fff;
 			padding-left: 1rem;
 			box-sizing: border-box;
+			transform: rotate(-5deg);
 			li{
 				font-size: 1rem;
-				line-height: 1.5rem;
+				line-height: 1.8rem;
 			}
 		}
 	}

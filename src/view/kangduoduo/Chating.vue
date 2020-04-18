@@ -7,7 +7,7 @@
 		>
 			<h2>{{item.consult_flag === 1 ? '医生回答' : '病情描述'}} <span>{{item.create_time}}</span></h2>
 			<p>{{item.sick_desc}}</p>
-			<div v-if="item.imgArr[0]">
+			<div v-if="item.imgArr">
 				<img 
 					v-for="(jtem, index) in item.imgArr" 
 					:key="index"
@@ -18,7 +18,7 @@
 				>
 			</div>
 		</div>
-		<van-button round class="put_question_again" @click="putQuestionAgain">继续提问</van-button>
+		<van-button round class="put_question_again" @click="putQuestionAgain">追加提问</van-button>
 		<footer>
 			<h3>温馨提示</h3>
 			<li>1.提交详细信息，医生可以给更准确的回复</li>
@@ -105,14 +105,16 @@ export default {
 			duoduo.getQuestionInfo(params).then(res => {
 				if (res.data.list && res.data.list.length > 0) {
 					this.questionInfoList = this.questionInfoList.concat(res.data.list)
-					this.getDoctorInfo(this.questionInfoList[0].doctor_id)
+					this.getDoctorInfo(res.data.list[0].doctor_id)
 					this.next_page = true
 					this.page++
 				} else {
 					this.next_page = false
 				}
 				this.questionInfoList.forEach(item => {
-					item.imgArr = item.disease_imgs.split(',')
+					if (item.disease_imgs) {
+						item.imgArr = item.disease_imgs.split(',')
+					}
 				})
 			})
 		}
