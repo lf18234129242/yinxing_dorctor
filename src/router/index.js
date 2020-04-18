@@ -153,6 +153,16 @@ export default new Router({
       meta:{
         index:0,
         auth:true,
+        title:'注册'
+      }
+    },
+    {
+      path: '/ScanShare',
+      name: 'ScanShare',
+      component: loadView('ScanShare'),
+      meta:{
+        index:0,
+        auth:true,
         title:'绑定医生'
       }
     },

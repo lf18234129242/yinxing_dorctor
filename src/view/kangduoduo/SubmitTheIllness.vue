@@ -103,6 +103,15 @@ export default {
 		},
     // 上传图片
     afterRead(file) {
+			let images = '', imageArr = []
+			if (Array.isArray(file)) {
+				file.forEach(item => {
+					this.uploadBase64Url(item.content)
+				})
+				images = imageArr.toString
+			} else {
+				this.uploadBase64Url(file.content)
+			}
       file.status = 'uploading'
       file.message = '上传中...'
       Toast.loading({
@@ -110,9 +119,11 @@ export default {
         duration:0,
         forbidClick: true
 			})
+		},
+		uploadBase64Url(file) {
       this.axios
         .post(uploadBase64_url, {
-          base64: file.content
+          base64: file
         })
         .then(res => {
           this.$toast.success("上传成功");
@@ -122,13 +133,21 @@ export default {
             this.$toast(res.data.msg)
           }
         });
-    },
+		},
     // 返回布尔值
     beforeRead(file) {
-			console.log(file)
-      if (file.type !== 'image/jpeg' && file.type !== 'image/png') {
-				Toast('只允许上传jpg/png格式的图片！')
-				return false
+			if (Array.isArray(file)) {
+				file.forEach(item => {
+					if (item.type !== 'image/jpeg' && item.type !== 'image/png') {
+						Toast('只允许上传jpg/png格式的图片！')
+						return false
+					}
+				})
+			} else {
+				if (file.type !== 'image/jpeg' && file.type !== 'image/png') {
+					Toast('只允许上传jpg/png格式的图片！')
+					return false
+				}
 			}
 			return true
     }
