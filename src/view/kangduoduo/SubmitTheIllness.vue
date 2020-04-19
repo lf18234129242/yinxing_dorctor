@@ -109,11 +109,11 @@ export default {
 			let images = '', imageArr = []
 			if (Array.isArray(file)) {
 				file.forEach(item => {
-					this.uploadBase64Url(item.content)
+					this.reduceImg(item)
 				})
 				images = imageArr.toString
 			} else {
-				this.uploadBase64Url(file.content)
+				this.reduceImg(file)
 			}
       file.status = 'uploading'
       file.message = '上传中...'
@@ -136,6 +136,28 @@ export default {
             this.$toast(res.data.msg)
           }
         });
+		},
+		// 图片压缩
+		reduceImg(file) {
+			if(/\/(?:jpeg|png)/i.test(file.file.type)&&file.file.size>1000000) { //1000000=1M
+				let canvas =  document.createElement('canvas')  
+				let context = canvas.getContext('2d') 
+				let img = new Image()
+				img.src = file.content
+				img.onload = () => {
+					let imgWidth = img.width
+					let imgHeight = img.height
+					canvas.width = imgWidth/10
+					canvas.height = imgHeight/10
+					context.drawImage(img, 0, 0, imgWidth/10, imgHeight/10)
+					// 将绘制完成的图片重新转化为base64编码，file.file.type为图片类型，0.92为默认压缩质量
+					file.content = canvas.toDataURL(file.file.type, 0.92) 
+					this.uploadBase64Url(file.content)
+				}                       
+			}else{
+				// 不做处理的jpg和png以及gif直接保存到数组
+				this.uploadBase64Url(file.content)
+			}
 		},
     // 返回布尔值
     beforeRead(file) {

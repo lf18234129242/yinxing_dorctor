@@ -83,21 +83,27 @@ export default {
 			seledtedArr: [],
 			token: '',
 			userId: '',
+			currentUserId: '',
 			doctorId: '',
 			doctorInfo: {},
 			doctorListArr: []
     }
 	},
 	mounted () {
+		this.doctorIds = ''
+		this.doctorListArr = []
     let href = window.location.href
     this.token = getStrParam(href, "token")
     this.userId = getStrParam(href, "userId")
     this.doctorId = getStrParam(href, "doctorId")
+    this.currentUserId = getStrParam(href, "currentUserId")
 		sessionStorage.setItem("token", this.token)
 		this.getDoctorInfo()
 		this.getDoctorList()
-		this.usershareSave()
-		this.userIntegralSave()
+		if (this.currentUserId != this.userId) {
+			this.usershareSave()
+			this.userIntegralSave()
+		}
 		Toast('谢谢你的助力！')
 	},
 	methods: {

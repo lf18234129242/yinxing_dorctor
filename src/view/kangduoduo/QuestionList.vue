@@ -80,6 +80,8 @@ export default {
 	mounted () {
     let href = window.location.href
     this.token = getStrParam(href, "token")
+    this.userId = getStrParam(href, "userId")
+    this.doctorId = getStrParam(href, "doctorId")
 		sessionStorage.setItem("token", this.token)
 		this.getQuestionList()
 		this.getTotalIntegral()
@@ -160,8 +162,6 @@ export default {
 					if (res.data.list && res.data.list.length > 0) {
 						this.questionList = this.questionList.concat(res.data.list)
 						this.next_page = true
-						this.doctorId = this.questionList[0].doctor_id
-						this.userId = this.questionList[0].user_id
 						this.getDoctorInfo()
 					} else {
 						this.next_page = false
