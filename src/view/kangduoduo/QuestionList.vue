@@ -75,6 +75,7 @@ export default {
 			userId: '',
 			doctorName: '',
 			avatar_url: '',
+			practice_hospital: '',
     }
 	},
 	mounted () {
@@ -143,7 +144,7 @@ export default {
 				path: '*',
 				query: {
 					token: this.token,
-					doctorId: this.questionList[0].doctor_id
+					doctorId: this.doctorId
 				}
 			})
 		},
@@ -175,6 +176,7 @@ export default {
 		shareFuc() {
 			wxShare(
 				window.location.href.split('#')[0],
+				this.practice_hospital,
 				this.doctorName, 
 				this.userId, 
 				this.doctorId, 
@@ -189,6 +191,7 @@ export default {
 			duoduo.getDoctorInfo(params).then(res => {
 				this.doctorName = res.data.doctor_name
 				this.avatar_url = res.data.avatar_url
+				this.practice_hospital = res.data.practice_hospital
 				this.shareFuc()
 			})
 		},

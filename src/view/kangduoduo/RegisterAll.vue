@@ -74,19 +74,17 @@ export default {
     };
   },
   mounted() {
-    this.phoneNumber = ''
-    this.age = ''
-    this.gender = ''
-    this.name = ''
-    this.reg_num = ''
+    // this.phoneNumber = ''
+    // this.age = ''
+    // this.gender = ''
+    // this.name = ''
+    // this.reg_num = ''
     let href = window.location.href
     // let href = "https://www.okginko.com/index.html??token=ouYrs1YZ2D4DVAbxbmBCgjMUv72Y&user_id=1&doctor_id=10";
     this.token = getStrParam(href, "token");
     this.userId = getStrParam(href, "userId");
     this.doctorId = getStrParam(href, "doctorId");
     sessionStorage.setItem("token", this.token);
-  },
-  mounted () {
     this.disabledNext = false
   },
   methods: {

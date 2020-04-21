@@ -33,7 +33,7 @@ export default {
       type: '',
     };
   },
-  activated() {
+  mounted() {
     this.token = sessionStorage.getItem("token");
     this.illnessId = this.$route.query.illnessId
     this.type = this.$route.query.type

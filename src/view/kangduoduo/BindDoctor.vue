@@ -111,7 +111,8 @@ export default {
 			let params = {
 				integral: 3,
 				token: this.token,
-				type: 1
+				type: 1,
+				userId: this.userId
 			}
 			duoduo.userIntegralSave(params).then(res => {
 				console.log(res)

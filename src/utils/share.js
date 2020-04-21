@@ -2,7 +2,7 @@
 import wx from 'weixin-js-sdk'
 import { Toast } from 'vant'
 import { duoduo } from './http'
-export default function wxShare(url, doctorName, userId, doctorId, avatar_url) {
+export default function wxShare(url, practice_hospital,  doctorName, userId, doctorId, avatar_url) {
 	duoduo.jsInit({
 		token: sessionStorage.getItem('token'),
 		url: url
@@ -18,14 +18,14 @@ export default function wxShare(url, doctorName, userId, doctorId, avatar_url) {
 		wx.ready(function () {   //需在用户可能点击分享按钮前就先调用
 			// 分享到群聊
 			wx.updateAppMessageShareData({ 
-				title: `帮我点一下，我正在参加${doctorName}医生的网络公益服务活动。`,
+				title: `帮我点一下，我要参加${practice_hospital}${doctorName}大夫的公益活动。`,
 				desc: `你也快来参加吧！可以免费向医生提问。`,
 				link: `https://admin.okginko.com/ginkgo-admin/wx/api/share?userId=${userId}&doctorId=${doctorId}`,
 				imgUrl: avatar_url
 			})
 			// 分享到朋友圈
 			wx.updateTimelineShareData({ 
-				title: `帮我点一下，我正在参加${doctorName}医生的网络公益服务活动。`,
+				title: `帮我点一下，我要参加${practice_hospital}${doctorName}大夫的公益活动。`,
 				link: `https://admin.okginko.com/ginkgo-admin/wx/api/share?userId=${userId}&doctorId=${doctorId}`,
 				imgUrl: avatar_url
 			})

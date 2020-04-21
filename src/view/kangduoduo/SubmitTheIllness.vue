@@ -44,6 +44,7 @@ export default {
       fileList: [],
       fileArr: [],
 			doctorId: '',
+			userId: '',
 			consultId: '',
 			integral: 10,
 			token: ''
@@ -98,7 +99,9 @@ export default {
 					this.$router.push({
 						path: '/QuestionList', 
 						query: {
-							token: this.token
+							token: this.token,
+							userId: this.userId,
+							doctorId: this.doctorId
 						}
 					})
 				}
@@ -145,11 +148,11 @@ export default {
 				let img = new Image()
 				img.src = file.content
 				img.onload = () => {
-					let imgWidth = img.width
-					let imgHeight = img.height
-					canvas.width = imgWidth/10
-					canvas.height = imgHeight/10
-					context.drawImage(img, 0, 0, imgWidth/10, imgHeight/10)
+					let imgWidth = img.width / 2
+					let imgHeight = img.height / 2
+					canvas.width = imgWidth
+					canvas.height = imgHeight
+					context.drawImage(img, 0, 0, imgWidth, imgHeight)
 					// 将绘制完成的图片重新转化为base64编码，file.file.type为图片类型，0.92为默认压缩质量
 					file.content = canvas.toDataURL(file.file.type, 0.92) 
 					this.uploadBase64Url(file.content)

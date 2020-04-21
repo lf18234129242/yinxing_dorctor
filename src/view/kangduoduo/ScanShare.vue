@@ -48,6 +48,7 @@ export default {
 			token: '',
 			userId: '',
 			doctorId: '',
+			practice_hospital: '',
 		}
 	},
 	mounted () {
@@ -62,6 +63,7 @@ export default {
 		shareFuc() {
 			wxShare(
 				window.location.href.split('#')[0],
+				this.practice_hospital,
 				this.doctorName, 
 				this.userId, 
 				this.doctorId, 
@@ -78,6 +80,7 @@ export default {
 				this.city = res.data.city
 				this.doctorName = res.data.doctor_name
 				this.avatar_url = res.data.avatar_url
+				this.practice_hospital = res.data.practice_hospital
 				this.shareFuc()
 			})
 		}
