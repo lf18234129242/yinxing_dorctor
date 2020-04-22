@@ -60,6 +60,9 @@ export default {
 			this.consultId = ''
 		}
 		sessionStorage.setItem("token", this.token);
+		if (getStrParam(href, "userId")) {
+			this.userId = getStrParam(href, "userId")
+		}
 		this.getDoctorInfo()
 		this.disabledSub = false
 	},
