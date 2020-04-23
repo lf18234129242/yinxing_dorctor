@@ -125,6 +125,7 @@ export default {
 				consultId: item.consult_id,
 				integral: 10,
 				token: this.token,
+				userId: this.userId,
 				type: 4
 			}
 			duoduo.userIntegralSave(params).then(res => {
