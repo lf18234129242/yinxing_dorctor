@@ -89,6 +89,7 @@ export default {
 		// this.getTotalIntegral()
 		this.isShowShareBtn = true
 		this.timeout()
+		this.monitoring()
 	},
 	// computed: {
 	// 	freeShareTimes() {
@@ -105,6 +106,14 @@ export default {
 	// 	}
 	// },
 	methods: {
+		monitoring() {
+			let params = {
+				doctorId: this.doctorId,
+				token: this.token,
+				type: 5
+			}
+			duoduo.monitoring(params).then(() => {})
+		},
 		timeout() {
 			let timer = setInterval(() => {
 				this.second--

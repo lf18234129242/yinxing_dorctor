@@ -100,6 +100,7 @@ export default {
 		sessionStorage.setItem("token", this.token)
 		this.getDoctorInfo()
 		this.getDoctorList()
+		this.monitoring()
 		if (this.currentUserId != this.userId) {
 			this.usershareSave()
 			this.userIntegralSave()
@@ -107,6 +108,14 @@ export default {
 		Toast('谢谢你的助力！')
 	},
 	methods: {
+		monitoring() {
+			let params = {
+				doctorId: this.doctorId,
+				token: this.token,
+				type: 4
+			}
+			duoduo.monitoring(params).then(() => {})
+		},
 		userIntegralSave() {
 			let params = {
 				integral: 3,
@@ -114,9 +123,7 @@ export default {
 				type: 1,
 				userId: this.userId
 			}
-			duoduo.userIntegralSave(params).then(res => {
-				console.log(res)
-			})
+			duoduo.userIntegralSave(params).then(() => {})
 		},
 		usershareSave() {
 			let params = {
@@ -124,9 +131,7 @@ export default {
 				token: this.token,
 				userId: this.userId
 			}
-			duoduo.usershareSave(params).then(res => {
-				console.log(res)
-			})
+			duoduo.usershareSave(params).then(() => {})
 		},
 		bindDoctor() {
 			let params = {

@@ -20,6 +20,7 @@ const URL = {
 	userintegral_save: BASEURL + '/api/userintegral/save', // 积分消耗或转发保存
 	totalIntegral: BASEURL + '/api/userintegral/totalIntegral', // 总积分
 	doctor_info: BASEURL + '/api/doctor/info', // 医生资料（详细信息）
+	monitoring: BASEURL + '/api/doctor/monitoring', // 医生数据监控
 	doctor_list: BASEURL + '/api/doctor/areaRecommended', // 同地区医生推荐列表
 	bind_doctor: BASEURL + '/api/userdoctor/save', // 绑定（保存）医生
 	usershare_save: BASEURL + '/api/usershare/save', // 分享绑定用户
