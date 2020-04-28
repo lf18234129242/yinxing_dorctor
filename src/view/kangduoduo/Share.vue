@@ -89,7 +89,6 @@ export default {
 		// this.getTotalIntegral()
 		this.isShowShareBtn = true
 		this.timeout()
-		this.shareFuc()
 	},
 	// computed: {
 	// 	freeShareTimes() {
@@ -136,6 +135,7 @@ export default {
 				this.doctorName = res.data.doctor_name
 				this.avatar_url = res.data.avatar_url
 				this.practice_hospital = res.data.practice_hospital
+				this.shareFuc()
 			})
 		},
 		// getTotalIntegral() {

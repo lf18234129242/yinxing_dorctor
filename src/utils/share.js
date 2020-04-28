@@ -13,7 +13,7 @@ export default function wxShare(url, practice_hospital,  doctorName, userId, doc
 			timestamp: res.data.timestamp, // 必填，生成签名的时间戳
 			nonceStr: res.data.nonceStr, // 必填，生成签名的随机串
 			signature: res.data.signature,// 必填，签名
-			jsApiList: ['updateAppMessageShareData', 'updateTimelineShareData'] // 必填，需要使用的JS接口列表
+			jsApiList: ['updateAppMessageShareData', 'updateTimelineShareData', 'onMenuShareAppMessage', 'onMenuShareTimeline'] // 必填，需要使用的JS接口列表
 		})
 		wx.ready(function () {   //需在用户可能点击分享按钮前就先调用
 			// 分享到群聊
