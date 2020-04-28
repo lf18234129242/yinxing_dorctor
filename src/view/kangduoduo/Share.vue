@@ -1,18 +1,9 @@
 <template>
 	<div class="sharePage pr">
 		<img src="@/assets/img/duoduo/leaf-bg.png" alt="" class="leaf">
-		<!-- <div class="now_coin">
-			<span>当前金币：{{total_integral}}</span>
-		</div> -->
 		<div class="text_content">
-			<!-- <h2>转发<span>{{freeShareTimes}}</span>次<br>可免费帮忙</h2> -->
 			<h2>转发3次<br>免费问问题</h2>
 		</div>
-		<!-- <div class="text_content">
-			<h3>消耗{{ONCECOST}}个金币，请医生帮忙</h3>
-			<h2>转发赚金币</h2>
-			<h3>转发一次赚{{INTERGRAL}}个金币</h3>
-		</div> -->
 		<div class="doctor_info">
 			<div class="avatar_box">
 				<img :src="avatar_url" alt="" class="avatar">
@@ -23,8 +14,6 @@
 				“我正在参加公益健康科普活动<br>
 				请分享给更多的人帮我助力”
 			</li>
-			<!-- <li class="share_text">“帮我转一下，有事我帮你”</li> -->
-			<!-- <li v-if="freeShareTimes" class="share_times">*免费帮助还需转发{{freeShareTimes}}次</li> -->
 			<img class="red_bg" src="@/assets/img/duoduo/red_bg_.png" alt="">
 			<img class="half_coin" src="@/assets/img/duoduo/coin_half.png" alt="">
 			<button 
@@ -86,25 +75,10 @@ export default {
 		this.doctorId = getStrParam(href, "doctorId")
 		sessionStorage.setItem('token', this.token)
 		this.getDoctorInfo()
-		// this.getTotalIntegral()
 		this.isShowShareBtn = true
 		this.timeout()
 		this.monitoring()
 	},
-	// computed: {
-	// 	freeShareTimes() {
-	// 		if (this.total_integral >= this.ONCECOST) {
-	// 			return 0
-	// 		} else {
-	// 			let num = this.total_integral % this.INTERGRAL
-	// 			if (num > 0) {
-	// 				return 4 - Math.floor(this.total_integral / this.INTERGRAL) + 1
-	// 			} else {
-	// 				return 4 - Math.floor(this.total_integral / this.INTERGRAL)
-	// 			}
-	// 		}
-	// 	}
-	// },
 	methods: {
 		monitoring() {
 			let params = {
@@ -130,7 +104,7 @@ export default {
 				this.doctorName, 
 				this.userId, 
 				this.doctorId, 
-				this.avatar_urll
+				this.avatar_url
 			)
 		},
 		getDoctorInfo() {
@@ -146,26 +120,7 @@ export default {
 				this.practice_hospital = res.data.practice_hospital
 				this.shareFuc()
 			})
-		},
-		// getTotalIntegral() {
-		// 	duoduo.getTotalIntegral({token: this.token}).then(res => {
-		// 		if (res.data.code === 0) {
-		// 			this.total_integral = res.data.totalIntegral
-		// 		}
-		// 	})
-		// },
-		// userIntegralSave() {
-		// 	let params = {
-		// 		integral: this.INTERGRAL,
-		// 		token: this.token,
-		// 		type: this.type
-		// 	}
-		// 	duoduo.userIntegralSave(params).then(res => {
-		// 		if (res.data.code === 0) {
-		// 			this.getTotalIntegral()
-		// 		}
-		// 	})
-		// }
+		}
 	}
 }
 </script>

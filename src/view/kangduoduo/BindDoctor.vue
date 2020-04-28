@@ -34,27 +34,13 @@
 					<div class="doctor_name">
 						<span>{{item.dept_name}}</span>
 						<span>{{item.doctor_name}}</span>
-						<!-- <span>{{item.practice_hospital}}</span> -->
 					</div>
 				</li>
 			</ul>
 		</section>
-		<!-- <div class="kong"></div> -->
 		<footer v-if="haveOtherDoctor">
 			<van-button class="btn" @click="bindDoctor">一键关注</van-button>
 		</footer>
-		<!-- <div class="thanks_for_share" v-if="showThanksBox">
-			<img @click="showThanksBox = false" class="close" src="@/assets/img/duoduo/icon_close.png" alt="">
-			<img class="banner" src="@/assets/img/duoduo/share_banner.png" alt="">
-			<div class="content">
-				<h3>我已成功聘请</h3>
-				<h4>
-					呼吸科张医生<br>
-					为我的家庭医生
-				</h4>
-				<van-button @click="showThanksBox = false" class="btn">我也要聘请医生</van-button>
-			</div>
-		</div> -->
 		<div v-if="showBindDoctorCode" class="bind_doctor_code_box">
 			<img @click="showBindDoctorCode = false" class="close" src="@/assets/img/duoduo/icon_close.png" alt="">
 			<div class="content">
