@@ -210,11 +210,12 @@ export default {
             clearInterval(timer);
             this.isGetRegNum = true;
           }
-        }, 1000);
+        }, 100);
       }
       this.getPhoneCode();
     },
     getPhoneCode() {
+      if (!this.isGetRegNum) return false
       yinxing.getPhoneCode({
         phoneNumber: this.phone_num,
         token: this.token

@@ -55,6 +55,7 @@
 </template>
 
 <script>
+import wxShare from '@/utils/share'
 import { duoduo } from "@/utils/http"
 import { getStrParam } from "@/utils/count";
 import { Toast } from 'vant';
@@ -71,6 +72,9 @@ export default {
 			userId: '',
 			currentUserId: '',
 			doctorId: '',
+			avatar_url: '',
+			doctorName: '',
+			practice_hospital: '',
 			doctorInfo: {},
 			doctorListArr: []
     }
@@ -94,11 +98,21 @@ export default {
 		Toast('谢谢你的助力！')
 	},
 	methods: {
+		shareFuc() {
+			wxShare(
+				window.location.href.split('#')[0],
+				this.practice_hospital,
+				this.doctorName, 
+				this.userId, 
+				this.doctorId, 
+				this.avatar_url
+			)
+		},
 		monitoring() {
 			let params = {
 				doctorId: this.doctorId,
 				token: this.token,
-				type: 4
+				type: 7
 			}
 			duoduo.monitoring(params).then(() => {})
 		},
@@ -139,6 +153,10 @@ export default {
 			duoduo.getDoctorInfo(params).then(res => {
 				if (res.data.code === 0) {
 					this.doctorInfo = res.data
+					this.avatar_url = res.data.avatar_url
+					this.doctorName = res.data.doctor_name
+					this.practice_hospital = res.data.practice_hospital
+					this.shareFuc()
 				}
 			})
 		},

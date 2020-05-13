@@ -58,8 +58,17 @@ export default {
 		this.doctorId = getStrParam(href, "doctorId")
 		sessionStorage.setItem('token', this.token)
 		this.getDoctorInfo()
+		this.monitoring()
 	},
 	methods: {
+		monitoring() {
+			let params = {
+				doctorId: this.doctorId,
+				token: this.token,
+				type: 4
+			}
+			duoduo.monitoring(params).then(() => {})
+		},
 		shareFuc() {
 			wxShare(
 				window.location.href.split('#')[0],
