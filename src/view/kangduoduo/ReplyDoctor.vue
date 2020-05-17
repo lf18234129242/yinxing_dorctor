@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { Toast } from 'vant';
+import { Toast, Dialog } from 'vant';
 import { ImagePreview } from 'vant'
 import { XSSReg } from "@/utils/count"
 export default {
@@ -50,6 +50,7 @@ export default {
       doctor_reply: '',
       replyBtnSub: false,
       reply_again: false,
+      doctor_name: '张鹏'
     }
   },
   methods: {
@@ -65,20 +66,26 @@ export default {
     },
     submitReply() {
       let doctor_reply = this.doctor_reply.trim().replace(XSSReg, '')
-      console.log(doctor_reply)
       if (doctor_reply === '') {
         this.$toast("请输入您的回复内容");
         return false;
       }
       // this.replyBtnSub = true
-      
+      Dialog.confirm({
+        message: `已提交回复，病人将收到短信通知，辛苦您了，${this.doctor_name}医生！`,
+      })
+      .then(() => {
+        // on confirm
+      })
+      .catch(() => {
+        // on cancel
+      })
     }
   },
 }
 </script>
 
 <style lang="scss" scoped>
-
 .ReplyDoctor{
 	background: #F2F2F2;
 	width: 100%;
