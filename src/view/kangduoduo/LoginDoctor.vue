@@ -14,6 +14,7 @@
 </template>
 
 <script>
+import { duoduo } from "@/utils/http"
 export default {
   name: 'LoginDoctor',
   data() {
@@ -22,6 +23,14 @@ export default {
       password: '',
       loginDis: false
     }
+  },
+  watch: {
+    username() {
+      this.loginDis = false
+    },
+    password() {
+      this.loginDis = false
+    },
   },
   methods: {
     login() {
@@ -34,6 +43,19 @@ export default {
         return false;
       }
       this.loginDis = true
+      let params = {
+        loginName: this.username,
+        password: this.password
+      }
+      duoduo.doctorLogin(params).then(res => {
+        if (res.data.code === 0) {
+          this.$toast(res.data.msg)
+          this.$router.push({
+            path: '/ConsultList',
+            query: {token: res.data.token}
+          })
+        }
+      })
     }
   },
 }

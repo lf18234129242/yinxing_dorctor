@@ -177,6 +177,16 @@ export default new Router({
       }
     },
     {
+      path: '/ConsultList',
+      name: 'ConsultList',
+      component: loadView('ConsultList'),
+      meta:{
+        index:1,
+        auth:true,
+        title:'问题列表'
+      }
+    },
+    {
       path: '/ReplyDoctor',
       name: 'ReplyDoctor',
       component: loadView('ReplyDoctor'),

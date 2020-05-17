@@ -25,7 +25,10 @@ const URL = {
 	bind_doctor: BASEURL + '/api/userdoctor/save', // 绑定（保存）医生
 	usershare_save: BASEURL + '/api/usershare/save', // 分享绑定用户
 	jsInit: BASEURL + '/api/wx/jsInit', // 绑定（保存）医生
-	
+	doctor_login: BASEURL + '/api/doctor/login', // 医生登录接口
+	consultList: BASEURL + '/api/doctor/consultList', // 医生问题列表
+	consultSave: BASEURL + '/api/doctor/consultSave', // 医生回复问题保存
+	consultInfo: BASEURL + '/api/doctor/consultInfo', // 医生回复问题保存
 }
 
 module.exports = URL

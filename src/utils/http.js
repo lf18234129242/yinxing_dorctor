@@ -27,6 +27,34 @@ const http = request => {
 }
 
 export const duoduo = {
+	consultInfo: async(params) => {
+		const res = await http(axios.post(api.consultInfo, params))
+		if (res) {
+			return Promise.resolve(res)
+		}
+		return Promise.reject(false)
+	},
+	consultSave: async(params) => {
+		const res = await http(axios.post(api.consultSave, params))
+		if (res) {
+			return Promise.resolve(res)
+		}
+		return Promise.reject(false)
+	},
+	consultList: async(params) => {
+		const res = await http(axios.post(api.consultList, params))
+		if (res) {
+			return Promise.resolve(res)
+		}
+		return Promise.reject(false)
+	},
+	doctorLogin: async(params) => {
+		const res = await http(axios.post(api.doctor_login, params))
+		if (res) {
+			return Promise.resolve(res)
+		}
+		return Promise.reject(false)
+	},
 	monitoring: async(params) => {
 		const res = await http(axios.post(api.monitoring, params))
 		if (res) {

@@ -1,87 +1,137 @@
 <template>
   <div class="ReplyDoctor">
-    <div class="illness_desc">
-      <h2>{{sick_person_name}}<span>{{create_time}}</span></h2>
-      <p>{{sick_desc}}</p>
-			<div v-if="imgArr">
+    <div class="illness_desc" v-for="(item, index) in replyInfoList" :key="index">
+      <h2>{{item.consult_flag === 1 ? '医生回复' : userName}}<span>{{item.create_time}}</span></h2>
+      <p>{{item.sick_desc}}</p>
+			<div v-if="item.imgArr">
 				<img 
-					v-for="(item, index) in imgArr" 
+					v-for="(jtem, index) in item.imgArr" 
 					:key="index"
-					:src="item"
+					:src="jtem"
 					alt=""
 					lazy-load
-					@click="previewImage(index, imgArr)"
+					@click="previewImage(index, jtem.imgArr)"
 				>
 			</div>
     </div>
-    <div class="illness_desc">
-      <h2>医生回复<span v-if="has_reply">{{reply_create_time}}</span></h2>
-      <p v-if="has_reply">{{reply_desc}}</p>
-      <textarea v-if="!has_reply || reply_again" id="" cols="30" rows="10" v-model="doctor_reply"></textarea>
+    <div class="illness_desc" v-if="!has_reply">
+      <h2>医生回复</h2>
+      <textarea id="" cols="30" rows="10" v-model="doctor_reply"></textarea>
     </div>
 
 		<van-button round class="put_question_again" @click="submit" :disabled="replyBtnSub">{{reply_btn_text}}</van-button>
-		<footer>
+		<!-- <footer>
 			<h3>温馨提示</h3>
 			<li>1.提交详细信息，医生可以给更准确的回复</li>
 			<li>2.该服务是医生利用空闲时间进行的免费帮忙</li>
 			<li>3.本服务为免费帮忙，内容仅供参考，如具体病情请及时前往门诊就医。</li>
-		</footer>
+		</footer> -->
   </div>
 </template>
 
 <script>
 import { Toast, Dialog } from 'vant';
 import { ImagePreview } from 'vant'
-import { XSSReg } from "@/utils/count"
+import { XSSReg, getStrParam } from "@/utils/count"
+import { duoduo } from "@/utils/http"
 export default {
   name: 'ReplyDoctor',
   data() {
     return {
-      sick_person_name: '病人名称',
-      create_time: '2015-05-15 12:23:00',
-      sick_desc: '病情描述病情描述病情描述',
-      imgArr: [],
       has_reply: false,
       reply_btn_text: '回复',  // 补充回复
       token: '',
-      reply_desc: '回复回复回复回复',
-      reply_create_time: '2015-05-15 12:23:00',
       doctor_reply: '',
       replyBtnSub: false,
-      reply_again: false,
-      doctor_name: '张鹏'
+      doctorName: '',
+      consultId: '',
+      limit: 10,
+      page: 0,
+      next_page: true,
+      replyInfoList: [],
+      diseaseImgs: '',
+      doctorId: '',
+      userName: '',
     }
   },
+  mounted () {
+    let href = decodeURI(window.location.href)
+    this.token = getStrParam(href, "token")
+    this.consultId = getStrParam(href, "consultId")
+    this.doctorId = getStrParam(href, "doctorId")
+    this.doctorName = getStrParam(href, "doctorName")
+		this.getConsultInfo()
+  },
   methods: {
+    getConsultInfo() {
+      let params = {
+        page: this.page,
+        limit: this.limit,
+        consultId: this.consultId,
+        token: this.token
+      }
+      duoduo.consultInfo(params).then(res => {
+        if (res.data.code === 0) {
+          this.userName = res.data.userName
+          this.replyInfoList = res.data.list
+          this.replyInfoList.forEach(item => {
+            if (item.disease_imgs) {
+              item.imgArr = item.disease_imgs.split(',')
+            }
+          })
+          if (this.replyInfoList[this.replyInfoList.length - 1].consult_flag === 1) {
+            this.has_reply = true
+            this.reply_btn_text = '补充回复'
+          }
+        }
+      })
+    },
     submit() {
-      if (this.reply_again) {
-        this.replayAgain()
+      if (this.has_reply) {
+        this.handleReplayAgain()
       } else {
-        this.submitReply()
+        this.handleSubmitReply()
       }
     },
-    replayAgain() {
-      this.reply_again = true
+    handleReplayAgain() {
+      this.has_reply = false
+      this.reply_btn_text = '回复'
     },
-    submitReply() {
+    handleSubmitReply() {
       let doctor_reply = this.doctor_reply.trim().replace(XSSReg, '')
       if (doctor_reply === '') {
         this.$toast("请输入您的回复内容");
         return false;
       }
-      // this.replyBtnSub = true
+      this.replyBtnSub = true
       Dialog.confirm({
-        message: `已提交回复，病人将收到短信通知，辛苦您了，${this.doctor_name}医生！`,
+        message: `是否提交回复？`,
       })
       .then(() => {
-        // on confirm
+        this.confirmReply(doctor_reply)
       })
       .catch(() => {
         // on cancel
       })
+    },
+    confirmReply(doctor_reply) {
+      let params = {
+        consultId: this.consultId,
+        diseaseImgs: this.diseaseImgs,
+        doctorId: this.doctorId,
+        sickDesc: doctor_reply,
+        token: this.token
+      }
+      duoduo.consultSave(params).then(res => {
+        if (res.data.code === 0) {
+          this.has_reply = false
+          this.reply_btn_text = '补充回复'
+          this.$toast(`已提交回复，病人将收到短信通知，辛苦您了，${this.doctorName}医生！`)
+          this.$router.go(-1)
+        }
+      })
     }
-  },
+  }
 }
 </script>
 

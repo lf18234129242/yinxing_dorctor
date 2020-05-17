@@ -1,12 +1,9 @@
 <template>
   <div class="QuestionList pr">
-		<div class="my_integral">
-			<li>我的积分：{{myIntegral}}</li>
-			<li @click="showShareArrow = true">立即转发赚积分</li>
-		</div>
 		<div class="no_data" v-if="questionList.length === 0">
 			<img src="@/assets/img/duoduo/no_record_data.png" alt="">
-			<p>您尚未提交问题</p>
+			<p>还没有病人提交问题</p>
+      <p>谢谢您，{{doctorName}}医生，您辛苦了！</p>
 		</div>
 		<template v-else>
 			<div 
@@ -30,38 +27,21 @@
 						>
 					</div>
 					<div v-else></div>
-					<div class="btn_box">
-						<span v-if="item.show_power === 2">消耗10积分</span>
-						<van-button class="look_detail">查看</van-button>
-					</div>
 				</div>
 				<div class="create_time">
 					<span>{{item.update_time}}</span>
-					<!-- <span>查看医生回复消耗10积分</span> -->
 				</div>
 			</div>
 		</template>
-		<div class="kong"></div>
-		<van-button class="put_question" @click="putQuestion">再次提问</van-button>
-		<div v-if="showShareArrow" class="share_arrow" @click="showShareArrow = false">
-			<img src="@/assets/img/duoduo/share_arrow.png" alt="">
-			<ul>
-				<li>1. 转发给您的好友</li>
-				<li>2. 请好友帮忙点一下链接</li>
-				<li>3. 即可赚取3积分</li>
-			</ul>
-		</div>
 	</div>
 </template>
 
 <script>
-import wx from 'weixin-js-sdk'
-import wxShare from '@/utils/share'
 import { duoduo } from "@/utils/http"
-import { getStrParam } from "@/utils/count";
+import { getStrParam } from "@/utils/count"
 import { Toast } from 'vant';
 export default {
-  name: "QuestionList",
+  name: "ConsultList",
   data() {
     return {
       questionList: [],
@@ -69,87 +49,28 @@ export default {
 			page: 0,
 			limit: 10,
 			next_page: true,
-			showShareArrow: false,
-			myIntegral: 0,
-			doctorId: '',
-			userId: '',
 			doctorName: '',
-			avatar_url: '',
-			practice_hospital: '',
     }
 	},
 	mounted () {
     let href = window.location.href
     this.token = getStrParam(href, "token")
-    this.userId = getStrParam(href, "userId")
-    this.doctorId = getStrParam(href, "doctorId")
 		sessionStorage.setItem("token", this.token)
-		this.getQuestionList()
-		this.getTotalIntegral()
+    this.getConsultList()
 	},
 	methods: {
-		getTotalIntegral() {
-			duoduo.getTotalIntegral({token: this.token}).then(res => {
-				if (res.data.code === 0) {
-					this.myIntegral = res.data.totalIntegral
-				}
-			})
-		},
 		handleQuestionDetail(item) {
-			if (item.show_power === 1) {
-				this.$router.push({
-					path: '/Chating',
-					query: {
-						token: this.token,
-						consultId: item.consult_id
-					}
-				})
-			} else if (item.show_power === 2) {
-				duoduo.getTotalIntegral({token: this.token}).then(res => {
-					if (res.data.code === 0) {
-						this.myIntegral = res.data.totalIntegral
-						if (res.data.totalIntegral >= 10) {
-							this.costIntegral(item)
-							this.showShareArrow = false
-						} else {
-							Toast('您的积分不足,查看医生回复需要消耗10积分')
-							this.showShareArrow = true
-						}
-					}
-				})
-			}
+      this.$router.push({
+        path: '/ReplyDoctor',
+        query: {
+          consultId: item.consult_id,
+          doctorId: item.doctor_id,
+          doctorName: this.doctorName,
+          token: this.token
+        }
+      })
 		},
-		// 进入详情页消耗积分
-		costIntegral(item) {
-			let params = {
-				consultId: item.consult_id,
-				integral: 10,
-				token: this.token,
-				userId: this.userId,
-				type: 4
-			}
-			duoduo.userIntegralSave(params).then(res => {
-				if (res.data.code === 0) {
-					this.$router.push({
-						path: '/Chating',
-						query: {
-							token: this.token,
-							consultId: item.consult_id
-						}
-					})
-				}
-			})
-		},
-		putQuestion() {
-			this.$router.push({
-				path: '*',
-				query: {
-					token: this.token,
-					doctorId: this.doctorId
-				}
-			})
-		},
-		getQuestionList() {
+		getConsultList() {
 			if (!this.next_page) {
 				Toast('没有更多数据了')
 				return false
@@ -159,45 +80,21 @@ export default {
 				page: this.page,
 				token: this.token
 			}
-			duoduo.getQuestionList(params).then(res => {
+			duoduo.consultList(params).then(res => {
 				if (res.data.code === 0) {
+          this.doctorName = res.data.doctorName
 					if (res.data.list && res.data.list.length > 0) {
 						this.questionList = this.questionList.concat(res.data.list)
 						this.next_page = true
-						this.getDoctorInfo()
 					} else {
 						this.next_page = false
 					}
 					this.questionList.forEach(item => {
-            if (item.disease_imgs) {
-							item.imgList = item.disease_imgs.split(',')
-						}
+						item.imgList = item.disease_imgs.split(',')
 					})
 				}
 			})
-		},
-		shareFuc() {
-			wxShare(
-				window.location.href.split('#')[0],
-				this.practice_hospital,
-				this.doctorName, 
-				this.userId, 
-				this.doctorId, 
-				this.avatar_url
-			)
-		},
-		getDoctorInfo() {
-			let params = {
-				doctor: this.doctorId,
-				token: this.token
-			}
-			duoduo.getDoctorInfo(params).then(res => {
-				this.doctorName = res.data.doctor_name
-				this.avatar_url = res.data.avatar_url
-				this.practice_hospital = res.data.practice_hospital
-				this.shareFuc()
-			})
-		},
+		}
 	}
 };
 </script>
