@@ -34,7 +34,7 @@
 import url from "@/utils/apiconfig.js";
 import { yinxing, duoduo } from "@/utils/http"
 import { Toast } from 'vant';
-import { count, getStrParam, uploadBase64_url } from "@/utils/count";
+import { count, getStrParam, uploadBase64_url, XSSReg } from "@/utils/count";
 export default {
   name: "SubmitTheIllness",
   data() {
@@ -80,7 +80,8 @@ export default {
 			})
 		},
 		handleSubmit() {
-			if (!this.illness_desc) {
+			let illness_desc = this.illness_desc.trim().replace(XSSReg, '')
+			if (!illness_desc) {
 				Toast('请您先填写病情描述哦！')
 				return false
 			}
@@ -91,7 +92,7 @@ export default {
 				diseaseImgs: fileStr,
 				doctorId: this.doctorId,
 				// integral: this.integral,
-				sickDesc: this.illness_desc.trim(),
+				sickDesc: illness_desc,
 				token: this.token
 			}
 			duoduo.submitQuestionSave(params).then(res => {

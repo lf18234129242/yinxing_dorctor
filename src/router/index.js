@@ -166,5 +166,25 @@ export default new Router({
         title:'转发好医生'
       }
     },
+    {
+      path: '/LoginDoctor',
+      name: 'LoginDoctor',
+      component: loadView('LoginDoctor'),
+      meta:{
+        index:0,
+        auth:true,
+        title:'登录'
+      }
+    },
+    {
+      path: '/ReplyDoctor',
+      name: 'ReplyDoctor',
+      component: loadView('ReplyDoctor'),
+      meta:{
+        index:10,
+        auth:true,
+        title:'登录'
+      }
+    },
   ]
 })

@@ -17,7 +17,7 @@
 import url from "@/utils/apiconfig.js";
 import { yinxing } from "@/utils/http"
 import { Toast } from 'vant';
-import { count, getStrParam, uploadBase64_url } from "@/utils/count";
+import { count, getStrParam, uploadBase64_url, XSSReg } from "@/utils/count";
 export default {
   name: 'Register-submitPicture',
   data() {
@@ -48,9 +48,10 @@ export default {
   methods: {
     next() {
       let fileStr = this.fileArr.join(",");
-      if (this.textarea) {
+      let textarea = this.textarea.trim().replace(XSSReg, '')
+      if (textarea) {
         yinxing.datumSave({
-          content: this.textarea,
+          content: textarea,
           imgUrl: fileStr,
           token: this.token
         }).then(res => {

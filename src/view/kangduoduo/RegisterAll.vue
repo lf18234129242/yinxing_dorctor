@@ -48,7 +48,7 @@
 
 <script>
 import { yinxing, duoduo } from "@/utils/http"
-import { count, getStrParam } from "@/utils/count";
+import { count, getStrParam, XSSReg } from "@/utils/count";
 export default {
   name: 'RegisterAll',
   data() {
@@ -74,13 +74,7 @@ export default {
     };
   },
   mounted() {
-    // this.phoneNumber = ''
-    // this.age = ''
-    // this.gender = ''
-    // this.name = ''
-    // this.reg_num = ''
     let href = window.location.href
-    // let href = "https://www.okginko.com/index.html??token=ouYrs1YZ2D4DVAbxbmBCgjMUv72Y&user_id=1&doctor_id=10";
     this.token = getStrParam(href, "token");
     this.userId = getStrParam(href, "userId");
     this.doctorId = getStrParam(href, "doctorId");
@@ -90,7 +84,10 @@ export default {
   methods: {
     // 下一步
     next() {
-      if (this.username == "") {
+      let username = this.username.trim().replace(XSSReg, '')
+      let phone_num = this.phone_num.trim().replace(XSSReg, '')
+      let reg_num = this.reg_num.trim().replace(XSSReg, '')
+      if (username == "") {
         this.$toast("请输入您的姓名");
         return false;
       }
@@ -102,24 +99,24 @@ export default {
         this.$toast("请选择您的年龄");
         return false;
       }
-      if (!this.phone_num) {
+      if (!phone_num) {
         this.$toast("请输入您的手机号");
         return false;
       }
-      if (!this.reg_num) {
+      if (!reg_num) {
         this.$toast("请输入验证码");
         return false;
       }
-      if (this.reg_num != this.phoneCode) {
+      if (reg_num != this.phoneCode) {
         this.$toast("验证码输入错误");
         return false;
       }
       this.disabledNext = true
       yinxing.messageSave({
-        phoneNumber: this.phone_num,
+        phoneNumber: phone_num,
         age: this.userage,
         gender: this.gender,
-        name: this.username,
+        name: username,
         token: this.token
       }).then(res => {
         if (res.data.code === 0) {

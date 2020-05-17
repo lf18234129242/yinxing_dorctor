@@ -30,9 +30,12 @@ function showHtml(str) {
 }
 const uploadBase64_url = "https://admin.okginko.com/ginkgo-admin/sys/oss/uploadBase64"
 
+const XSSReg = /\~|\！|\!|\@|\#|\$|\^|\￥|\%|\…|\&|\*|\(|\)|\—|\+|\{|\}|\“|\”|\《|\》|\?|\？|\<|\>|\'|\"/g
+
 export { 
 	count, 
 	getStrParam, 
 	showHtml, 
-	uploadBase64_url 
+    uploadBase64_url,
+    XSSReg
 }
