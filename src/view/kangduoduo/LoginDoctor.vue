@@ -87,7 +87,7 @@ export default {
   }
   .cell-box {
     width: 100%;
-    // height: 150px;
+    height: 3rem;
     padding: 1.4rem 1.6rem 1.2rem;
     box-sizing: border-box;
     display: flex;

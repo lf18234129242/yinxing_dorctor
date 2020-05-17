@@ -193,7 +193,7 @@ export default new Router({
       meta:{
         index:10,
         auth:true,
-        title:'登录'
+        title:'医生回复'
       }
     },
   ]

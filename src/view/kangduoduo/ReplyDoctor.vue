@@ -126,7 +126,7 @@ export default {
         if (res.data.code === 0) {
           this.has_reply = false
           this.reply_btn_text = '补充回复'
-          this.$toast(`已提交回复，病人将收到短信通知，辛苦您了，${this.doctorName}医生！`)
+          this.$toast(`已提交回复，病人将收到短信通知，辛苦您了，${this.doctorName}！`)
           this.$router.go(-1)
         }
       })

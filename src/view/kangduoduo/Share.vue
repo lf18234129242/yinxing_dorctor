@@ -51,7 +51,7 @@ export default {
 	name: 'share-page',
 	data() {
 		return {
-			second: 10,
+			second: 5,
 			isShowShareBtn: true,
 			showShareArrow: false,
 			INTERGRAL: 3,
