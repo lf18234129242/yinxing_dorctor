@@ -20,6 +20,8 @@ import {
 	Tab,
 	Image,
 	Lazyload,
+	List,
+	PullRefresh
 } from 'vant';
 
 Vue.use(RadioGroup)
@@ -35,6 +37,8 @@ Vue.use(RadioGroup)
 	.use(Tab)
 	.use(Image)
 	.use(Lazyload)
+	.use(List)
+	.use(PullRefresh)
 
 //把 `******` 加到 `Vue` 的原型中
 Vue.prototype.axios = axios
