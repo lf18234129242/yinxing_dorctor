@@ -10,7 +10,7 @@
 					:src="jtem"
 					alt=""
 					lazy-load
-					@click="previewImage(index, jtem.imgArr)"
+					@click="previewImage(index, item.imgArr)"
 				>
 			</div>
     </div>
@@ -63,6 +63,14 @@ export default {
 		this.getConsultInfo()
   },
   methods: {
+		previewImage(num, imgList) {
+      console.log(num)
+      console.log(imgList)
+			ImagePreview({
+				images: imgList,
+				startPosition: num
+			})
+		},
     getConsultInfo() {
       let params = {
         page: this.page,
@@ -83,6 +91,7 @@ export default {
             this.has_reply = true
             this.reply_btn_text = '补充回复'
           }
+          console.log(this.replyInfoList)
         }
       })
     },

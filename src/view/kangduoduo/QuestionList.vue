@@ -169,9 +169,9 @@ export default {
 						this.next_page = false
 					}
 					this.questionList.forEach(item => {
-            if (item.disease_imgs) {
+            // if (item.disease_imgs) {
 							item.imgList = item.disease_imgs.split(',')
-						}
+						// }
 					})
 				}
 			})
