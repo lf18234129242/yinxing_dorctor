@@ -112,7 +112,8 @@ export default {
         return false;
       }
       this.disabledNext = true
-      yinxing.messageSave({
+      yinxing.messageSave1({
+        doctorId: this.doctorId,
         phoneNumber: phone_num,
         age: this.userage,
         gender: this.gender,
@@ -120,7 +121,27 @@ export default {
         token: this.token
       }).then(res => {
         if (res.data.code === 0) {
-          this.getTotalIntegral()
+          // this.getTotalIntegral()
+					this.myIntegral = res.data.totalIntegral
+					if (this.myIntegral < 20) {
+						this.$router.push({
+							path: '/Share',
+							query: {
+                userId: this.userId,
+                doctorId: this.doctorId,
+                token: this.token
+							}
+						})
+					} else {
+            this.$router.push({
+              path: "/SubmitTheIllness",
+              query: {
+                token: this.token,
+                userId: this.userId,
+                doctorId: this.doctorId
+              }
+            })
+          }
         }
       })
     },
@@ -207,7 +228,7 @@ export default {
             clearInterval(timer);
             this.isGetRegNum = true;
           }
-        }, 100);
+        }, 1000);
       }
       this.getPhoneCode();
     },

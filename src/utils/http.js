@@ -176,6 +176,13 @@ export const yinxing = {
 		}
 		return Promise.reject(false)
 	},
+	messageSave1: async (params) => {
+		const res = await http(axios.post(api.message_save1, params))
+		if (res) {
+			return Promise.resolve(res)
+		}
+		return Promise.reject(false)
+	},
 	messageSave: async (params) => {
 		const res = await http(axios.post(api.message_save, params))
 		if (res) {
