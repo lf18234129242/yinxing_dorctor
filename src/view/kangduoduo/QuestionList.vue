@@ -9,37 +9,46 @@
 			<p>您尚未提交问题</p>
 		</div>
 		<template v-else>
-			<div 
-				class="question_list"
-				v-for="(item,index) in questionList"
-				:key="index"
-				@click="handleQuestionDetail(item)"
-			>
-				<div class="question">
-					<span :class="['question_status', item.type === 2 ? 'yes' : 'no']">{{item.type === 2 ? '已回复' : '未回复'}}</span>
-					{{item.sick_desc}}
-				</div>
-				<div class="question_imgs">
-					<div v-if="item.imgList[0] !== ''">
-						<img 
-							v-for="(jtem, idx) in item.imgList" 
-							:key="idx" 
-							v-show="idx < 3"
-							:src="jtem" 
-							alt=""
-						>
+			<van-pull-refresh v-model="refreshing" @refresh="onRefresh">
+				<van-list
+					v-model="loading"
+					:finished="finished"
+					finished-text="没有更多了"
+					@load="getQuestionList"
+				>
+					<div 
+						class="question_list"
+						v-for="(item,index) in questionList"
+						:key="index"
+						@click="handleQuestionDetail(item)"
+					>
+						<div class="question">
+							<span :class="['question_status', item.type === 2 ? 'yes' : 'no']">{{item.type === 2 ? '已回复' : '未回复'}}</span>
+							{{item.sick_desc}}
+						</div>
+						<div class="question_imgs">
+							<div v-if="item.imgList[0] !== ''">
+								<img 
+									v-for="(jtem, idx) in item.imgList" 
+									:key="idx" 
+									v-show="idx < 3"
+									:src="jtem" 
+									alt=""
+								>
+							</div>
+							<div v-else></div>
+							<div class="btn_box">
+								<span v-if="item.show_power === 2">消耗10积分</span>
+								<van-button class="look_detail">查看</van-button>
+							</div>
+						</div>
+						<div class="create_time">
+							<span>{{item.update_time}}</span>
+							<!-- <span>查看医生回复消耗10积分</span> -->
+						</div>
 					</div>
-					<div v-else></div>
-					<div class="btn_box">
-						<span v-if="item.show_power === 2">消耗10积分</span>
-						<van-button class="look_detail">查看</van-button>
-					</div>
-				</div>
-				<div class="create_time">
-					<span>{{item.update_time}}</span>
-					<!-- <span>查看医生回复消耗10积分</span> -->
-				</div>
-			</div>
+				</van-list>
+			</van-pull-refresh>
 		</template>
 		<div class="kong"></div>
 		<van-button class="put_question" @click="putQuestion">再次提问</van-button>
@@ -76,6 +85,9 @@ export default {
 			doctorName: '',
 			avatar_url: '',
 			practice_hospital: '',
+      loading: false,
+      finished: false,
+      refreshing: false,
     }
 	},
 	mounted () {
@@ -149,29 +161,36 @@ export default {
 				}
 			})
 		},
+		onRefresh() {
+			this.questionList = []
+			this.page = 0
+			this.limit = 10
+			this.loading = true
+			this.finished = false
+			this.getQuestionList()
+		},
 		getQuestionList() {
-			if (!this.next_page) {
-				Toast('没有更多数据了')
-				return false
+			if (this.refreshing) {
+				this.questionList = []
+				this.refreshing = false
 			}
 			let params = {
 				limit: this.limit,
-				page: this.page,
+				page: this.page * this.limit,
 				token: this.token
 			}
 			duoduo.getQuestionList(params).then(res => {
 				if (res.data.code === 0) {
 					if (res.data.list && res.data.list.length > 0) {
 						this.questionList = this.questionList.concat(res.data.list)
-						this.next_page = true
+						this.page++
 						this.getDoctorInfo()
 					} else {
-						this.next_page = false
+						this.finished = true
 					}
+					this.loading = false
 					this.questionList.forEach(item => {
-            // if (item.disease_imgs) {
-							item.imgList = item.disease_imgs.split(',')
-						// }
+						item.imgList = item.disease_imgs.split(',')
 					})
 				}
 			})
