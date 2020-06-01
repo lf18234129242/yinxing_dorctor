@@ -7,6 +7,8 @@ import axios from 'axios'
 import './assets/css/base.css'
 import './assets/js/fontsize.js'
 import {
+	Icon,
+	Dialog,
 	RadioGroup, 
 	Radio, 
 	CellGroup, 
@@ -39,6 +41,8 @@ Vue.use(RadioGroup)
 	.use(Lazyload)
 	.use(List)
 	.use(PullRefresh)
+	.use(Dialog)
+	.use(Icon)
 
 //把 `******` 加到 `Vue` 的原型中
 Vue.prototype.axios = axios

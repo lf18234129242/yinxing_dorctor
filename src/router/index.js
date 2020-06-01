@@ -196,5 +196,15 @@ export default new Router({
         title:'医生回复'
       }
     },
+    {
+      path: '/UserManage',
+      name: 'UserManage',
+      component: loadView('UserManage'),
+      meta:{
+        index:2,
+        auth:true,
+        title:'用户管理'
+      }
+    },
   ]
 })
