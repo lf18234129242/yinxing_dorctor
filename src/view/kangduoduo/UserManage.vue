@@ -16,13 +16,15 @@
         <img :src="item.avatar" alt="">
         <div>
           <div class="user_item_name">
-            <span class="">{{item.nick_name}}</span>
-            <span class="user_name">{{item.user_name}}</span>
+            <span class="nick_name">{{item.nick_name}}</span>
+            <span :class="['source', item.source === '门诊' ? 'yellow' : 'blue']">{{item.source}}</span>
+            <span class="scan_time">{{item.scan_time}}</span>
           </div>
           <div class="user_item_info">
-            <span class="">{{item.age}}岁</span>
-            <span class="">{{item.gender}}</span>
-            <span class="">{{item.phone}}</span>
+            <span class="user_name">{{item.user_name}}</span>
+            <span class="age">{{item.age}}岁</span>
+            <span class="gender">{{item.gender}}</span>
+            <span class="phone">{{item.phone}}</span>
           </div>
         </div>
       </div>
@@ -113,10 +115,14 @@
 </template>
 
 <script>
+import { duoduo } from "@/utils/http"
+import { getStrParam } from "@/utils/count"
+import { Toast } from 'vant'
 export default {
+  name: 'UserManage',
   data() {
     return {
-      token: 'value',
+      token: 'ouYrs1aRCoSsjEX7DDcuRdUYRNt0',
       userList: [
         {
           id: 1,
@@ -128,6 +134,8 @@ export default {
           phone: '1823412319',
           illness: '暂无',
           illnessStep: '暂无',
+          source: '门诊',
+          scan_time: '2020-05-31'
         },
         {
           id: 2,
@@ -139,6 +147,8 @@ export default {
           phone: '1823412319',
           illness: '暂无',
           illnessStep: '暂无',
+          source: '裂变',
+          scan_time: '2020-05-31'
         }
       ],
       illnessList: [
@@ -169,7 +179,16 @@ export default {
 
     }
   },
+  mounted () {
+    this.getUserList()
+  },
   methods: {
+    getUserList() {
+      let params = {token: this.token}
+      duoduo.getUserList(params).then(res => {
+        console.log(res)
+      })
+    },
     handleLink() {
       this.$router.push({
         path: '/ConsultList',
@@ -251,11 +270,17 @@ export default {
         height: 1rem;
         display: flex;
         align-items: center;
+        .nick_name,.scan_time,.phone{
+          flex: 2
+        }
+        .source,.user_name,.age,.gender{
+          flex: 1
+        }
         span{
-          flex: 1;
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
+          text-align: center;
         }
         .user_name{
           padding-left: .3rem;
@@ -263,6 +288,12 @@ export default {
         }
       }
     }
+  }
+  .yellow{
+    color: #FFBA00;
+  }
+  .blue{
+    color: blue;
   }
   nav{
     width: 100%;

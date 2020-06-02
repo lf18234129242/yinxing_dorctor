@@ -27,6 +27,13 @@ const http = request => {
 }
 
 export const duoduo = {
+	getUserList: async(params) => {
+		const res = await http(axios.post(api.userList, params))
+		if (res) {
+			return Promise.resolve(res)
+		}
+		return Promise.reject(false)
+	},
 	consultInfo: async(params) => {
 		const res = await http(axios.post(api.consultInfo, params))
 		if (res) {
