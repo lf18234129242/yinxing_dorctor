@@ -1,51 +1,51 @@
 <template>
   <div class="UserManage">
     <div class="header">
-      <div>门诊扫码用户：5</div>
-      <div>裂变人数：17</div>
+      <div>门诊扫码用户：{{userJson.opcCount}}</div>
+      <div>裂变人数：{{userJson.fissionCount}}</div>
     </div>
-    <div class="kong"></div>
     <div class="user_list_box">
       <div 
         class="user_item ripple"
-        v-for="(item, index) in userList"
-        :key="item.id"
+        v-for="(item, index) in userJson.opcList"
+        :key="item.userId"
         @click="handleDetail(item)"
       >
         <span class="index">{{index + 1}}</span>
-        <img :src="item.avatar" alt="">
+        <img :src="item.headimgUrl" alt="">
         <div>
           <div class="user_item_name">
-            <span class="nick_name">{{item.nick_name}}</span>
-            <span :class="['source', item.source === '门诊' ? 'yellow' : 'blue']">{{item.source}}</span>
-            <span class="scan_time">{{item.scan_time}}</span>
+            <span class="nick_name">{{item.nickName | filterNoData}}</span>
+            <span :class="['source', item.userType == 1 ? 'yellow' : 'blue']">{{item.userType == 1 ? '门诊' : '裂变'}}</span>
+            <span class="scan_time">{{item.createTime | filterCteateTime}}</span>
           </div>
           <div class="user_item_info">
-            <span class="user_name">{{item.user_name}}</span>
-            <span class="age">{{item.age}}岁</span>
-            <span class="gender">{{item.gender}}</span>
-            <span class="phone">{{item.phone}}</span>
+            <span class="user_name">{{item.name | filterNoData}}</span>
+            <span class="age">{{item.age | filterNoData}}岁</span>
+            <span class="gender">{{item.gender | filterNoData}}</span>
+            <span class="phone">{{item.phoneNumber | filterNoData}}</span>
           </div>
         </div>
       </div>
     </div>
     <nav>
       <div @click="handleLink">问题列表</div>
-      <div>用户管理</div>
+      <div class="current_page">用户管理</div>
     </nav>
     <van-dialog
       v-model="showUserInfo"
       title=""
+      @confirm="saveProcess"
       className="user_info_dialog_box"
     >
       <div class="user_info_dialog">
         <div class="user_info_item">
           <span>微信昵称：</span>
-          <span>{{userInfo.nick_name}}</span>
+          <span>{{userInfo.nickName}}</span>
         </div>
         <div class="user_info_item">
           <span>姓名：</span>
-          <span>{{userInfo.user_name}}</span>
+          <span>{{userInfo.name}}</span>
         </div>
         <div class="user_info_item">
           <span>性别：</span>
@@ -57,13 +57,13 @@
         </div>
         <div class="user_info_item">
           <span>电话：</span>
-          <span>{{userInfo.phone}}</span>
+          <span>{{userInfo.phoneNumber}}</span>
         </div>
         <div class="user_info_item">
           <span>疾病：</span>
           <span 
-            @click="showIllnessPicker = true"
-            class="ill_picker"  
+            @click="handleShowIllnessPicker"
+            class="ill_picker pr"  
           >
             {{userInfo.illness}}
             <van-icon name="arrow-down" />
@@ -72,8 +72,8 @@
         <div class="user_info_item">
           <span>病程：</span>
           <span 
-            @click="showIllStepPicker = true"
-            class="ill_picker"  
+            @click="handleShowIllStepPicker"
+            class="ill_picker pr"  
           >
             {{userInfo.illnessStep}}
             <van-icon name="arrow-down" />
@@ -115,78 +115,84 @@
 </template>
 
 <script>
-import { duoduo } from "@/utils/http"
+import { duoduo, yinxing } from "@/utils/http"
 import { getStrParam } from "@/utils/count"
 import { Toast } from 'vant'
 export default {
   name: 'UserManage',
   data() {
     return {
-      token: 'ouYrs1aRCoSsjEX7DDcuRdUYRNt0',
-      userList: [
-        {
-          id: 1,
-          avatar: 'https://image.doulaoban.com/applet/rpo_upgrade.png',
-          nick_name: '云游四海走四方云游四海走四方',
-          user_name: '周敏涛',
-          age: 85,
-          gender: '女',
-          phone: '1823412319',
-          illness: '暂无',
-          illnessStep: '暂无',
-          source: '门诊',
-          scan_time: '2020-05-31'
-        },
-        {
-          id: 2,
-          avatar: 'https://image.doulaoban.com/applet/rpo_upgrade.png',
-          nick_name: '云游四海走四方',
-          user_name: '周敏涛',
-          age: 85,
-          gender: '女',
-          phone: '1823412319',
-          illness: '暂无',
-          illnessStep: '暂无',
-          source: '裂变',
-          scan_time: '2020-05-31'
-        }
-      ],
-      illnessList: [
-        {
-          value: 1,
-          text: '脑膜炎'
-        },
-        {
-          value: 2,
-          text: '高血压'
-        },
-      ],
-      illnessStepList: [
-        {
-          value: 1,
-          text: '第一阶段'
-        },
-        {
-          value: 2,
-          text: '第二阶段'
-        },
-      ],
+      token: '1b03d28f7bf04358a24da916b7064a5f',
+      userJson: {},
+      illnessList: [],
+      illnessStepList: [],
       showIllnessPicker: false,
       showIllStepPicker: false,
       showUserInfo: false,
       userInfo: {},
       user_mark: '',
-
+    }
+  },
+  filters: {
+    filterCteateTime(val) {
+      return val.slice(0, 16)
+    },
+    filterNoData(val) {
+      return val ? val : '--'
     }
   },
   mounted () {
+    let href = window.location.href
+    this.token = getStrParam(href, "token")
     this.getUserList()
   },
   methods: {
+    saveProcess() {
+      let params = {
+        illnessId: this.userInfo.illnessId,
+        openId: this.userInfo.openId,
+        processId: this.userInfo.processId,
+        remake: this.user_mark,
+        token: this.token
+      }
+      duoduo.processSave(params).then(res => {
+        if (res.data.code === 0) {
+          this.showUserInfo = false
+          Toast(res.data.msg)
+        }
+      })
+    },
+    getIllList(openId) {
+      let params = {
+        token: openId
+      }
+      yinxing.getIllList(params).then(res => {
+        if (res.data.code === 0) {
+          this.showUserInfo = true
+          this.illnessList = res.data.data
+          this.illnessList.forEach(item => {
+            item.value = item.id
+            item.text = item.name
+          })
+        }
+      })
+    },
+    getProcessList() {
+      yinxing.getProcessList(
+        {token: this.userInfo.openId}
+      ).then(res => {
+        if (res.data.code === 0) {
+          console.log(res.data)
+          this.illnessStepList = res.data.data
+        }
+      })
+    },
     getUserList() {
       let params = {token: this.token}
       duoduo.getUserList(params).then(res => {
-        console.log(res)
+        if (res.data.code === 0) {
+          this.userJson = res.data
+        }
       })
     },
     handleLink() {
@@ -198,19 +204,31 @@ export default {
       })
     },
     handleDetail(data) {
+      if (data.userType === '2') return false
       this.userInfo = data
-      this.showUserInfo = true
+      this.getIllList(data.openId)
+    },
+    handleShowIllnessPicker() {
+      if (this.illnessList.length > 0) {
+        this.showIllnessPicker = true
+      }
+    },
+    handleShowIllStepPicker() {
+      if (this.illnessStepList.length > 0) {
+        this.showIllStepPicker = true
+      }
     },
     onConfirmIllness(data) {
-      console.log(data)
       this.userInfo.illness = data.text
+      this.userInfo.illnessId = data.value
       this.showIllnessPicker = false
+      this.getProcessList()
     },
     onConfirmIllStep(data) {
-      console.log(data)
       this.userInfo.illnessStep = data.text
+      this.userInfo.processId = data.value
       this.showIllStepPicker = false
-    },
+    }
   }
 }
 </script>
@@ -230,6 +248,7 @@ export default {
     border-bottom: 1px solid #f5f5f5;
     box-shadow:0px 2px 10px 0px rgba(0,105,83,0.3);
     background: #fff;
+    z-index: 10;
     div{
       flex: 1;
       height: 100%;
@@ -239,14 +258,10 @@ export default {
       font-size: .6rem;
     }
   }
-  .kong{
-    width: 100%;
-    height: 2rem;
-  }
   .user_list_box{
     width: 100%;
-    height: calc(100vh - 4rem);
-    // margin: 2rem 0;
+    margin: 2rem 0;
+    box-sizing: border-box;
     background: #fff;
     .user_item{
       width: 100%;
@@ -270,21 +285,19 @@ export default {
         height: 1rem;
         display: flex;
         align-items: center;
-        .nick_name,.scan_time,.phone{
-          flex: 2
+        .scan_time,.phone{
+          flex: 2;
+          text-align: left;
         }
-        .source,.user_name,.age,.gender{
-          flex: 1
+        .nick_name,.source,.user_name,.age,.gender{
+          flex: 1;
+          text-align: left;
         }
         span{
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
           text-align: center;
-        }
-        .user_name{
-          padding-left: .3rem;
-          box-sizing: border-box;
         }
       }
     }
@@ -314,6 +327,10 @@ export default {
 			color: #fff;
 			font-weight:600;
     }
+    .current_page{
+      background: #fff;
+      color: #000;
+    }
   }
   .user_info_dialog_box{
     width: 70vw;
@@ -340,12 +357,14 @@ export default {
           white-space: nowrap;
         }
         .ill_picker{
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          // justify-content: flex-end;
+          width: 100%;
+          height: .8rem!important;
+          display: inline-block;
+          background: #f2f2f2;
           i{
-            display: flex;
+            position: absolute;
+            right: .1rem;
+            top: .1rem;
           }
         }
         textarea{

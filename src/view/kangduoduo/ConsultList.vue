@@ -42,6 +42,10 @@
 				</van-list>
 			</van-pull-refresh>
 		</template>
+    <nav>
+      <div class="current_page">问题列表</div>
+      <div @click="handleLink">用户管理</div>
+    </nav>
 	</div>
 </template>
 
@@ -70,6 +74,14 @@ export default {
 		this.getConsultList()
 	},
 	methods: {
+    handleLink() {
+      this.$router.push({
+        path: '/UserManage',
+        query: {
+          token: this.token
+        }
+      })
+    },
 		handleQuestionDetail(item) {
       this.$router.push({
         path: '/ReplyDoctor',
@@ -124,6 +136,31 @@ export default {
 	width: 100%;
 	min-height: 100vh;
 	background: #F2F2F2;
+	margin-bottom: 2rem;
+  nav{
+    width: 100%;
+    height: 2rem;
+    display: flex;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    div{
+      flex: 1;
+      height: 100%;
+      font-size: .8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+			background:linear-gradient(90deg,rgba(0,181,140,1) 0%,rgba(0,104,82,1) 99%);
+			box-shadow:0px .1rem .2rem 0px rgba(0,106,84,0.3);
+			color: #fff;
+			font-weight:600;
+    }
+    .current_page{
+      background: #fff;
+      color: #000;
+    }
+  }
 	.my_integral{
 		width: 100%;
 		height: 1.5rem;
