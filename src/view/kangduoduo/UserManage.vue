@@ -148,6 +148,10 @@ export default {
   },
   methods: {
     saveProcess() {
+      if (this.userInfo.illnessId && !this.userInfo.processId) {
+        Toast('请选择病程')
+        return false
+      }
       let params = {
         illnessId: this.userInfo.illnessId,
         openId: this.userInfo.openId,
@@ -158,7 +162,7 @@ export default {
       duoduo.processSave(params).then(res => {
         if (res.data.code === 0) {
           this.showUserInfo = false
-          Toast(res.data.msg)
+          Toast('提交成功')
         }
       })
     },
@@ -180,12 +184,15 @@ export default {
     getProcessList() {
       let params = {
         token: this.userInfo.openId,
-        id: this.userInfo.illnessId
+        illnessId: this.userInfo.illnessId
       }
       duoduo.getProcessList1(params).then(res => {
         if (res.data.code === 0) {
-          console.log(res.data)
           this.illnessStepList = res.data.data
+          this.illnessStepList.forEach(item => {
+            item.value = item.id
+            item.text = item.NAME
+          })
         }
       })
     },
