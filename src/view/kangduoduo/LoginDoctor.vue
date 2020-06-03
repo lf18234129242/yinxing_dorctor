@@ -1,9 +1,28 @@
 <template>
   <div class="LoginDoctor">
     <h1>登录</h1>
-    <div class="cell-box">
+    <div class="cell-box pr">
       <p>姓名</p>
-      <input type="text" v-model="username" placeholder="请输入您的账号" />
+      <input 
+        type="text" 
+        v-model="username" 
+        placeholder="请输入您的账号" 
+        @focus="handleGetLoc"
+        @input="handleInputAccount"
+      />
+      <transition name="van-fade">
+        <div 
+          v-show="hasAccountLoc"
+          class="user_name_loc"
+        >
+          <div 
+            class="accout_name"
+            v-for="item in accountList"
+            :key="item.username"
+            @click="handleLogin(item)"
+          >{{item.username}}</div>
+        </div>
+      </transition>
     </div>
     <div class="cell-box">
       <p>密码</p>
@@ -19,9 +38,11 @@ export default {
   name: 'LoginDoctor',
   data() {
     return {
+      hasAccountLoc: false,
       username: '',
       password: '',
-      loginDis: false
+      loginDis: false,
+      accountList: []
     }
   },
   watch: {
@@ -33,6 +54,32 @@ export default {
     },
   },
   methods: {
+    handleInputAccount() {
+      this.hasAccountLoc = false
+    },
+    handleGetLoc() {
+      let arr = JSON.parse(localStorage.getItem('account_list'))
+      if (arr.length > 0) {
+        this.hasAccountLoc = true
+        this.accountList = arr
+      }
+    },
+    handleLogin(item) {
+      this.username = item.username
+      this.password = item.password
+      this.hasAccountLoc = false
+    },
+    setStorege() {
+      let json = {
+        username: this.username,
+        password: this.password
+      }
+      let item = this.accountList.find(v => v.username === json.username)
+      if (!item) {
+        this.accountList.push(json)
+      }
+      localStorage.setItem('account_list', JSON.stringify(this.accountList))
+    },
     login() {
       if (this.username.trim() === "") {
         this.$toast("请输入您的账号");
@@ -49,7 +96,7 @@ export default {
       }
       duoduo.doctorLogin(params).then(res => {
         if (res.data.code === 0) {
-          this.$toast(res.data.msg)
+          this.setStorege()
           this.$router.push({
             path: '/ConsultList',
             query: {token: res.data.token}
@@ -92,6 +139,23 @@ export default {
     box-sizing: border-box;
     display: flex;
     align-items: center;
+    .user_name_loc{
+      width: 10.1rem;
+      position: absolute;
+      left: 3.2rem;
+      top: 2.7rem;
+      z-index: 3;
+      box-shadow: 0px 0px 5px 5px #eee;
+      .accout_name{
+        width: 100%;
+        height: 1.2rem;
+        font-size: 0.6rem;
+        line-height: 1.2rem;
+        text-indent: 2em;
+        background: #fff;
+        border-bottom: 1px solid #f2f2f2;
+      }
+    }
     p {
       width: 2rem;
       font-size: 0.56rem;
