@@ -1,7 +1,8 @@
 <template>
   <div class="UserManage">
     <div class="header">
-      <div>门诊扫码用户：{{userJson.opcCount}}</div>
+      <div>用户数：{{userJson.opcList.length}}</div>
+      <div>门诊扫码次数：{{userJson.opcCount}}</div>
       <div>裂变人数：{{userJson.fissionCount}}</div>
     </div>
     <div class="user_list_box">
@@ -28,6 +29,7 @@
         </div>
       </div>
     </div>
+    <div class="kong"></div>
     <nav>
       <div @click="handleLink">问题列表</div>
       <div class="current_page">用户管理</div>
@@ -35,6 +37,7 @@
     <van-dialog
       v-model="showUserInfo"
       title=""
+      showCancelButton
       @confirm="saveProcess"
       className="user_info_dialog_box"
     >
@@ -163,6 +166,8 @@ export default {
         if (res.data.code === 0) {
           this.showUserInfo = false
           Toast('提交成功')
+          this.user_mark = ''
+          this.userInfo = {}
         }
       })
     },
@@ -193,6 +198,10 @@ export default {
             item.value = item.id
             item.text = item.NAME
           })
+          if (this.illnessStepList.length > 0) {
+            this.userInfo.illnessStep = this.illnessStepList[0].text
+            this.userInfo.processId = this.illnessStepList[0].id
+          }
         }
       })
     },
@@ -213,9 +222,12 @@ export default {
       })
     },
     handleDetail(data) {
-      if (data.userType === '2') return false
       this.userInfo = data
-      this.getIllList(data.openId)
+      if (data.userType !== '2') {
+        this.getIllList(data.openId)
+      } else {
+        this.showUserInfo = true
+      }
     },
     handleShowIllnessPicker() {
       if (this.illnessList.length > 0) {
@@ -243,6 +255,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.kong{
+  width: 100%;
+  height: 2rem;
+}
 .UserManage{
   width: 100%;
   height: 100vh;
@@ -259,12 +275,18 @@ export default {
     background: #fff;
     z-index: 10;
     div{
-      flex: 1;
       height: 100%;
-      padding: 0 .6rem;
+      padding: 0 .2rem;
       box-sizing: border-box;
       line-height: 2rem;
       font-size: .6rem;
+      text-align: center;
+      &:nth-child(even) {
+        flex: 2;
+      }
+      &:nth-child(odd) {
+        flex: 1;
+      }
     }
   }
   .user_list_box{
