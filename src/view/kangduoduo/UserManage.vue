@@ -1,9 +1,18 @@
 <template>
   <div class="UserManage">
     <div class="header">
-      <div>用户数：{{userJson.opcList.length}}</div>
-      <div>门诊扫码次数：{{userJson.opcCount}}</div>
-      <div>裂变人数：{{userJson.fissionCount}}</div>
+      <div>
+        <span>用户数</span>
+        <span>{{userJson.opcList.length}}</span>
+      </div>
+      <div>
+        <span>门诊扫码次数</span>
+        <span>{{userJson.opcCount}}</span>
+      </div>
+      <div>
+        <span>裂变人数</span>
+        <span>{{userJson.fissionCount}}</span>
+      </div>
     </div>
     <div class="user_list_box">
       <div 
@@ -278,14 +287,18 @@ export default {
       height: 100%;
       padding: 0 .2rem;
       box-sizing: border-box;
-      line-height: 2rem;
+      line-height: 1rem;
       font-size: .6rem;
       text-align: center;
-      &:nth-child(even) {
-        flex: 2;
-      }
-      &:nth-child(odd) {
-        flex: 1;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      align-items: center;
+      span{
+        &:nth-child(1){
+          color: #888;
+        }
       }
     }
   }
