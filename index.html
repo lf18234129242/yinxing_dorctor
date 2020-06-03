@@ -11,19 +11,45 @@
   <div id="app"></div>
   <!-- built files will be auto injected -->
 </body>
-<script>
-  htmlFontSize()
-  function htmlFontSize(){
-    var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-    var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-    var width = w > h ? h : w;
-    width = width > 720 ? 720 : width
-    var fz = ~~(width*100000/36)/10000
-    document.getElementsByTagName("html")[0].style.cssText = 'font-size: ' + fz +"px";
-    var realfz = ~~(+window.getComputedStyle(document.getElementsByTagName("html")[0]).fontSize.replace('px','')*10000)/10000
-    if (fz !== realfz) {
-        document.getElementsByTagName("html")[0].style.cssText = 'font-size: ' + fz * (fz / realfz) +"px";
+<script type="text/javascript">
+  (function () {
+    if (typeof WeixinJSBridge == "object" && typeof WeixinJSBridge.invoke == "function") {
+      handleFontSize();
+    } else {
+      if (document.addEventListener) {
+        document.addEventListener("WeixinJSBridgeReady", handleFontSize, false);
+      } else if (document.attachEvent) {
+        document.attachEvent("WeixinJSBridgeReady", handleFontSize);
+        document.attachEvent("onWeixinJSBridgeReady", handleFontSize);
+      }
     }
-}
+    function handleFontSize() {
+
+      WeixinJSBridge.invoke('setFontSizeCallback', { 'fontSize': 0 });
+      WeixinJSBridge.on('menu:setfont', function () {
+        WeixinJSBridge.invoke('setFontSizeCallback', { 'fontSize': 0 });
+      });
+    }
+  })();
+  (function() {
+
+    if (typeof WeixinJSBridge == "object" && typeof WeixinJSBridge.invoke == "function") {
+      handleFontSize();
+    } else {
+      if (document.addEventListener) {
+        document.addEventListener("WeixinJSBridgeReady", handleFontSize, false);
+      } else if (document.attachEvent) {
+        document.attachEvent("WeixinJSBridgeReady", handleFontSize);
+        document.attachEvent("onWeixinJSBridgeReady", handleFontSize);  }
+    }
+    function handleFontSize() {
+      // 设置网页字体为默认大小
+      WeixinJSBridge.invoke('setFontSizeCallback', { 'fontSize' : 0 });
+      // 重写设置网页字体大小的事件
+      WeixinJSBridge.on('menu:setfont', function() {
+        WeixinJSBridge.invoke('setFontSizeCallback', { 'fontSize' : 0 });
+      });
+    }
+  })();
 </script>
 </html>
