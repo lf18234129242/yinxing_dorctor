@@ -2,6 +2,7 @@ const BASEURL = 'https://api.okginko.com'
 const URL = {
 	processSave: BASEURL + '/api/doctor/user/process/save', // 用户病程保存接口
 	userList: BASEURL + '/api/doctor/userList', // 用户列表接口
+	process_list1: BASEURL + '/api/process/list1', // 病程列表接口，用户管理用
 	process_list: BASEURL + '/api/process/list', // 病程列表接口
 	ill_list: BASEURL + '/api/illness/list', // 疾病列表接口
 	datum_save: BASEURL + '/api/userinfo/datum/save', // 患者资料保存接口

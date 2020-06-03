@@ -27,6 +27,13 @@ const http = request => {
 }
 
 export const duoduo = {
+	getProcessList1: async (params) => {
+		const res = await http(axios.post(api.process_list1, params))
+		if (res) {
+			return Promise.resolve(res)
+		}
+		return Promise.reject(false)
+	},
 	processSave: async(params) => {
 		const res = await http(axios.post(api.processSave, params))
 		if (res) {

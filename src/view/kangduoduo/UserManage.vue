@@ -178,9 +178,11 @@ export default {
       })
     },
     getProcessList() {
-      yinxing.getProcessList(
-        {token: this.userInfo.openId}
-      ).then(res => {
+      let params = {
+        token: this.userInfo.openId,
+        id: this.userInfo.illnessId
+      }
+      duoduo.getProcessList1(params).then(res => {
         if (res.data.code === 0) {
           console.log(res.data)
           this.illnessStepList = res.data.data
