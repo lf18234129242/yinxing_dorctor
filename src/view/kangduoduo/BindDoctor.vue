@@ -11,6 +11,7 @@
 			<div class="info">
 				<li>{{doctorInfo.practice_hospital}}</li>
 				<li>{{doctorInfo.dept_name}}&nbsp;&nbsp;&nbsp;&nbsp;{{doctorInfo.doctor_name}}</li>
+				<li v-if="doctorInfo.intro">{{doctorInfo.intro}}</li>
 			</div>
 			<div class="code_img_box">
 				<img :src="'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=' + doctorInfo.share_ticket" alt="">
@@ -275,9 +276,9 @@ export default {
 	}
 	.header{
 		width:13.6rem;
-		height:12.56rem;
 		background:rgba(255,255,255,1);
 		box-shadow:0px 1px .4rem 1px rgba(72,47,39,0.1);
+		padding-bottom: .5rem;
 		border-radius:.4rem;
 		margin-top: 2.3rem;
 		margin-bottom: .6rem;
@@ -350,12 +351,13 @@ export default {
 			display: flex;
 			flex-wrap: wrap;			
 			.doctor_item{
-				width: 3.6rem;
+				width: 45%;
 				height: 6rem;
 				margin: 0 .6rem 0 0;
 				.avatar{
 					width: 3.6rem;
 					height: 3.6rem;
+					margin: 0 auto;
 					box-sizing: border-box;
 					border-radius: 50%;
 					border: .1rem solid #FEF3F0;

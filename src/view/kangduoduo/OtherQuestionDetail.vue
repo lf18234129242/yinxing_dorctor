@@ -30,7 +30,7 @@ function scrollY () {
 	return window.pageYOffset || window.document.documentElement.scrollTop
 }
 export default {
-	name: 'Chating',
+	name: 'OtherQuestionDetail',
   data() {
     return {
 			questionInfoList: [],

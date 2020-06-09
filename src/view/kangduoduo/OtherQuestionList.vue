@@ -42,8 +42,8 @@
 		</template>
 		<div class="kong"></div>
     <nav>
-      <div @click="handleLink">我的提问</div>
-      <div @click="putQuestion">我要提问</div>
+      <div @click="handleLink" class="current_page">我的提问</div>
+      <div>我要提问</div>
     </nav>
 	</div>
 </template>
@@ -53,7 +53,7 @@ import { duoduo } from "@/utils/http"
 import { getStrParam } from "@/utils/count";
 import { Toast } from 'vant';
 export default {
-  name: "QuestionList",
+  name: "OtherQuestionList",
   // metaInfo: {
   //   title: `${this.doctorName}医生的问题列表`
   // },
@@ -81,7 +81,7 @@ export default {
     this.userId = getStrParam(href, "userId")
     this.doctorId = getStrParam(href, "doctorId")
 		sessionStorage.setItem("token", this.token)
-    // this.getQuestionList()
+    this.getQuestionList()
     document.title = `${this.doctorName}医生的问题列表`
 	},
 	methods: {
@@ -97,21 +97,12 @@ export default {
 		},
 		handleQuestionDetail(item) {
       this.$router.push({
-        path: '/Chating',
+        path: '/OtherQuestionDetail',
         query: {
           token: this.token,
           consultId: item.consult_id
         }
       })
-		},
-		putQuestion() {
-			this.$router.push({
-				path: '*',
-				query: {
-					token: this.token,
-					doctorId: this.doctorId
-				}
-			})
 		},
 		onRefresh() {
 			this.questionList = []
@@ -127,6 +118,7 @@ export default {
 				this.refreshing = false
 			}
 			let params = {
+        doctorId: this.doctorId,
 				limit: this.limit,
 				page: this.page * this.limit,
 				token: this.token
