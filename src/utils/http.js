@@ -146,6 +146,20 @@ export const duoduo = {
 		}
 		return Promise.reject(false)
 	},
+	getPublicQuestionInfo: async(params) => {
+		const res = await http(axios.post(api.public_info, params))
+		if (res) {
+			return Promise.resolve(res)
+		}
+		return Promise.reject(false)
+	},
+	getPublicQuestionList: async(params) => {
+		const res = await http(axios.post(api.public_list, params))
+		if (res) {
+			return Promise.resolve(res)
+		}
+		return Promise.reject(false)
+	},
 	submitQuestionSave: async(params) => {
 		const res = await http(axios.post(api.question_save, params))
 		if (res) {

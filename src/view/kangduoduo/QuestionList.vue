@@ -51,7 +51,11 @@
 			</van-pull-refresh>
 		</template>
 		<div class="kong"></div>
-		<van-button class="put_question" @click="putQuestion">再次提问</van-button>
+		<!-- <van-button class="put_question" @click="putQuestion">再次提问</van-button> -->
+    <nav>
+      <div @click="handleLink">其他人的提问</div>
+      <div @click="putQuestion">再次提问</div>
+    </nav>
 		<div v-if="showShareArrow" class="share_arrow" @click="showShareArrow = false">
 			<img src="@/assets/img/duoduo/share_arrow.png" alt="">
 			<ul>
@@ -85,6 +89,7 @@ export default {
 			doctorName: '',
 			avatar_url: '',
 			practice_hospital: '',
+			hospital_abbr: '',
       loading: false,
       finished: false,
       refreshing: false,
@@ -100,6 +105,16 @@ export default {
 		this.getTotalIntegral()
 	},
 	methods: {
+		handleLink() {
+			this.$router.push({
+				path: '/OtherQuestionList',
+				query: {
+					token: this.token,
+					userId: this.userId,
+					doctorId: this.doctorId
+				}
+			})
+		},
 		getTotalIntegral() {
 			duoduo.getTotalIntegral({token: this.token}).then(res => {
 				if (res.data.code === 0) {
@@ -198,7 +213,7 @@ export default {
 		shareFuc() {
 			wxShare(
 				window.location.href.split('#')[0],
-				this.practice_hospital,
+				this.hospital_abbr,
 				this.doctorName, 
 				this.userId, 
 				this.doctorId, 
@@ -214,6 +229,7 @@ export default {
 				this.doctorName = res.data.doctor_name
 				this.avatar_url = res.data.avatar_url
 				this.practice_hospital = res.data.practice_hospital
+				this.hospital_abbr = res.data.hospital_abbr
 				this.shareFuc()
 			})
 		},
@@ -222,6 +238,30 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+nav{
+	width: 100%;
+	height: 2rem;
+	display: flex;
+	position: fixed;
+	left: 0;
+	bottom: 0;
+	div{
+		flex: 1;
+		height: 100%;
+		font-size: .8rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background:linear-gradient(90deg,rgba(0,181,140,1) 0%,rgba(0,104,82,1) 99%);
+		box-shadow:0px .1rem .2rem 0px rgba(0,106,84,0.3);
+		color: #fff;
+		font-weight:600;
+	}
+	.current_page{
+		background: #fff;
+		color: #000;
+	}
+}
 .QuestionList{
 	width: 100%;
 	min-height: 100vh;

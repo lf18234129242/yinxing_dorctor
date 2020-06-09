@@ -65,6 +65,7 @@ export default {
 			userId: '',
 			doctorId: '',
 			practice_hospital: '',
+			hospital_abbr: '',
 			type: 1, // 类型{1：分享好友 2：分享群聊3：分享朋友圈 4：留言消耗}
 		}
 	},
@@ -100,7 +101,7 @@ export default {
 		shareFuc() {
 			wxShare(
 				window.location.href.split('#')[0],
-				this.practice_hospital,
+				this.hospital_abbr,
 				this.doctorName, 
 				this.userId, 
 				this.doctorId, 
@@ -118,6 +119,7 @@ export default {
 				this.doctorName = res.data.doctor_name
 				this.avatar_url = res.data.avatar_url
 				this.practice_hospital = res.data.practice_hospital
+				this.hospital_abbr = res.data.hospital_abbr
 				this.shareFuc()
 			})
 		}

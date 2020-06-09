@@ -123,7 +123,7 @@ export default new Router({
       meta:{
         index:3,
         auth:true,
-        title:''
+        title:'问题详情'
       }
     },
     {
@@ -134,6 +134,26 @@ export default new Router({
         index:2,
         auth:true,
         title:'问题列表'
+      }
+    },
+    {
+      path: '/OtherQuestionList',
+      name: 'OtherQuestionList',
+      component: loadView('OtherQuestionList'),
+      meta:{
+        index:2,
+        auth:true,
+        title:'其他人的问题'
+      }
+    },
+    {
+      path: '/OtherQuestionDetail',
+      name: 'OtherQuestionDetail',
+      component: loadView('OtherQuestionDetail'),
+      meta:{
+        index:3,
+        auth:true,
+        title:'问题详情'
       }
     },
     {

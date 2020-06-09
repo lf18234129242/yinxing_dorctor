@@ -15,7 +15,7 @@
 			<div class="code_img_box">
 				<img :src="'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=' + doctorInfo.share_ticket" alt="">
 			</div>
-			<li class="code_desc">扫码绑定，即可免费提问</li>
+			<li class="code_desc">长按识别二维码</li>
 		</div>
 		<section v-if="haveOtherDoctor">
 			<h4>下滑看看其他科室</h4>
@@ -32,8 +32,8 @@
 						<div class="model" v-show="item.seledted">已选择</div>
 					</div>
 					<div class="doctor_name">
-						<span>{{item.dept_name}}</span>
-						<span>{{item.doctor_name}}</span>
+						<span>{{item.hospital_abbr}}</span>
+						<span>{{item.dept_name}} {{item.doctor_name}}</span>
 					</div>
 				</li>
 			</ul>
@@ -45,7 +45,7 @@
 			<img @click="showBindDoctorCode = false" class="close" src="@/assets/img/duoduo/icon_close.png" alt="">
 			<div class="content">
 				<div class="sixedge" style="width:6.6rem;">长按二维码并关注</div>
-				<p>立即聘请所选医生</p>
+				<p>立即关注所选医生</p>
 				<div class="code_box">
 					<img :src="'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=' + doctorInfo.share_ticket" alt="">
 				</div>
@@ -75,6 +75,7 @@ export default {
 			avatar_url: '',
 			doctorName: '',
 			practice_hospital: '',
+			hospital_abbr: '',
 			doctorInfo: {},
 			doctorListArr: []
     }
@@ -101,7 +102,7 @@ export default {
 		shareFuc() {
 			wxShare(
 				window.location.href.split('#')[0],
-				this.practice_hospital,
+				this.hospital_abbr,
 				this.doctorName, 
 				this.userId, 
 				this.doctorId, 
@@ -156,6 +157,7 @@ export default {
 					this.avatar_url = res.data.avatar_url
 					this.doctorName = res.data.doctor_name
 					this.practice_hospital = res.data.practice_hospital
+					this.hospital_abbr = res.data.hospital_abbr
 					this.shareFuc()
 				}
 			})

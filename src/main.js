@@ -6,6 +6,8 @@ import router from './router'
 import axios from 'axios'
 import './assets/css/base.css'
 import './assets/js/fontsize.js'
+import Meta from 'vue-meta'
+
 import {
 	Icon,
 	Dialog,
@@ -43,6 +45,7 @@ Vue.use(RadioGroup)
 	.use(PullRefresh)
 	.use(Dialog)
 	.use(Icon)
+	.use(Meta)
 
 //把 `******` 加到 `Vue` 的原型中
 Vue.prototype.axios = axios

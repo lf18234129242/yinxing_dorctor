@@ -1,7 +1,7 @@
 <template>
   <div class="wechatCode">
     <h1 v-if="flag == '1'">您的信息已经提交。</h1>
-    <h2>亲爱的{{userName}}，下面是我的交流群，欢迎您的加入。我会不定期做一些分享和科普。</h2>
+    <h2>{{userName}}，请加入我的交流群，长按下方二维码，然后加入群聊。入群后可免费提问。</h2>
     <h3>————{{doctorName}}医生</h3>
     <img :src="doctorCode" />
     <li>1. 长按中间的二维码</li>
