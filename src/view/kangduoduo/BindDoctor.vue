@@ -306,6 +306,10 @@ export default {
 				color: #00221A;
 				line-height: .96rem;
 			}
+			li:nth-child(3){
+				padding: .3rem .5rem;
+				box-sizing: border-box;
+			}
 		}
 		.code_img_box{
 			width: 5.2rem;

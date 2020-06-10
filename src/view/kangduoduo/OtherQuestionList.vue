@@ -15,7 +15,7 @@
 						@click="handleQuestionDetail(item)"
 					>
 						<div class="question">
-							<span class="question_status">匿名</span>
+							匿名
 							{{item.sick_desc}}
 						</div>
 						<div class="question_imgs">

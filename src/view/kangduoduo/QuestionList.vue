@@ -53,7 +53,7 @@
 		<div class="kong"></div>
 		<!-- <van-button class="put_question" @click="putQuestion">再次提问</van-button> -->
     <nav>
-      <div @click="handleLink">其他人的提问</div>
+      <div class="current_page" @click="handleLink">其他人的提问</div>
       <div @click="putQuestion">再次提问</div>
     </nav>
 		<div v-if="showShareArrow" class="share_arrow" @click="showShareArrow = false">
