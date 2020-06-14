@@ -122,8 +122,8 @@ export default {
 			} else {
 				this.reduceImg(file)
 			}
-      file.status = 'uploading'
-      file.message = '上传中...'
+      // file.status = 'uploading'
+      // file.message = '上传中...'
       Toast.loading({
         message:'正在上传中...',
         duration:0,
@@ -136,8 +136,9 @@ export default {
           base64: file
         })
         .then(res => {
-          this.$toast.success("上传成功");
           if (res.data.code === 0) {
+						this.$toast.success("上传成功");
+						// file.status = 'done'
             this.fileArr.push(res.data.url);
           } else {
             this.$toast(res.data.msg)
