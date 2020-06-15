@@ -27,7 +27,7 @@
 							{{item.sick_desc}}
 						</div>
 						<div class="question_imgs">
-							<div v-if="item.imgList[0] !== ''">
+							<div v-if="item.imgList">
 								<img 
 									v-for="(jtem, idx) in item.imgList" 
 									:key="idx" 
@@ -205,7 +205,9 @@ export default {
 					}
 					this.loading = false
 					this.questionList.forEach(item => {
-						item.imgList = item.disease_imgs.split(',')
+						if(item.disease_imgs) {
+							item.imgList = item.disease_imgs.split(',')
+						}
 					})
 				}
 			})
