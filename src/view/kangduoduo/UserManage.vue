@@ -135,7 +135,11 @@ export default {
   data() {
     return {
       token: '1b03d28f7bf04358a24da916b7064a5f',
-      userJson: {},
+      userJson: {
+        opcList: [],
+        opcCount: null,
+        fissionCount: null
+      },
       illnessList: [],
       illnessStepList: [],
       showIllnessPicker: false,
@@ -177,6 +181,7 @@ export default {
           Toast('提交成功')
           this.user_mark = ''
           this.userInfo = {}
+          this.getUserList()
         }
       })
     },
@@ -232,6 +237,7 @@ export default {
     },
     handleDetail(data) {
       this.userInfo = data
+      this.user_mark = data.doctorRemake
       if (data.userType !== '2') {
         this.getIllList(data.openId)
       } else {
