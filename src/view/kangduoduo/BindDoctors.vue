@@ -43,6 +43,7 @@
 </template>
 
 <script>
+import QRCode from 'qrcodejs2'
 import wxShare from '@/utils/share'
 import { duoduo } from "@/utils/http"
 import { getStrParam } from "@/utils/count"
@@ -67,6 +68,7 @@ export default {
     this.token = getStrParam(href, "token")
     this.doctorId = getStrParam(href, "doctorId")
 		this.getDoctorList()
+		this.getDoctorInfo()
 		sessionStorage.setItem("token", this.token)
   },
   methods: {
@@ -109,10 +111,7 @@ export default {
 						this.haveOtherDoctor = true
 						this.doctorList = res.data.data
 						this.doctorList.forEach(item => {
-							this.$set(item, 'seledted', false)
-						})
-						this.doctorList.forEach(item => {
-							this.doctorListArr.push(item.id)
+							this.doctorIds.push(item.id)
 						})
 					} else {
 						this.haveOtherDoctor = false
@@ -196,7 +195,7 @@ export default {
       height: .92rem;
       color: #fff;
       background: rgba(0,0,0,0.5);
-      font-size: .48rem;
+      font-size: .6rem;
       line-height: .92rem;
       text-align: center;
       position: absolute;
@@ -207,7 +206,7 @@ export default {
 
   .doctor-info{
     width: 6.6rem;
-    height: 3rem;
+    height: 3.6rem;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -229,7 +228,9 @@ export default {
       color: #666;
       text-overflow: ellipsis;
       overflow: hidden;
-      white-space: nowrap;
+      display: -webkit-box; 
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2; 
     }
   }
 
@@ -304,6 +305,17 @@ export default {
       border-radius:.4rem;
       display: block;
       margin: .3rem auto 0;
+      position: relative;
+
+      // &::after{
+      //   content: '';
+      //   width: 10rem;
+      //   height: 10rem;
+      //   position: absolute;
+      //   left: -2.5rem;
+      //   top: -2.5rem;
+      // }
+
       img{
         width:5.2rem;
         height:5.2rem;

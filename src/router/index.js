@@ -173,7 +173,7 @@ export default new Router({
       meta:{
         index:1,
         auth:true,
-        title:'绑定医生'
+        title:'医生团队'
       }
     },
     {

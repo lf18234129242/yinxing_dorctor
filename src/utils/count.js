@@ -1,8 +1,4 @@
-import axios from 'axios'
-import url from './apiconfig'
 import { yinxing } from './http'
-import Vue from 'vue'
-import router from '../router'
 function count(id, token) {
 	yinxing.userpushSave({
 		token: token,
