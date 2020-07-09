@@ -25,7 +25,9 @@ import {
 	Image,
 	Lazyload,
 	List,
-	PullRefresh
+	PullRefresh,
+	Checkbox,
+	CheckboxGroup,
 } from 'vant';
 
 Vue.use(RadioGroup)
@@ -46,6 +48,8 @@ Vue.use(RadioGroup)
 	.use(Dialog)
 	.use(Icon)
 	.use(Meta)
+	.use(Checkbox)
+	.use(CheckboxGroup)
 
 //把 `******` 加到 `Vue` 的原型中
 Vue.prototype.axios = axios

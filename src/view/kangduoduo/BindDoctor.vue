@@ -64,6 +64,7 @@ export default {
 	name: 'BindDoctor',
   data() {
     return {
+			doctorIds: '',
 			haveOtherDoctor: false,
 			showBindDoctorCode: false,
 			showThanksBox: true,
