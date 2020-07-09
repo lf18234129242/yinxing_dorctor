@@ -136,6 +136,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.user-select{
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
 .BindDoctors{
   width: 100%;
   min-height: 100vh;
@@ -288,6 +295,7 @@ export default {
     top: 0;
     margin: auto;
     p{
+      @extend .user-select;
       width: 100%;
       height: 1rem;
       line-height: 1rem;
@@ -333,6 +341,7 @@ export default {
 }
 
 .sixedge{
+  @extend .user-select;
   width: 9.4rem;
   height: 1.36rem;
   padding: 0 .5rem;
