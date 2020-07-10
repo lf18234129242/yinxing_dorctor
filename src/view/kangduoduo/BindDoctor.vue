@@ -452,7 +452,7 @@ export default {
 		}
 		.content{
 			width:11.34rem;
-			height:10.44rem;
+			height:13.44rem;
 			background:rgba(255,255,255,1);
 			border-radius:.4rem;
 			padding: .8rem 0;
@@ -474,8 +474,8 @@ export default {
 				margin-top: -.4rem;
 			}
 			.code_box{
-				width:5.2rem;
-				height:5.2rem;
+				width: 8rem;
+				height: 8rem;
 				background:rgba(255,255,255,1);
 				border:1px solid rgba(255, 169, 124, 1);
 				box-shadow:-.28rem .28rem 0px 0px rgba(255,230,213,1);
@@ -483,8 +483,8 @@ export default {
 				display: block;
 				margin: .3rem auto 0;
 				img{
-					width:5.2rem;
-					height:5.2rem;
+					width:100%;
+					height:100%;
 					border-radius:.4rem;
 				}
 			}

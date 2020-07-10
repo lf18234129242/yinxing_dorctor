@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="BindDoctors" v-if="haveOtherDoctor">
-      <h1>{{doctorName}}的医生团队共同为您服务</h1>
+      <h1>{{doctorName}}医生团队<br>共同为您服务</h1>
       <div class="doctors-box">
         <h5 class="sixedge fiexd-code">点击选择 可同时聘请多个医生</h5>
         <div 
@@ -193,8 +193,8 @@ export default {
     margin: 0 .6rem 0;
 
     img{
-      width: 3.4rem;
-      height: 3.4rem;
+      width: 3.6rem;
+      height: 3.6rem;
     }
 
     .doctor-name{
@@ -283,7 +283,7 @@ export default {
   }
   .content{
     width:11.34rem;
-    height:10.44rem;
+    height:13.44rem;
     background:rgba(255,255,255,1);
     border-radius:.4rem;
     padding: .8rem 0;
@@ -305,8 +305,8 @@ export default {
       margin-top: -.4rem;
     }
     .code_box{
-      width:5.2rem;
-      height:5.2rem;
+      width: 8rem;
+      height: 8rem;
       background:rgba(255,255,255,1);
       border:1px solid rgba(255, 169, 124, 1);
       box-shadow:-.28rem .28rem 0px 0px rgba(255,230,213,1);
@@ -315,18 +315,9 @@ export default {
       margin: .3rem auto 0;
       position: relative;
 
-      // &::after{
-      //   content: '';
-      //   width: 10rem;
-      //   height: 10rem;
-      //   position: absolute;
-      //   left: -2.5rem;
-      //   top: -2.5rem;
-      // }
-
       img{
-        width:5.2rem;
-        height:5.2rem;
+        width:100%;
+        height:100%;
         border-radius:.4rem;
       }
     }
