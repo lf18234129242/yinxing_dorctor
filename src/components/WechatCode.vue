@@ -1,11 +1,19 @@
 <template>
   <div class="wechatCode">
-    <h1 v-if="flag == '1'">您的信息已经提交。</h1>
+    <!-- <h1 v-if="flag == '1'">您的信息已经提交。</h1>
     <h2>{{userName}}，请加入我的交流群，长按下方二维码，然后加入群聊。入群后可免费提问。</h2>
     <h3>————{{doctorName}}医生</h3>
     <img :src="doctorCode" />
     <li>1. 长按中间的二维码</li>
-    <li>2. 前往图中的群聊</li>
+    <li>2. 前往图中的群聊</li> -->
+    <div class="doctor-box">
+      <img src="" alt="">
+      <div>{{doctorName}}医生</div>
+    </div>
+    <div class="wechat-code-box">
+      <div>{{userName}}，请加入我的交流群，长按下方二维码，加入群聊，入群后可免费提问。</div>
+      <img :src="doctorCode" alt="">
+    </div>
   </div>
 </template>
 
@@ -63,8 +71,35 @@ export default {
 
 <style lang="scss" scoped>
 .wechatCode{
-  padding: .6rem;
+  width: 100%;
+  height: 100vh;
+  padding-top: 1.56rem;
   box-sizing: border-box;
+  background: #F2F2F2;
+  display: flex;
+
+  .doctor-box{
+    width: 3.6rem;
+    padding: 0 .96rem 0 .88rem;
+    box-sizing: border-box;
+
+    img{
+      width: 1.76rem;
+      height: 1.76rem;
+      border-radius: 50%;
+      margin-bottom: .5rem;
+    }
+    div{
+      font-size: .48rem;
+      color: #656565;
+      text-align: center;
+    }
+  }
+  .wechat-code-box{
+    width: 9.48rem;
+    height: fit-content;
+    background: #fff;
+  }
 }
 img{
 	width: 10rem;

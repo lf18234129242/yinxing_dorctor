@@ -89,7 +89,7 @@ export default new Router({
       meta:{
         index:6,
         auth:true,
-        title:'二维码'
+        title:'扫码进群'
       }
     },
     {
