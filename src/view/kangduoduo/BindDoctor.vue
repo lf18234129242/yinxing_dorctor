@@ -19,7 +19,7 @@
 			<li class="code_desc">长按识别二维码</li>
 		</div>
 		<section v-if="haveOtherDoctor">
-			<h4>下滑看看其他科室</h4>
+			<h4>免费咨询其他医生</h4>
 			<h5 class="sixedge">点击头像 可同时关注多个医生</h5>
 			<ul class="doctor_list">
 				<li 

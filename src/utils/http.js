@@ -2,6 +2,7 @@ import api from './apiconfig'
 import axios from './axios'
 import Vue from 'vue'
 import { Toast } from 'vant'
+// import _this from '@/main'
 Vue.use(Toast)
 const http = request => {
 	return new Promise((resolve, reject) => {
@@ -21,6 +22,9 @@ const http = request => {
 			if (err.data.msg) {
 				Toast(err.data.msg)
 			}
+			// if (err.data.code === 500) {
+			// 	_this.push('/LoginDoctor')
+			// }
 			return reject(err)
 		})
 	})

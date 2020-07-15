@@ -3,30 +3,29 @@
     <div class="BindDoctors" v-if="haveOtherDoctor">
       <h1>{{doctorName}}医生团队<br>共同为您服务</h1>
       <div class="doctors-box">
-        <h5 class="sixedge fiexd-code">可同时关注多个医生，获得免费服务</h5>
+        <h5 class="sixedge fiexd-code">入群可获得免费服务</h5>
         <div 
           class="doctors-item"
           v-for="item in doctorList"
           :key="item.id"
         >
-          <van-checkbox-group v-model="doctorIds">
-            <van-checkbox :name="item.id" checked-color="#006A53">
-              <div class="checkbox-box">
-                <div class="avatar-box">
-                  <img :src="item.avatar_url" alt="">
-                  <div class="doctor-name">{{item.doctor_name}}</div>
-                </div>
-                <div class="doctor-info">
-                  <h2>{{item.hospital_abbr}}</h2>
-                  <h3>{{item.dept_name}}</h3>
-                  <h4>{{item.intro}}</h4>
-                </div>
-              </div>
-            </van-checkbox>
-          </van-checkbox-group>
+          <div class="checkbox-box">
+            <div class="avatar-box">
+              <img :src="item.avatar_url" alt="">
+              <div class="doctor-name">{{item.doctor_name}}</div>
+            </div>
+            <div class="doctor-info">
+              <h2>{{item.hospital_abbr}}</h2>
+              <h3>{{item.dept_name}}</h3>
+              <h4>{{item.intro}}</h4>
+            </div>
+            <div 
+              class="get-code" 
+              @click="$router.push(`/WechatCode?token=${token}&doctor_id=${doctorId}&type=1`)"
+            >进群</div>
+          </div>
         </div>
       </div>
-      <div class="btn" @click="bindDoctor">一键关注</div>
     </div>
     <div v-else class="no-doctor">暂无可关注的医生</div>
 		<div v-if="showBindDoctorCode" class="bind_doctor_code_box">
@@ -54,7 +53,6 @@ export default {
     return {
 			showBindDoctorCode: false,
       haveOtherDoctor: false,
-      doctorIds: [],
       doctorList: [],
       doctorInfo: '',
       avatar_url: '',
@@ -67,9 +65,11 @@ export default {
     let href = window.location.href
     this.token = getStrParam(href, "token")
     this.doctorId = getStrParam(href, "doctorId")
+    this.push_id = sessionStorage.getItem("push_id");
 		this.getDoctorList()
 		this.getDoctorInfo()
 		sessionStorage.setItem("token", this.token)
+    sessionStorage.setItem("push_id", this.push_id)
   },
   methods: {
 		shareFuc() {
@@ -110,24 +110,9 @@ export default {
 					if (res.data.data.length > 0) {
 						this.haveOtherDoctor = true
 						this.doctorList = res.data.data
-						this.doctorList.forEach(item => {
-							this.doctorIds.push(item.id)
-						})
 					} else {
 						this.haveOtherDoctor = false
 					}
-				}
-			})
-		},
-		bindDoctor() {
-			let params = {
-				doctorIds: this.doctorIds.toString(),
-				token: this.token
-			}
-			duoduo.bindDoctor(params).then(res => {
-				if (res.data.code === 0) {
-					this.showBindDoctorCode = true
-					this.getDoctorInfo()
 				}
 			})
 		},
@@ -166,7 +151,7 @@ export default {
     border-radius: .4rem .4rem 0 0;
     margin: 0 auto;
     position: relative;
-    padding: 0.68rem .6rem 2rem;
+    padding: 0.68rem .6rem 0;
     box-sizing: border-box;
   }
 
@@ -190,7 +175,7 @@ export default {
     border: .1rem solid #FDF2ED;
     overflow: hidden;
     position: relative;
-    margin: 0 .6rem 0;
+    margin: 0 .6rem 0 0;
 
     img{
       width: 3.6rem;
@@ -239,6 +224,17 @@ export default {
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 2; 
     }
+  }
+
+  .get-code{
+    width: 1.5rem;
+    height: 1rem;
+    text-align: center;
+    line-height: 1rem;
+    border-radius: 4px;
+    background: #eee;
+    color: rgb(0, 104, 82);
+
   }
 
   .btn{

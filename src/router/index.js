@@ -177,6 +177,16 @@ export default new Router({
       }
     },
     {
+      path: '/BindDoctorCode',
+      name: 'BindDoctorCode',
+      component: loadView('BindDoctorCode'),
+      meta:{
+        index:1,
+        auth:true,
+        title:'医生团队'
+      }
+    },
+    {
       path: '/RegisterAll',
       name: 'RegisterAll',
       component: loadView('RegisterAll'),
