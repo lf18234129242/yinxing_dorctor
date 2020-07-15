@@ -1,31 +1,34 @@
 <template>
   <div class="ReplyDoctor">
-    <div class="illness_desc" v-for="(item, index) in replyInfoList" :key="index">
-      <h2>{{item.consult_flag === 1 ? '医生回复' : userName}}<span>{{item.create_time}}</span></h2>
-      <p>{{item.sick_desc}}</p>
-			<div v-if="item.imgArr">
-				<img 
-					v-for="(jtem, index) in item.imgArr" 
-					:key="index"
-					:src="jtem"
-					alt=""
-					lazy-load
-					@click="previewImage(index, item.imgArr)"
-				>
-			</div>
-    </div>
+    <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
+      <van-list
+        v-model="loading"
+        :finished="finished"
+        finished-text="没有更多了"
+        @load="getConsultInfo"
+      >
+        <div class="illness_desc" v-for="(item, index) in replyInfoList" :key="index">
+          <h2>{{item.consult_flag === 1 ? '医生回复' : userName}}<span>{{item.create_time}}</span></h2>
+          <p>{{item.sick_desc}}</p>
+          <div v-if="item.imgArr">
+            <img 
+              v-for="(jtem, index) in item.imgArr" 
+              :key="index"
+              :src="jtem"
+              alt=""
+              lazy-load
+              @click="previewImage(index, item.imgArr)"
+            >
+          </div>
+        </div>
+      </van-list>
+    </van-pull-refresh>
     <div class="illness_desc" v-if="!has_reply">
       <h2>医生回复</h2>
       <textarea id="" cols="30" rows="10" v-model="doctor_reply"></textarea>
     </div>
 
 		<van-button round class="put_question_again" @click="submit" :disabled="replyBtnSub">{{reply_btn_text}}</van-button>
-		<!-- <footer>
-			<h3>温馨提示</h3>
-			<li>1.提交详细信息，医生可以给更准确的回复</li>
-			<li>2.该服务是医生利用空闲时间进行的免费帮忙</li>
-			<li>3.本服务为免费帮忙，内容仅供参考，如具体病情请及时前往门诊就医。</li>
-		</footer> -->
   </div>
 </template>
 
@@ -52,6 +55,9 @@ export default {
       diseaseImgs: '',
       doctorId: '',
       userName: '',
+      loading: false,
+      finished: false,
+      refreshing: false,
     }
   },
   mounted () {
@@ -63,25 +69,42 @@ export default {
 		this.getConsultInfo()
   },
   methods: {
+		onRefresh() {
+			this.replyInfoList = []
+			this.page = 0
+			this.limit = 10
+			this.loading = true
+			this.finished = false
+			this.getQuestionList()
+		},
 		previewImage(num, imgList) {
-      console.log(num)
-      console.log(imgList)
 			ImagePreview({
 				images: imgList,
 				startPosition: num
 			})
 		},
     getConsultInfo() {
+      this.loading = true
+			if (this.refreshing) {
+				this.replyInfoList = []
+				this.refreshing = false
+			}
       let params = {
-        page: this.page,
+        page: this.page * this.limit,
         limit: this.limit,
         consultId: this.consultId,
         token: this.token
       }
       duoduo.consultInfo(params).then(res => {
         if (res.data.code === 0) {
-          this.userName = res.data.userName
-          this.replyInfoList = res.data.list
+          if(res.data.list && res.data.list.length > 0) {
+            this.userName = res.data.userName
+            this.replyInfoList = this.replyInfoList.concat(res.data.list)
+						this.page++
+          } else {
+            this.finished = true
+          }
+          this.loading = false
           this.replyInfoList.forEach(item => {
             if (item.disease_imgs) {
               item.imgArr = item.disease_imgs.split(',')
@@ -91,7 +114,6 @@ export default {
             this.has_reply = true
             this.reply_btn_text = '补充回复'
           }
-          console.log(this.replyInfoList)
         }
       })
     },
