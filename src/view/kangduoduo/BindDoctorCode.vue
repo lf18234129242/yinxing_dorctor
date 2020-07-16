@@ -3,7 +3,7 @@
     <div class="BindDoctors" v-if="haveOtherDoctor">
       <h1>{{doctorName}}医生团队<br>共同为您服务</h1>
       <div class="doctors-box">
-        <h5 class="sixedge fiexd-code">入群可获得免费服务</h5>
+        <h5 class="sixedge fiexd-code">进群可获得免费服务</h5>
         <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
           <van-list
             v-model="loading"
