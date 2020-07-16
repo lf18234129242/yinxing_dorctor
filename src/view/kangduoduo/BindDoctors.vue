@@ -26,7 +26,7 @@
           </van-checkbox-group>
         </div>
       </div>
-      <div class="btn" @click="bindDoctor">一键关注</div>
+      <div class="btn" @click="bindDoctor">一键关注&nbsp;&nbsp;&nbsp;&nbsp;免费服务</div>
     </div>
     <div v-else class="no-doctor">暂无可关注的医生</div>
 		<div v-if="showBindDoctorCode" class="bind_doctor_code_box">
@@ -333,7 +333,7 @@ export default {
 
 .sixedge{
   @extend .user-select;
-  width: 9.4rem;
+  width: 10.4rem;
   height: 1.36rem;
   padding: 0 .5rem;
   position: relative;

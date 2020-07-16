@@ -4,27 +4,36 @@
       <h1>{{doctorName}}医生团队<br>共同为您服务</h1>
       <div class="doctors-box">
         <h5 class="sixedge fiexd-code">入群可获得免费服务</h5>
-        <div 
-          class="doctors-item"
-          v-for="item in doctorList"
-          :key="item.id"
-        >
-          <div class="checkbox-box">
-            <div class="avatar-box">
-              <img :src="item.avatar_url" alt="">
-              <div class="doctor-name">{{item.doctor_name}}</div>
-            </div>
-            <div class="doctor-info">
-              <h2>{{item.hospital_abbr}}</h2>
-              <h3>{{item.dept_name}}</h3>
-              <h4>{{item.intro}}</h4>
-            </div>
+        <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
+          <van-list
+            v-model="loading"
+            :finished="finished"
+            finished-text="没有更多了"
+            @load="getUserDoctorTeamList"
+          >
             <div 
-              class="get-code" 
-              @click="$router.push(`/WechatCode?token=${token}&doctor_id=${doctorId}&type=1`)"
-            >进群</div>
-          </div>
-        </div>
+              class="doctors-item"
+              v-for="item in doctorList"
+              :key="item.id"
+            >
+              <div class="checkbox-box">
+                <div class="avatar-box">
+                  <img :src="item.avatarUrl" alt="">
+                  <div class="doctor-name">{{item.doctorName}}</div>
+                </div>
+                <div class="doctor-info">
+                  <h2>{{item.hospitalAbbr}}</h2>
+                  <h3>{{item.deptName}}</h3>
+                  <h4>{{item.intro}}</h4>
+                </div>
+                <div 
+                  class="get-code" 
+                  @click="$router.push(`/WechatCode?token=${token}&doctor_id=${doctorId}&type=${type}&push_id=${push_id}`)"
+                >进群</div>
+              </div>
+            </div>
+          </van-list>
+        </van-pull-refresh>
       </div>
     </div>
     <div v-else class="no-doctor">暂无可关注的医生</div>
@@ -48,7 +57,7 @@ import { duoduo } from "@/utils/http"
 import { getStrParam } from "@/utils/count"
 import { Toast } from 'vant';
 export default {
-  name: 'BindDoctors',
+  name: 'BindDoctorsCode',
   data() {
     return {
 			showBindDoctorCode: false,
@@ -59,14 +68,22 @@ export default {
       doctorName: '',
       practice_hospital: '',
       hospital_abbr: '',
+      push_id: '',
+      type: '',
+      loading: false,
+      finished: false,
+      refreshing: false,
+			page: 0,
+			limit: 10,
     }
   },
   mounted () {
     let href = window.location.href
     this.token = getStrParam(href, "token")
     this.doctorId = getStrParam(href, "doctorId")
-    this.push_id = sessionStorage.getItem("push_id");
-		this.getDoctorList()
+    this.push_id = getStrParam(href, "push_id")
+    this.type = getStrParam(href, "type")
+		this.getUserDoctorTeamList()
 		this.getDoctorInfo()
 		sessionStorage.setItem("token", this.token)
     sessionStorage.setItem("push_id", this.push_id)
@@ -93,26 +110,44 @@ export default {
 					this.avatar_url = res.data.avatar_url
 					this.doctorName = res.data.doctor_name
 					this.practice_hospital = res.data.practice_hospital
-					this.hospital_abbr = res.data.hospital_abbr
+          this.hospital_abbr = res.data.hospital_abbr
+          document.title = `${this.doctorName}的医生团队`
 					this.shareFuc()
 				}
 			})
 		},
-		getDoctorList() {
-			let params = {
-				doctor: this.doctorId,
-				token: this.token,
-				limit: 9,
-				page: 0
+		onRefresh() {
+			this.doctorList = []
+			this.page = 0
+			this.limit = 10
+			this.loading = true
+			this.finished = false
+			this.getUserDoctorTeamList()
+		},
+		getUserDoctorTeamList() {
+			if (this.refreshing) {
+				this.doctorList = []
+				this.refreshing = false
 			}
-			duoduo.getDoctorList(params).then(res => {
+			let params = {
+				doctorId: this.doctorId,
+				token: this.token,
+				limit: this.limit,
+				page: this.page * this.limit,
+			}
+			duoduo.getUserDoctorTeamList(params).then(res => {
 				if (res.data.code === 0) {
-					if (res.data.data.length > 0) {
+					if (res.data.data && res.data.data.length > 0) {
 						this.haveOtherDoctor = true
-						this.doctorList = res.data.data
+            this.doctorList = this.doctorList.concat(res.data.data)
+            this.page++
 					} else {
+						this.finished = true
+          }
+          if(this.page === 0 && res.data.data.length === 0) {
 						this.haveOtherDoctor = false
-					}
+          }
+          this.loading = false
 				}
 			})
 		},
@@ -151,7 +186,7 @@ export default {
     border-radius: .4rem .4rem 0 0;
     margin: 0 auto;
     position: relative;
-    padding: 0.68rem .6rem 0;
+    padding: 0.68rem .3rem 0;
     box-sizing: border-box;
   }
 
@@ -165,7 +200,7 @@ export default {
   .checkbox-box{
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
   }
 
   .avatar-box{
@@ -175,7 +210,7 @@ export default {
     border: .1rem solid #FDF2ED;
     overflow: hidden;
     position: relative;
-    margin: 0 .6rem 0 0;
+    margin: 0 .3rem 0 0;
 
     img{
       width: 3.6rem;
@@ -197,7 +232,7 @@ export default {
   }
 
   .doctor-info{
-    width: 6.6rem;
+    width: 6rem;
     height: 3.6rem;
     display: flex;
     flex-direction: column;
@@ -227,13 +262,13 @@ export default {
   }
 
   .get-code{
-    width: 1.5rem;
+    width: 2rem;
     height: 1rem;
     text-align: center;
     line-height: 1rem;
     border-radius: 4px;
-    background: #eee;
-    color: rgb(0, 104, 82);
+    background: rgb(0, 104, 82);
+    color: #fff;
 
   }
 

@@ -72,7 +72,7 @@ export default {
 <style lang="scss" scoped>
 .wechatCode{
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
   padding-top: 1.56rem;
   box-sizing: border-box;
   background: #F2F2F2;

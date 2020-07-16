@@ -31,6 +31,13 @@ const http = request => {
 }
 
 export const duoduo = {
+	getUserDoctorTeamList: async (params) => {
+		const res = await http(axios.post(api.userDoctorTeamList, params))
+		if (res) {
+			return Promise.resolve(res)
+		}
+		return Promise.reject(false)
+	},
 	getProcessList1: async (params) => {
 		const res = await http(axios.post(api.process_list1, params))
 		if (res) {

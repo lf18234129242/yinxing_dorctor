@@ -1,5 +1,6 @@
 const BASEURL = 'https://api.okginko.com'
 const URL = {
+	userDoctorTeamList: BASEURL + '/api/doctor/userDoctorTeamList', // 公用问题单条记录接口
 	processSave: BASEURL + '/api/doctor/user/process/save', // 用户病程保存接口
 	userList: BASEURL + '/api/doctor/userList', // 用户列表接口
 	process_list1: BASEURL + '/api/process/list1', // 病程列表接口，用户管理用
