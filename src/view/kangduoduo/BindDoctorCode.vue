@@ -28,7 +28,7 @@
                 </div>
                 <div 
                   class="get-code" 
-                  @click="$router.push(`/WechatCode?token=${token}&doctor_id=${doctorId}&type=${type}&push_id=${push_id}`)"
+                  @click="$router.push(`/WechatCode?token=${token}&doctor_id=${item.doctorId}&type=${type}&push_id=${push_id}`)"
                 >进群</div>
               </div>
             </div>
@@ -51,7 +51,6 @@
 </template>
 
 <script>
-import QRCode from 'qrcodejs2'
 import wxShare from '@/utils/share'
 import { duoduo } from "@/utils/http"
 import { getStrParam } from "@/utils/count"
@@ -81,7 +80,7 @@ export default {
     let href = window.location.href
     this.token = getStrParam(href, "token")
     this.doctorId = getStrParam(href, "doctorId")
-    this.push_id = getStrParam(href, "push_id")
+    this.push_id = getStrParam(href, "pushId")
     this.type = getStrParam(href, "type")
 		this.getUserDoctorTeamList()
 		this.getDoctorInfo()

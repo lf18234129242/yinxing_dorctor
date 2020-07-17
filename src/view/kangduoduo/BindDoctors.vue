@@ -43,7 +43,6 @@
 </template>
 
 <script>
-import QRCode from 'qrcodejs2'
 import wxShare from '@/utils/share'
 import { duoduo } from "@/utils/http"
 import { getStrParam } from "@/utils/count"

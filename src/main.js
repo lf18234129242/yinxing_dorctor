@@ -6,7 +6,7 @@ import router from './router'
 import axios from 'axios'
 import './assets/css/base.css'
 import './assets/js/fontsize.js'
-import Meta from 'vue-meta'
+// import Meta from 'vue-meta'
 
 import {
 	Icon,
@@ -47,7 +47,7 @@ Vue.use(RadioGroup)
 	.use(PullRefresh)
 	.use(Dialog)
 	.use(Icon)
-	.use(Meta)
+	// .use(Meta)
 	.use(Checkbox)
 	.use(CheckboxGroup)
 
