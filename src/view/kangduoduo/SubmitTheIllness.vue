@@ -105,7 +105,8 @@ export default {
 						query: {
 							token: this.token,
 							userId: this.userId,
-							doctorId: this.doctorId
+							doctorId: this.doctorId,
+							openModel: true
 						}
 					})
 				}

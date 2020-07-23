@@ -100,6 +100,10 @@ export default {
     this.token = getStrParam(href, "token")
     this.userId = getStrParam(href, "userId")
     this.doctorId = getStrParam(href, "doctorId")
+		let openModel = getStrParam(href, "openModel")
+		if(openModel) {
+			this.showShareArrow = true
+		}
 		sessionStorage.setItem("token", this.token)
 		this.getQuestionList()
 		this.getTotalIntegral()

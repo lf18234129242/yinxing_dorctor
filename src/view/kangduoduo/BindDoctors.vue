@@ -1,6 +1,7 @@
 <template>
   <div>
-    <div class="BindDoctors" v-if="haveOtherDoctor">
+    <!--  v-if="haveOtherDoctor" -->
+    <div class="BindDoctors">
       <h1>{{doctorName}}医生团队<br>共同为您服务</h1>
       <div class="doctors-box">
         <h5 class="sixedge fiexd-code">可同时关注多个医生，获得免费服务</h5>
@@ -28,7 +29,7 @@
       </div>
       <div class="btn" @click="bindDoctor">一键关注&nbsp;&nbsp;&nbsp;&nbsp;免费服务</div>
     </div>
-    <div v-else class="no-doctor">暂无可关注的医生</div>
+    <!-- <div v-else class="no-doctor">暂无可关注的医生</div> -->
 		<div v-if="showBindDoctorCode" class="bind_doctor_code_box">
 			<img @click="showBindDoctorCode = false" class="close" src="@/assets/img/duoduo/icon_close.png" alt="">
 			<div class="content">
