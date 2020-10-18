@@ -29,7 +29,8 @@ export default {
       doctorName: '',
       userName: '',
       flag: '',
-      type: ''
+      type: '',
+      groupId: ''
     };
   },
   mounted() {
@@ -44,6 +45,7 @@ export default {
       this.push_id = getStrParam(href, "push_id");
       this.doctorId = getStrParam(href, "doctor_id");
       this.type = getStrParam(href, "type");
+      this.groupId = getStrParam(href, "groupId");
       count(this.push_id, this.token);
       sessionStorage.setItem("token", this.token);
       sessionStorage.setItem("push_id", this.push_id);
@@ -55,7 +57,8 @@ export default {
       yinxing.getDoctorCode({
         token: this.token,
         doctorId: this.doctorId,
-        type: this.type
+        type: this.type,
+        groupId: this.groupId
       }).then(res => {
         if (res.data.code === 0) {
           this.doctorCode = res.data.groupCode

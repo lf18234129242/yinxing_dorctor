@@ -1,17 +1,20 @@
 <template>
   <div class="UserManage">
-    <div class="header">
-      <div>
-        <span>用户数</span>
-        <span>{{userJson.opcList.length}}</span>
-      </div>
-      <div>
-        <span>门诊扫码次数</span>
-        <span>{{userJson.opcCount}}</span>
-      </div>
-      <div>
-        <span>裂变人数</span>
-        <span>{{userJson.fissionCount}}</span>
+    <div class="search-header-box">
+      <van-search v-model="searchStr" @input="getUserList" placeholder="请输入姓名关键词" />
+      <div class="header">
+        <div>
+          <span>用户数</span>
+          <span>{{userJson.opcList.length}}</span>
+        </div>
+        <div>
+          <span>门诊扫码次数</span>
+          <span>{{userJson.opcCount}}</span>
+        </div>
+        <div>
+          <span>裂变人数</span>
+          <span>{{userJson.fissionCount}}</span>
+        </div>
       </div>
     </div>
     <div class="user_list_box">
@@ -134,7 +137,7 @@ export default {
   name: 'UserManage',
   data() {
     return {
-      token: '1b03d28f7bf04358a24da916b7064a5f',
+      token: '',
       userJson: {
         opcList: [],
         opcCount: null,
@@ -147,6 +150,7 @@ export default {
       showUserInfo: false,
       userInfo: {},
       user_mark: '',
+      searchStr: ''
     }
   },
   filters: {
@@ -220,7 +224,10 @@ export default {
       })
     },
     getUserList() {
-      let params = {token: this.token}
+      let params = {
+        token: this.token,
+        searchStr: this.searchStr
+      }
       duoduo.getUserList(params).then(res => {
         if (res.data.code === 0) {
           this.userJson = res.data
@@ -278,17 +285,20 @@ export default {
   width: 100%;
   height: 100vh;
   font-size: .6rem;
+  .search-header-box{
+    width: 100%;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 10;
+  }
   .header{
     width: 100%;
     height: 2rem;
     display: flex;
-    position: fixed;
-    left: 0;
-    top: 0;
     border-bottom: 1px solid #f5f5f5;
     box-shadow:0px 2px 10px 0px rgba(0,105,83,0.3);
     background: #fff;
-    z-index: 10;
     div{
       height: 100%;
       padding: 0 .2rem;
@@ -310,7 +320,7 @@ export default {
   }
   .user_list_box{
     width: 100%;
-    margin: 2rem 0;
+    margin: 4rem 0 2px;
     box-sizing: border-box;
     background: #fff;
     .user_item{

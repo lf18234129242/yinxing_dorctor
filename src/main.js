@@ -28,6 +28,7 @@ import {
 	PullRefresh,
 	Checkbox,
 	CheckboxGroup,
+	Search
 } from 'vant';
 
 Vue.use(RadioGroup)
@@ -50,6 +51,7 @@ Vue.use(RadioGroup)
 	// .use(Meta)
 	.use(Checkbox)
 	.use(CheckboxGroup)
+	.use(Search)
 
 //把 `******` 加到 `Vue` 的原型中
 Vue.prototype.axios = axios
