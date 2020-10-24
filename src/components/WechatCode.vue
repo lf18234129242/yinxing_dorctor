@@ -45,7 +45,7 @@ export default {
       this.push_id = getStrParam(href, "push_id");
       this.doctorId = getStrParam(href, "doctor_id");
       this.type = getStrParam(href, "type");
-      this.groupId = getStrParam(href, "groupId");
+      this.groupId = getStrParam(href, "group_id");
       count(this.push_id, this.token);
       sessionStorage.setItem("token", this.token);
       sessionStorage.setItem("push_id", this.push_id);
